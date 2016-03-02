@@ -1,0 +1,74 @@
+\documentclass[a4paper,12pt]{report}
+
+
+\usepackage[latin2]{inputenc} % vagy latin2 helyett utf8
+\usepackage[T1]{fontenc}      % karakterkódolás
+\usepackage[magyar]{babel}    % magyar beállítások
+\frenchspacing                % helyközök
+%\usepackage{times}           % betûtípus
+\usepackage{lmodern}          %   vagy inkább ez
+
+\usepackage[margin=2.5cm,left=3.5cm,includeheadfoot]{geometry}
+                              % margók
+\usepackage{graphicx}         % képekhez
+\usepackage{setspace}         % sorköz
+
+\onehalfspacing               % másfeles
+
+
+
+
+\begin{document}
+
+% ------------------------------------------------------------------------------
+% Címlap
+
+\input{cimlap.tex}
+
+% ------------------------------------------------------------------------------
+% Témabejelentõ
+
+\vspace*{\fill}
+
+\vfill
+\thispagestyle{empty}
+\newpage
+\setcounter{page}{1}
+
+% ------------------------------------------------------------------------------
+% Tartalomjegyzék
+
+\tableofcontents
+
+% ------------------------------------------------------------------------------
+
+
+\chapter{Bevezetés}
+
+Bevezetés.
+
+
+% ------------------------------------------------------------------------------
+
+
+\chapter{Elméleti alapok}
+Elméleti alapok.
+
+\section{Microsoft Orleans}
+
+% ------------------------------------------------------------------------------
+
+
+\chapter{Eredmények}
+
+
+% ------------------------------------------------------------------------------
+
+
+% ------------------------------------------------------------------------------
+
+\begin{thebibliography}{9}
+\bibitem{v} Valaki, valami.
+\end{thebibliography}
+
+\end{document}
