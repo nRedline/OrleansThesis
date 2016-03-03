@@ -12,8 +12,16 @@
                               % margók
 \usepackage{graphicx}         % képekhez
 \usepackage{setspace}         % sorköz
-
 \onehalfspacing               % másfeles
+
+\usepackage{hyperref}		  % table of contents hyperlink
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
 
 
 
@@ -45,30 +53,67 @@
 
 \chapter{Bevezetés}
 
-Bevezetés.
-
-
+A távérzékelt adatok feldolgozása jelenleg is nagy kihívás tekintve az adatok mennyiségére és méretére.
+Jelen dolgozat célja.
+Katasztrófák esetén kritikus az adatok gyors elõállítása
 % ------------------------------------------------------------------------------
 
 
 \chapter{Elméleti alapok}
-Elméleti alapok.
+Ebben a fejezetben bemutatásra kerülnek a dolgozat által érintett elméleti témakörök, valamint a felhasznált technológiák.
 
-\section{Microsoft Orleans}
+
+\section{A Távérzékelés alapjai}
+Távérzékelés alatt olyan adatgyûjtési és feldolgozási eljárásokat értünk, melynek során
+tárgyakról vagy területekrõl közvetve, azok érintése nélkül gyûjtünk és rögzítünk adatokat. \cite{noaa}
+
+Mára a távérzékelést leggyakrabban a földfelszíni, illetve légköri adatok begyûjtésére értjük, valamilyen légi, vagy ûrbéli szenzor segítségével. 
+Ezek a szenzorok a földfelszínrõl érkezõ energiát érzékelik, ez által alkotnak képet egy bizonyos területrõl. 
+
+Az érzékelt energia forrása alapján beszélhetünk passzív-, illetve aktív távérzékelõ szenzorokról.
+A passzív szenzorok valamilyen természetes energia sugárzását érzékelik, ez lehet a Föld által kibocsátott, vagy visszavert energia. Passzív szenzorok által leggyakrabban használt energiaforrás a Napból érkezõ visszavert energia.
+Az aktív szenzorok abban különböznek passzív társaiktól, hogy õk maguk sugározzák a földfelszínre az érzékelni kívánt energiát.
+
+Az élet számos területén fehasználhatjuk a távérzékeléssel nyert információkat, például:
+\begin{itemize}
+	\item \textbf{Katasztrófavédelem:} 
+	\item \textbf{Természeti erõforrások monitorozása: }
+	\item \textbf{Mezõgazdasági termés,- illetve hozambecslés: }
+	
+\end{itemize}
+\section{A Microsoft Orleans platform}
 
 % ------------------------------------------------------------------------------
 
+
+\chapter{Technológiai háttér}
+\section{Az AEGIS keretrendszer}
+\section{A Microsoft Orleans platform}
+\section{Distributed actor model}
+
+% ------------------------------------------------------------------------------
+
+
+\chapter{Megvalósítás}
+\section{Lokális mûveletek}
+\section{Fokális mûveletek}
+\section{Zonális mûveletek}
+\section{Globális mûveletek}
+
+
+% ------------------------------------------------------------------------------
 
 \chapter{Eredmények}
 
 
 % ------------------------------------------------------------------------------
 
+\chapter{Összegzés}
 
 % ------------------------------------------------------------------------------
 
 \begin{thebibliography}{9}
-\bibitem{v} Valaki, valami.
+\bibitem{noaa} National Oceanic and Atmospheric Administration, http://oceanservice.noaa.gov/facts/remotesensing.html
 \end{thebibliography}
 
 \end{document}
