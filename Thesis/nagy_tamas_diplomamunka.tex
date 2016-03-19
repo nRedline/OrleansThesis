@@ -52,46 +52,117 @@
 
 
 \chapter{Bevezetés}
+Lorem ipsum...
 
-A távérzékelt adatok feldolgozása jelenleg is nagy kihívás tekintve az adatok mennyiségére és méretére.
-Jelen dolgozat célja.
-Katasztrófák esetén kritikus az adatok gyors elõállítása
+
 % ------------------------------------------------------------------------------
 
 
 \chapter{Elméleti alapok}
-Ebben a fejezetben bemutatásra kerülnek a dolgozat által érintett elméleti témakörök, valamint a felhasznált technológiák.
-
+Lorem ipsum 2...
 
 \section{A Távérzékelés alapjai}
 Távérzékelés alatt olyan adatgyûjtési és feldolgozási eljárásokat értünk, melynek során
 tárgyakról vagy területekrõl közvetve, azok érintése nélkül gyûjtünk és rögzítünk adatokat. \cite{noaa}
 
-Mára a távérzékelést leggyakrabban a földfelszíni, illetve légköri adatok begyûjtésére értjük, valamilyen légi, vagy ûrbéli szenzor segítségével. 
+Manapság a távérzékelést leggyakrabban földfelszíni-, illetve légköri adatok begyûjtésére értjük, valamilyen légi, vagy ûrbéli szenzor segítségével. 
 Ezek a szenzorok a földfelszínrõl érkezõ energiát érzékelik, ez által alkotnak képet egy bizonyos területrõl. 
 
 Az érzékelt energia forrása alapján beszélhetünk passzív-, illetve aktív távérzékelõ szenzorokról.
 A passzív szenzorok valamilyen természetes energia sugárzását érzékelik, ez lehet a Föld által kibocsátott, vagy visszavert energia. Passzív szenzorok által leggyakrabban használt energiaforrás a Napból érkezõ visszavert energia.
 Az aktív szenzorok abban különböznek passzív társaiktól, hogy õk maguk sugározzák a földfelszínre az érzékelni kívánt energiát.
 
-Az élet számos területén fehasználhatjuk a távérzékeléssel nyert információkat, például:
+Az élet számos területén fehasználhatóak a távérzékeléssel nyert információk, például:
 \begin{itemize}
-	\item \textbf{Katasztrófavédelem:} 
-	\item \textbf{Természeti erõforrások monitorozása: }
-	\item \textbf{Mezõgazdasági termés,- illetve hozambecslés: }
+	\item \textbf{Katasztrófavédelem} 
+	\newline 
+	Hurrikánok, földrengések, erózió, árvíz megfigyelése. A távérzékelt adatokat felhasználhatjuk a
+	természeti katasztrófa hatásainak kiértékelésére, az információ alapján megelõzõ lépéseket tehetünk a jelenlegi helyzet kezelésére, valamint a jövõbeni katasztrófákra is felkészülhetünk.
 	
+	\item \textbf{Természeti erõforrások monitorozása }
+	\newline
+	Földhasználat, vadvilági területek monitorozása. A távérzékelt adatok felhasználásával minimalizálhatjuk a
+	városi növekedés káros hatásait a környezetre, valamint dönthetünk, hogyan védhetjük természeti erõforrásainkat.
+
+	\item \textbf{Mezõgazdasági termés,- illetve hozambecslés }
+	\newline
+	A távérzékelt adatok segítségével becslést adhatunk a monitorozott termõterület hozamára, illetve megelõzhetjük
+	a termést veszélyeztetõ növények és állatok kártételét.
 \end{itemize}
-\section{A Microsoft Orleans platform}
+
+Manapság számos mûhold szolgáltat távérzékelt ûrfelvételeket, melyek - a megfelelõ eszközök birtokában - 
+bárki számára hozzáférhetõk. A mûholdak által szolgáltatott nyers adatok számos hibaforrással lehetnek terheltek:
+
+\begin{itemize}
+	 \setlength\itemsep{0em}
+	\item Légköri zavaró hatások (páratartalom, hõmérséklet-különbségek)
+	\item A felvevõ rendszer torzításai (geometriai, radiometriai)
+	\item A mûhold mozgási szabálytalanságai
+	\item Felszíni domborzati zavaró hatások
+	\item Átsugárzás
+\end{itemize}
+
+\section{Távérzékelt felvételek feldolgozása}
 
 % ------------------------------------------------------------------------------
 
 
 \chapter{Technológiai háttér}
-\section{Az AEGIS keretrendszer}
-\section{A Microsoft Orleans platform}
-\section{Distributed actor model}
+Ebben a fejezetben a távérzékelt felvételek feldolgozásához használt technológiák és platformok kerülnek bemutatásra.
 
-% ------------------------------------------------------------------------------
+
+\section{A Microsoft Orleans platform}
+Az Orleans egy - a Microsoft Research által fejlesztett - keretrendszer, amely megoldást ad 
+felhõalapú, elosztott alkalmazások építésére anélkül, hogy komplex tudást követelne a felhasználóktól
+az elosztott alkalmazásfejlesztés (konkurencia, skálázhatóság, stb.) területén.\cite{dotnetOrleans} 
+A platform igyekszik a felhõalapú fejlesztés nehézségeit a "motorháztetõ alá" rejteni, így a felhasználóknak 
+nem szükséges ezzel foglalkozniuk.
+
+A keretrendszert több jelenleg is futó projekten hatásosan alkalmazták, 2015 januárjában pedig nyílt forráskódú
+licenccel a nyilvánosság elé tárták.
+
+\subsection{Motiváció}
+A legtöbb mai komplex felhõalapú rendszer a Szolgáltatásorientált architektrúra alapján épül fel. 
+Az architektúra alapötlete, hogy az alkalmazást több különbözõ (gyakran több száz) szervizre bontjuk, 
+melyeket egymástól függetlenül telepítünk, illetve menedzselünk a rendszerben. Ezek a szervizek külön-külön
+képesek skálázódni, azonban ez nem biztosítja a rendszer egészének megfelelõ skálázódását. 
+
+A bejövõ adatok növekvõ mennyiségének és méretének kezelési módja Szolgálatásorientált architektúrában 
+az adatok felosztása. A szervizek dinamikusan, a szolgáltatás szünetelése nélkül particionálódnak, ekkor a partíciók
+nagyméretû konkurenciát generálhatnak a szerviz irányába - a jelenlegi eszközök azonban nem nyújtanak
+hatékony megoldást ennek kezelésére.
+
+Az n-rétegû architektúra a particionálás problémáját az adattárolási rétegre bízza. 
+Ekkor azonban a megfelelõ teljesítmény elérése érdekében a felsõbb rétegeken különbözõ cachelési megoldások
+alkalmazása szükséges, ez azonban további komplexitást eredményez a rendszerben.\cite{dotnetOrleans} 
+
+Az Orleans rendszer törekszik a fent említett nehézségeket keretrendszer szinten megoldani és az alkalmazás üzleti
+logikájától a lehetõ legnagyobb mértékben izolálni. Ehhez egy korábbi ágens alapú modell, az \textit{Actor model}
+szolgált kiindulási pontként. Ennek egy virtualizált, felhõre felkészített verziója került implementálásra
+az Orleans keretrendszerben.
+
+
+\subsection{Actor model}
+Az \textit{Actor model} egy olyan elosztott számítási modell melynek számítási alapegységei az "\textit{aktorok}".
+Az aktorok egymástól izolált egységek, melyek aszinkron üzeneteken keresztül kommunikálnak egymással. 
+Egy aktor futása során mindig valamilyen üzenetre reagál - számítást végezhet, aktorokat hozhat létre, 
+további üzeneteket küldhet. Az aktorok jellemzõen egy számítási szállal rendelkeznek. Ez, valamint az aktorok
+állapotának enkapszulációja és izolációja más aktoroktól eliminálja a versenyhelyzetek kezelésének szükségességét
+aktor szinten. A fejlesztõknek nem szükséges lockolást, mutexeket és más versenyhezeteket kezelõ megoldásokat
+alkalmazniuk, melyek nem tartoznak az alkalmazás logikájához. Az aktorok dinamikusan jönnek létre
+a rendelkezésre álló erõforrások alapján, ezáltal hatékony terheléselosztás alkalmazható\cite{dotnetOrleans}.
+
+\subsection{Virtual Actor model}
+Az Orleans rendszer egy módosított Actor modellt definiál, amelyet elosztott alkalmazások, valamint az
+Erlang nyelv Actor modellének implementációja ihletett, és teljes egészében a .NET keretrendszerre épül.
+Az Orleans aktorok (\textit{Grain}, szabad fordításban \textit{szemcse, gabonaszem}) a tradicionális
+modelltõl eltérõen virtuálisak - Az Orleans futtatókörnyezet kezeli az aktorok aktiválását egy szerveren
+(\textit{Orleans Silo}), valamint ha a példány egy bizonyos ideig kihasználatlanul marad, a futtatókörnyezet
+elvégzi a példány deaktiválását és felszabadítását.
+
+\section{Az AEGIS keretrendszer}
+
+% ------------------------------------------------------- -----------------------
 
 
 \chapter{Megvalósítás}
@@ -114,6 +185,7 @@ Az élet számos területén fehasználhatjuk a távérzékeléssel nyert információkat, 
 
 \begin{thebibliography}{9}
 \bibitem{noaa} National Oceanic and Atmospheric Administration, http://oceanservice.noaa.gov/facts/remotesensing.html
+\bibitem{dotnetOrleans} Orleans Documentation, \newline http://dotnet.github.io/orleans
 \end{thebibliography}
 
 \end{document}
