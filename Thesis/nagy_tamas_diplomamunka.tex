@@ -118,22 +118,24 @@ az elosztott alkalmazásfejlesztés (konkurencia, skálázhatóság, stb.) területén.\
 A platform igyekszik a felhõalapú fejlesztés nehézségeit a "motorháztetõ alá" rejteni, így a felhasználóknak 
 nem szükséges ezzel foglalkozniuk.
 
-A keretrendszert több jelenleg is futó projekten hatásosan alkalmazták, 2015 januárjában pedig nyílt forráskódú
+A keretrendszert több jelenleg is futó projekten hatékonyan alkalmazták, 2015 januárjában pedig nyílt forráskódú
 licenccel a nyilvánosság elé tárták.
 
 \subsection{Motiváció}
-A legtöbb mai komplex felhõalapú rendszer a Szolgáltatásorientált architektrúra alapján épül fel. 
+A legtöbb mai komplex felhõalapú rendszer a \textit{Szolgáltatásorientált architektrúra} alapján épül fel. 
 Az architektúra alapötlete, hogy az alkalmazást több különbözõ (gyakran több száz) szervizre bontjuk, 
 melyeket egymástól függetlenül telepítünk, illetve menedzselünk a rendszerben. Ezek a szervizek külön-külön
 képesek skálázódni, azonban ez nem biztosítja a rendszer egészének megfelelõ skálázódását. 
 
-A bejövõ adatok növekvõ mennyiségének és méretének kezelési módja Szolgálatásorientált architektúrában 
-az adatok felosztása. A szervizek dinamikusan, a szolgáltatás szünetelése nélkül particionálódnak, ekkor a partíciók
+%Recompose
+A bejövõ terhelés növekedésének kezelési módja \textit{Szolgálatásorientált architektúrában} 
+az adatok felosztása szervizek között. 
+A szervizek dinamikusan, a szolgáltatás szünetelése nélkül particionálódnak, ekkor a partíciók
 nagyméretû konkurenciát generálhatnak a szerviz irányába - a jelenlegi eszközök azonban nem nyújtanak
 hatékony megoldást ennek kezelésére.
 
-Az n-rétegû architektúra a particionálás problémáját az adattárolási rétegre bízza. 
-Ekkor azonban a megfelelõ teljesítmény elérése érdekében a felsõbb rétegeken különbözõ cachelési megoldások
+Az n-rétegû architektúra a particionálás problémájának kezelését az adattárolási rétegre bízza. 
+Ekkor a megfelelõ teljesítmény elérése érdekében a felsõbb rétegeken különbözõ cachelési megoldások
 alkalmazása szükséges, ez azonban további komplexitást eredményez a rendszerben.\cite{dotnetOrleans} 
 
 Az Orleans rendszer törekszik a fent említett nehézségeket keretrendszer szinten megoldani és az alkalmazás üzleti
@@ -152,13 +154,45 @@ aktor szinten. A fejlesztõknek nem szükséges lockolást, mutexeket és más verseny
 alkalmazniuk, melyek nem tartoznak az alkalmazás logikájához. Az aktorok dinamikusan jönnek létre
 a rendelkezésre álló erõforrások alapján, ezáltal hatékony terheléselosztás alkalmazható\cite{dotnetOrleans}.
 
-\subsection{Virtual Actor model}
+\subsection{Virtual Actor model} %Explain in detail
 Az Orleans rendszer egy módosított Actor modellt definiál, amelyet elosztott alkalmazások, valamint az
 Erlang nyelv Actor modellének implementációja ihletett, és teljes egészében a .NET keretrendszerre épül.
 Az Orleans aktorok (\textit{Grain}, szabad fordításban \textit{szemcse, gabonaszem}) a tradicionális
 modelltõl eltérõen virtuálisak - Az Orleans futtatókörnyezet kezeli az aktorok aktiválását egy szerveren
 (\textit{Orleans Silo}), valamint ha a példány egy bizonyos ideig kihasználatlanul marad, a futtatókörnyezet
-elvégzi a példány deaktiválását és felszabadítását.
+elvégzi a példány deaktiválását és felszabadítását. A megfelelõ skálázhatóság érdekében a  kommunikáció aszinkron
+üzenetküldésen alapul, melynek a .NET 4.0-ban bevezetett Taszk alapú aszinkron programozási minta megfelelõ alapot
+biztosít. 
+
+Ha egy üzenetet elküldünk egy \textit{Grain}-nek, és az adott idõpillanatban egyetlen aktivációja sincs, akkor a környezet
+választ egy helyet, és létrehozza a példányt. Mivel az aktorok virtuálisak, elméletben mindig létezik aktivációjuk,
+így nem szükséges tesztelni egy aktiváció meglétét valamint egy esetleges hiba utáni helyreállítását, az Orleans 
+környezet ezt elvégzi helyettünk.
+
+Az aktorok közötti üzenetváltáshoz .NET objektumok széles köre támogatott - Maguk az üzenetek szerializálva 
+továbbítódnak, így a továbbítani kívánt objektumra az egyetlen megkötés a szerializálhatóság.
+A keretrendszer támogatja a standard beépített .NET szerializációs megoldásokat, saját szerializálóval is rendelkezik
+valamint lehetõséget biztosít egyedi szerializáló bevezetésére is az egyes üzenetekhez.
+
+\subsection{Alkalmazási lehetõségek} %Not the best section title.
+Az Orleans környezet alapvetõen a Szolgáltatásorientált architektúra jegyében épült alkalmazások fejlesztését
+támogatja - egymástól teljesen izolált, önálló szervizek összessége, melyek jól skálázódnak, és egy meghatározott 
+mûvelet elvégzésére képesek. Egy komplex alkalmazás több száz, vagy akár több ezer szervizbõl is állhat, és a szervizek
+száma az alkalmazás terheltségének változásával dinamikusan nõhet, illetve csökkenhet.
+A szervizek tipikusan nem komplex, mûveletigényes számítások elvégzésére alkalmasak, fõ szempont a reszponzivitás. 
+
+Ennek megfelelõen az Orleans aktorok egymástól izolált egységek, melyek nem osztanak meg memóriát egymással,
+az egyedüli kommunikációs lehetõség közöttük az aszinkron üzenetküldés. Egy számítási szállal rendelkeznek, és 
+alapértelmezés szerint az aktor entitás egyszerre csak egy üzenetet dolgozhat fel, a többi beérkezõ üzenet blokkolódik.
+Mivel az aktorok virtuálisak, így a futtatókörnyezet az skálázást a terhelésnek és a rendelkezésre álló 
+erõforrásoknak megfelelõen alakíthatja.
+
+A dolgozat által vizsgált feladat számos ponton különbözik a fent felsorolt szempontoktól - távérzékelt adatok
+feldolgozásához gyakran hatalmas méretû adatokkal kell dolgoznunk, a mûveletek költségesek, és akár több 
+órát is igénybe vehetnek, valamint a mûveletek legtöbbjének párhuzamosítása esetén az egyes folyamatoknak más
+folyamatok adataihoz is hozzá kell férniük. A dolgozat része volt ezen szempontbéli különbségek kiküszöbölése
+a megfelelõ eredmény érdekében - a késõbbi fejezetekben az alkalmazott megoldások és az eredmények
+részletesen is tárgyalásra kerülnek.
 
 \section{Az AEGIS keretrendszer}
 
@@ -185,7 +219,10 @@ elvégzi a példány deaktiválását és felszabadítását.
 
 \begin{thebibliography}{9}
 \bibitem{noaa} National Oceanic and Atmospheric Administration, http://oceanservice.noaa.gov/facts/remotesensing.html
-\bibitem{dotnetOrleans} Orleans Documentation, \newline http://dotnet.github.io/orleans
+\bibitem{dotnetOrleans} Orleans Documentation, http://dotnet.github.io/orleans
+\bibitem{orleansMSR} Microsoft Research Technical Report on Orleans, \newline http://research.microsoft.com/pubs/210931/Orleans-MSR-TR-2014-41.pdf
+\bibitem{soa} Service-oriented architecture, https://en.wikipedia.org/wiki/Service-oriented \textunderscore architecture
+
 \end{thebibliography}
 
 \end{document}
