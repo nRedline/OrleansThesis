@@ -25,6 +25,7 @@
 }
 
 \usepackage{amsmath}
+\usepackage{caption}
 
 \usepackage{chngcntr}
 \counterwithout{figure}{chapter}
@@ -190,7 +191,70 @@ megadja a pontot tartalmazó szegmens sorszámát. Szegmentálás használata esetén e
 kevésbé keverednek.
 \cite{remoteSensingLecture}
 
-\section{Téradatok elosztott feldolgozása}
+\subsection{Feldolgozó mûveletek munkaterülete}
+A feldolgozó mûveletek munkaterülete azt határozza meg, hogy egy lépés végrehajtásához mekkora adathalmazra
+van szükség. Ez alapján négy csoportot különböztetünk meg
+
+\begin{itemize}
+	\item \textit{Lokális mûvelet:} A forrás egy megadott képpontjából a cél egy képpontját állítja elõ,
+	lényegében egy pontból pontba történõ transzformáció. Ebbe a csoportba tartoznak az egyszerûbb képi
+	transzformációk, mint az \textit{invertálás}, valamint az egyes \textit{küszöbölõ} algoritmusok.
+	\item \textit{Fokális mûvelet:} Egy megadott képpont kiszámításához annak valamilyen sugarú környezetében lévõ
+	értékek felhasználásával dolgozik. Ide tartoznak például a különbözõ \textit{szûrõ} mûveletek.
+\end{itemize}
+
+\begin{figure}[h!] %TODO: Position
+	\minipage{0.5\textwidth}
+	\includegraphics[width=\linewidth]{figures/localOperation.png}
+	{\caption{Lokális mûvelet}}\label{fig:localOperation}
+	\endminipage\hfill
+	\minipage{0.5\textwidth}
+	\includegraphics[width=\linewidth]{figures/focalOperation.png}
+	\caption{Fokális mûvelet}\label{fig:focalOperation}
+	\endminipage\hfill
+\end{figure}
+
+\begin{itemize}
+	\item \textit{Regionális (zonális) mûvelet:} %TODO Recompose 
+	A regionális mûveletek hasonlóak
+	a fokális mûveletekhez, leszámítva hogy míg a fokális mûveletnél a képpont kiszámításához szükséges környezet
+	egy elõre definiált
+	méretû terület, addig a zonális mûveletnél a szükséges környezet az õt tartalmazó régió (zóna), 
+	mely a feldolgozás során dinamikusan változhat. Regionális mûvelet például a legtöbb \textit{szegmentáló}
+	algoritmus
+	
+	\item \textit{Globális mûvelet:} Az eredménykép minden képpontjának elõállításához rendelkeznie kell a teljes
+	forráskép ismeretével. Ide tartoznak például azok a \textit{küszöbölõ eljárások}, melyek
+	a küszöbértéket a teljes képbõl számított valamilyen statisztika (pl.: Hisztogram) alapján határozzák meg. 
+	A legtöbb \textit{klaszterezõ algoritmus} is ebbe a kategóriába tartozik, mivel a klaszterek
+	kialakítása	során a képpont elhelyezkedését már nem vesszük figyelembe, csupán a spektrális tulajdonságait.
+\end{itemize}
+
+\begin{figure}[h!] %TODO: Position
+	\minipage{0.5\textwidth}
+	\includegraphics[width=\linewidth]{figures/zonalOperation.png}
+	{\caption{Regionális mûvelet}}\label{fig:zonalOperation}
+	\endminipage\hfill
+	\minipage{0.5\textwidth}
+	\includegraphics[width=\linewidth]{figures/globalOperation.png}
+	\caption{Globális mûvelet}\label{fig:globalOperation}
+	\endminipage\hfill
+\end{figure}
+
+A mûveletek ezen tulajdonsága kulcsfontosságú az elosztott feldolgozás témakörében - lokális mûveletek esetén a feldolgozandó adat könnyedén particionálható, a feldolgozás pedig tetszõleges számú párhuzamos szálon futtatható.
+
+Fokális mûveleteknél biztosítanunk kell, hogy az egyes képpontok mindegyike rendelkezzen információval a környezetérõl
+- ezt megtehetjük például a partíciókra bevezetett \textit{átfedés} definiálásával, központi
+\textit{utófeldolgozás}sal, illetve ha lehetõségünk van az egyes partíciókon futó folyamatok közvetlen 
+kommunikációjára, a szükséges pixelértéket elkérhetjük a vele rendelkezõ folyamattól.
+
+Regionális mûveletek esetén a fokális mûveletekhez hasonlóan biztosítanunk kell a környezõ értékek elérését. Itt 
+jellemzõen az átfedéses megoldás nem célravezetõ, tekintve hogy nincs információnk a folyamat elindításának
+pillanatában, mekkora területre lesz szükség az egyes képpontok kiszámításához, ez az információ a mûvelet futása alatt
+dinamikusan változhat.
+
+Sok esetben globális mûveletek is elvégezhetõk particionált módon, itt azonban mindenképp szükséges egy központi
+összefuttató lépés - ennek módszere az alkalmazott mûvelettõl függ.\cite{remoteSensingLecture}
 
 % ------------------------------------------------------------------------------
 
@@ -287,13 +351,28 @@ részletesen is tárgyalásra kerülnek.
 
 % ------------------------------------------------------- -----------------------
 
-
 \chapter{Megvalósítás}
-\section{Lokális mûveletek}
-\section{Fokális mûveletek}
-\section{Zonális mûveletek}
-\section{Globális mûveletek}
 
+\section{Vizsgált algoritmusok}
+Az elemzett algoritmusok megválasztásánál fontos szempont volt a sokszínûség - a távérzékelt felvételek 
+feldolgozásának mindkét fázisából, mindegyik munkaterület-csoportból kerültek kiválasztásra
+mûveletek, ezáltal átfogó képet kaphatunk, a képfeldolgozás mely részein alkalmazható hatékonyan a rendszer. 
+
+\subsection{Lokális mûveletek}
+\subsubsection{Spektrális Invertálás}
+\subsubsection{ToA-Reflektancia}
+
+\subsection{Fokális mûveletek}
+\subsubsection{Konstans küszöbölés}
+\subsubsection{Otsu küszöbölés}
+
+\subsection{Regionális mûveletek}
+\subsubsection{Negyedelõ fa alapú szegmentálás}
+\subsubsection{Szekvenciális csatolás alapú szegmentálás}
+\subsubsection{Legjobb összevonáson alapuló szegmentálás}
+
+\subsection{Globális mûveletek}
+\subsubsection{Kiegyensúlyozott hisztogram-küszöbölés}
 
 % ------------------------------------------------------------------------------
 
@@ -312,6 +391,7 @@ részletesen is tárgyalásra kerülnek.
 \bibitem{orleansMSR} Microsoft Research Technical Report on Orleans, \newline http://research.microsoft.com/pubs/210931/Orleans-MSR-TR-2014-41.pdf
 \bibitem{soa} Service-oriented architecture, https://en.wikipedia.org/wiki/Service-oriented \textunderscore architecture
 \bibitem{remoteSensingLecture} László, I., Csornai, G., Fekete, I., Giachetta, R.: Távérzékelt felvételek elemzése, Egyetemi jegyzet, Eötvös Loránd Tudományegyetem Informatikai Kar, Budapest, 2014.
+\bibitem{mapAlgebra} Map Algebra: Global, Zonal, Focal and Local Operations, http://gisgeography.com/map-algebra-global-zonal-focal-local/
 
 \end{thebibliography}
 
