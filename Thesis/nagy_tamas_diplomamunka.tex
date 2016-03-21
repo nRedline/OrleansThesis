@@ -11,6 +11,7 @@
 \usepackage[margin=2.5cm,left=3.5cm,includeheadfoot]{geometry}
                               % margók
 \usepackage{graphicx}         % képekhez
+\usepackage{grffile}
 \usepackage{setspace}         % sorköz
 \onehalfspacing               % másfeles
 
@@ -22,6 +23,13 @@
 	linkcolor=black,
 	urlcolor=black
 }
+
+\usepackage{amsmath}
+
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
+
+\graphicspath {{figures/}}
 
 
 
@@ -59,19 +67,65 @@ Lorem ipsum...
 
 
 \chapter{Elméleti alapok}
-Lorem ipsum 2...
+A fejezet célja betekintést nyújtani a dolgozat során érintett kulcsfontosságú elméleti témakörökbe.
+Elsõként a távérzékelés fogalma, fizikai és technikai alapjai, valamint alkalmazási lehetõségei kerülnek ismertetésre.
+Ezután a távérzékelt felvételek feldolgozási folyamata, és a folyamat során elvégzett mûveletek bemutatása következik.
 
-\section{A Távérzékelés alapjai}
+\section{A Távérzékelés}
 Távérzékelés alatt olyan adatgyûjtési és feldolgozási eljárásokat értünk, melynek során
 tárgyakról vagy területekrõl közvetve, azok érintése nélkül gyûjtünk és rögzítünk adatokat. \cite{noaa}
 
 Manapság a távérzékelést leggyakrabban földfelszíni-, illetve légköri adatok begyûjtésére értjük, valamilyen légi, vagy ûrbéli szenzor segítségével. 
 Ezek a szenzorok a földfelszínrõl érkezõ energiát érzékelik, ez által alkotnak képet egy bizonyos területrõl. 
 
+\subsection{A távérzékelés fizikai és technikai alapjai}
+A távérzékelõ rendszereknek alapvetõen három fõ összetevõje van: A sugárforrás, a megfigyelés tárgyát képezõ földfelszín és az érzékelõ.
+
 Az érzékelt energia forrása alapján beszélhetünk passzív-, illetve aktív távérzékelõ szenzorokról.
-A passzív szenzorok valamilyen természetes energia sugárzását érzékelik, ez lehet a Föld által kibocsátott, vagy visszavert energia. Passzív szenzorok által leggyakrabban használt energiaforrás a Napból érkezõ visszavert energia.
+A passzív szenzorok valamilyen természetes energia sugárzását érzékelik, ez lehet a Föld által kibocsátott, vagy
+visszavert energia. Passzív szenzorok által leggyakrabban használt energiaforrás a Napból érkezõ visszavert energia.
 Az aktív szenzorok abban különböznek passzív társaiktól, hogy õk maguk sugározzák a földfelszínre az érzékelni kívánt energiát.
 
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=90mm]{figures/remote_sensing_components.jpg}
+	\caption{A távérzékelési rendszer összetevõi \label{remote_sensing_components}}
+\end{figure}
+
+A távérzékelt felvételek spektrális felbontása meghatározza, hogy az elektromágneses spektrumon belül mely
+hullámsávokat milyen részletességgel vételezi a szenzor. Az ún. \textit{pankromatikus} szenzorok egy spektrális
+sávot felvételeznek, mely lefedi a teljes látható tartományt, valamint belenyúlhat a közeli infravörös tartományba.
+A \textit{multispektrális} szenzorok több különbözõ elektromágneses hullámsávban érzékelnek. A leggyakrabban használt
+multispektrális szenzorok sávszáma 3 és 7 között van, és a reflektív tartomány mellett a termális infravörös sávot
+is felvételezik.
+
+Az érzékelõ a megadott hullámsávban beérkezõ mennyiséget digitális értékekké alakítja - az érzékelõk \textit{radiometriai felbontása} 
+a kvantálás finomságát jelzi. Minél több energiaszintet képes megkülönböztetni az szenzor, annál magasabb
+radiometriai felbontással rendelkezik. A legelterjedtebb nagyfelbontású multispektrális szenzoroknál 
+a legjellemzõbb a 7-8 bites felbontás, mely 128, illetve 256 különbözõ intenzitásszintnek felel meg.
+
+Egy többsávos digitális felvételezés eredménye egy olyan mátrixként értelmezhetõ, melynek minden eleme egy elemi
+felszíndarabnak felel meg - a mátrix elemeinek pozíciója kapcsolatban van a felvételezett felszíndarab földrajzi
+helyzetével. Az egyes mátrixértékek maguk is vektorok, melyek elemei a megadott felszíndarabon belül az egyes
+spektrális sávokban mért intenzitásértékeket tartalmazzák. Egy \textit{N} sorból és \textit{M} oszlopból álló
+többsávos digitális felvétel az alábbi formulában írható le:
+
+\begin{center}
+$
+V = 
+\begin{pmatrix}
+\vec{v}_{1,1} & \cdots & \vec{v}_{1,\textit{M}} \\
+\vdots  & \ddots & \vdots  \\
+\vec{v}_{\textit{N},1} & \cdots & \vec{v}_{\textit{N,M}} 
+\end{pmatrix}
+$,
+\end{center}
+
+ahol B számú spektrális sávot feltételezve $\vec{v}_{\textit{i,j}} = (v_{\textit{i,j}1}, \hdots, v_{\textit{i,jB}})$
+az egyes elemekhez tartozó intenzitásértékek vektora. A mátrix elemeinek koordinátáit és értékeit annak megfelelõen értelmezzük,
+amelyet az elvégezni kívánt mûvelet megkövetel. \cite{remoteSensingLecture}
+
+\subsection{Távérzékelt felvételek alkalmazási területei}
 Az élet számos területén fehasználhatóak a távérzékeléssel nyert információk, például:
 \begin{itemize}
 	\item \textbf{Katasztrófavédelem} 
@@ -90,19 +144,53 @@ Az élet számos területén fehasználhatóak a távérzékeléssel nyert információk, pé
 	a termést veszélyeztetõ növények és állatok kártételét.
 \end{itemize}
 
-Manapság számos mûhold szolgáltat távérzékelt ûrfelvételeket, melyek - a megfelelõ eszközök birtokában - 
-bárki számára hozzáférhetõk. A mûholdak által szolgáltatott nyers adatok számos hibaforrással lehetnek terheltek:
+A felhasználási területek közül fõként a katasztrófavédelemnél kiemelten fontos, hogy az érzékelés pillanatától számítva 
+mennyi késéssel juthatunk hozzá a kiértékelt adatokhoz - árvíz esetén például órák alatt változhat a vízszint, amelyrõl ha idõben
+értesülünk, megtehetjük a megfelelõ óvintézkedéseket, késlekedés esetén azonban jelentõs károk keletkezhetnek. A mûholdak visszatérési
+ideje csupán egy tényezõ az eredmény elõállításának gyorsaságában - kritikus lehet a már meglévõ adatok feldolgozásának sebessége is,
+tekintve hogy hatalmas méretû adatokkal kell dolgoznunk, a kiértékelõ eljárások legtöbbje pedig meglehetõsen komplex.
+Ez felveti olyan adatfeldolozó megoldások kutatásának szükségességét, amellyel a kiértékelés ideje csökkenthetõ.
 
-\begin{itemize}
-	 \setlength\itemsep{0em}
-	\item Légköri zavaró hatások (páratartalom, hõmérséklet-különbségek)
-	\item A felvevõ rendszer torzításai (geometriai, radiometriai)
-	\item A mûhold mozgási szabálytalanságai
-	\item Felszíni domborzati zavaró hatások
-	\item Átsugárzás
-\end{itemize}
 
 \section{Távérzékelt felvételek feldolgozása}
+A távérzékelés általánosságban a felvételezéstõl a tematikus információ-kivonásig tart. Elsõ lépésként a felvételek egy elõfeldolgozó
+fázison mennek keresztül, majd ezt követi a felvételek kiértékelése. A dolgozat során elemzett mûveletek egy része az elõfeldolgozásban, 
+a többi mûvelet pedig a képelemzésben használt, így megfelelõ képet kaphatunk, mely feldolgozási fázisban milyen hatékonysággal 
+használható a vizsgált rendszer. A következõ szakaszokban az egyes fázisok ismertetése mellett a vizsgált mûveletek bemutatásra kerülnek.
+
+\subsection{Elõfeldolgozás}
+Manapság számos mûhold szolgáltat távérzékelt ûrfelvételeket, melyek - a megfelelõ eszközök birtokában - 
+bárki számára hozzáférhetõk. A mûholdak által szolgáltatott nyers adatok számos hibaforrással lehetnek terheltek, melyeket lehetõség szerint
+ki kell küszöbölni. Ide tartoznak például a \textit{légköri zavaró hatások}(páratartalom, hõmérséklet-különbségek), a felvevõ rendszer és
+hordozóeszközének mozgási szabálytalanságaiból adódó \textit{torzítás}ok, valamint a szomszédos területekrõl való \textit{átsugárzás}.
+A hibaforrások kiküszöbölése mellett a hatékony feldolgozás érdekében érdemes minden felvételt egységes geometriai rendszerbe transzformálva
+kezelni, melyet \textit{geometriai korrekció}nak nevezünk.
+
+\textit{Intenzitás-korrekció} alatt azokat a mûveleteket értjük, melyekkel a felvétel képpontjaioz és az egyes spektrális sávokhoz tartozó
+sávonkénti intenzitást módosítjuk. Ide tartozik például a \textit{radiometriai korrekció}, valamint a különbözõ látványjavító mûveletek.
+Radiometriai korrekció alkalmazásával következtethetünk a földfelszín fizikai paramétereire. Az elsõ lépés a szenzorhoz ténylegesen eljutó
+sugárzás, a radiancia mennyiségének megállapítása. 
+Ebbõl számítható a \textit{ToA-reflektancia} (\textit{Top of Atmosphere - a légkör tetején mérhetõ reflektancia}), 
+mely a visszavert és a beesõ sugárzás arányának olyan közelítése, mely nem veszi figyelembe a sugárzás és a légkör közötti kölcsönhatást.
+
+Az egyes látványjavító mûveletek célja a felvétel vizuális megjelenítési tulajdonságainak megváltoztatása az emberi szemmel történõ
+értelmezés könnyítése érdekében. Látványjavító mûvelet például az \textit{invertálás}, valamint a különbözõ \textit{szûrések}. \cite{remoteSensingLecture}
+
+\subsection{Képelemzés}
+A felvételkiértékelés célja a felszínborítás, földfelszíni objektumok fizikai jellemzõinek megállapítása. A
+ kívánt végeredmény rendszerint a megadott terület elemeinek osztályba sorolása, egy tematikus térkép elkészítése, 
+ mely véges számú célosztállyal írja le a vizsgált területet. A felvételkiértékelés két alapvetõ módszere a 
+\textit{vizuális interpretáció} és a \textit{kvantitatív, numerikus kiértékelés}. A vizuális interpretáció során a tematikus döntéseket a
+felvételen látható információ alapján hozza meg a kiértékelõ személy, míg a numerikus kiértékelési módszereknél a tematikus döntések
+meghozatala a számítógépen, elõre beprogramozott feltételek alapján történik. Az osztályozási módszerek lehetnek pontonkénti mûveletek,
+melyek figyelmen kívül hagyják a homogén területek szomszédos képpontjainak azonosságát (pl.: \textit{küszöbölõ eljárások}),
+valamint olyan mûveletek, amelyek már homogén területek sorozatán képesek elvégezni az osztályozást. Ezen homogén területek feltárásának
+és összekapcsolásának módja a \textit{szegmentálás}. A szegmentálás eredményeként egy tematikus térképet kapunk, mely minden képpontra
+megadja a pontot tartalmazó szegmens sorszámát. Szegmentálás használata esetén elmondható, hogy homogén területen a kategóriák
+kevésbé keverednek.
+\cite{remoteSensingLecture}
+
+\section{Téradatok elosztott feldolgozása}
 
 % ------------------------------------------------------------------------------
 
@@ -195,6 +283,7 @@ a megfelelõ eredmény érdekében - a késõbbi fejezetekben az alkalmazott megoldáso
 részletesen is tárgyalásra kerülnek.
 
 \section{Az AEGIS keretrendszer}
+%Finish remote sensing first as this section will point back there.
 
 % ------------------------------------------------------- -----------------------
 
@@ -222,6 +311,7 @@ részletesen is tárgyalásra kerülnek.
 \bibitem{dotnetOrleans} Orleans Documentation, http://dotnet.github.io/orleans
 \bibitem{orleansMSR} Microsoft Research Technical Report on Orleans, \newline http://research.microsoft.com/pubs/210931/Orleans-MSR-TR-2014-41.pdf
 \bibitem{soa} Service-oriented architecture, https://en.wikipedia.org/wiki/Service-oriented \textunderscore architecture
+\bibitem{remoteSensingLecture} László, I., Csornai, G., Fekete, I., Giachetta, R.: Távérzékelt felvételek elemzése, Egyetemi jegyzet, Eötvös Loránd Tudományegyetem Informatikai Kar, Budapest, 2014.
 
 \end{thebibliography}
 
