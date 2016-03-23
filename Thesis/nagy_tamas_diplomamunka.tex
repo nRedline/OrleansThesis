@@ -45,12 +45,12 @@
 % ------------------------------------------------------------------------------
 % Témabejelentõ
 
-\vspace*{\fill}
+%\vspace*{\fill}
 
-\vfill
-\thispagestyle{empty}
-\newpage
-\setcounter{page}{1}
+%\vfill
+%\thispagestyle{empty}
+%\newpage
+%\setcounter{page}{1}
 
 % ------------------------------------------------------------------------------
 % Tartalomjegyzék
@@ -263,7 +263,7 @@ Sok esetben globális mûveletek is elvégezhetõk particionált módon, itt azonban m
 Ebben a fejezetben a távérzékelt felvételek feldolgozásához használt technológiák és platformok kerülnek bemutatásra.
 
 
-\section{A Microsoft Orleans platform}
+\section{A Microsoft Orleans platform} %TODO Mention Azure!!!
 Az Orleans egy - a Microsoft Research által fejlesztett - keretrendszer, amely megoldást ad 
 felhõalapú, elosztott alkalmazások építésére anélkül, hogy komplex tudást követelne a felhasználóktól
 az elosztott alkalmazásfejlesztés (konkurencia, skálázhatóság, stb.) területén.\cite{dotnetOrleans} 
@@ -346,8 +346,55 @@ folyamatok adataihoz is hozzá kell férniük. A dolgozat része volt ezen szempontb
 a megfelelõ eredmény érdekében - a késõbbi fejezetekben az alkalmazott megoldások és az eredmények
 részletesen is tárgyalásra kerülnek.
 
-\section{Az AEGIS keretrendszer}
-%Finish remote sensing first as this section will point back there.
+\section{Az AEGIS térinformatikai keretrendszer}
+Az \textit{AEGIS }keretrendszer \textit{Eötvös Loránd Tudományegyetem Informatikai Karán} jelenleg is fejlesztés alatt
+álló térinformatikai keretrendszer, melynek fõ célja térinformaikai algoritmusok, megoldások kutatása és fejlesztése.
+A rendszer téradatok széles spektrumát támogatja, például: \textit{vektoros adathalmazok}, \textit{raszter felvételek}
+valamint \textit{pontfelhõk}. A rendszer egy platformfüggetlen osztálykönyvtár, melynek fejlesztése C\# nyelven
+történik, alapja a \textit{.NET keretrendszer}, illetve a \textit{Mono Framework}. A fejlesztés a komponens alapú
+architektúra jegyében történik, mely lehetõséget ad a rendszer bõvítésére, valamint az újrafelhasználhatóságra.
+Ennek segítségével az egyes komponensek könnyedén integrálhatóak más alkalmazásokba. \cite{aegis}
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=90mm]{figures/aegis_components.jpg}
+	\caption{Az \textit{AEGIS} rendszer komponensei \cite{aegis}
+	\label{fig:aegis_components}}
+\end{figure}
+
+A rendszer adatmodellje az \textit{Open Geospatial Consortium (OGC)} szervezet által definiált
+\textit{Simple Feature Access (SFA)} szabvány. A szabványnak megfelelõen a rendszer minden téradatot 
+(beleértve a raszteres képi adatokat is) egységes (\textit{Geometry}) formában kezel. 
+Az implementált algoritmusok kezelése is egy egységes alapon történik, az egyes mûveletek (\textit{Operation}) metaadatokkal (\textit{OperationMethod})
+rendelkeznek, melynek segítségével kategorizálhatjuk a metódusokat, valamint optimalizálhatjuk a végrehajtást.
+
+
+
+\subsubsection{Feldolgozás Hadoop architektúrán}
+Az AEGIS támogatja a \textit{Hadoop} architektúrával történõ adatkezelést, illetve feldolgozást.
+A rendszer megfelelõen kezeli nagyméretû bináris adatok \textit{Hadoop}ba történõ beolvasását (pl.: \textit{GeoTIFF} formában).
+Az input adat opcionálisan particionálható, ezáltal elosztottan, párhuzamos módon is feldolgozható. Az egyes
+feldolgozó mûveletek módosítás nélkül végrehajthatóak egyszerû \textit{Map-}, illetve \textit{Reduce} függvényekként.
+\cite{aegisHadoop}
+Ez a korábban részletezett mûveletek munkaterületei közül a lokális illetve a fokális mûveletekre könnyedén
+alkalmazható, regionális és globális mûveletek esetén általában szükséges egy olyan alternatív algoritmus alkalmazása,
+amely az eredeti algoritmus kibõvítése egy utófeldolgozó lépéssel.
+Például a \textit{hisztogram kiegyenlítés} mûvelet egy globális mûvelet, melynek szüksége van az egész képre vonatkozó
+hisztogram értékekre. Ekkor Hadoop architektúrán a mûvelet három különbözõ lépésbõl áll. Elõször egy \textit{Map}
+függvényben kiszámítjuk az egyes hisztogram értékeket minden fájldarabra. A második, \textit{Reduce} lépés
+összefésüli ezeket az értékeket, és elõállítja a teljes hisztogramot. A harmadik lépésben pedig egy újabb \textit{Map}
+utasítás alkalmazza a hisztogramkiegyenlítést a kiszámított teljes hisztogramértékek alapján.
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=150mm]{figures/histogram_map_reduce.jpg}
+	\caption{Hisztogramkiegyenlítés \textit{MapReduce} alkalmazásával \cite{aegisHadoop}
+		\label{fig:histogram_map_reduce}}
+\end{figure}
+
+A legtöbb esetben a mûveletek könnyedén adaptálhatóak Hadoop környezetbe, azonban néhány alkalommal komplex módosításokra van szükség, és a portolt algoritmus helyfoglalási igénye sokkal nagyobb lehet, mint az eredeti mûveleté.
+Ezek a tényezõk indokolták alternatív feldolgozó mechanizmusok kutatásának szükségességét.
+
 
 % ------------------------------------------------------- -----------------------
 
@@ -392,6 +439,8 @@ mûveletek, ezáltal átfogó képet kaphatunk, a képfeldolgozás mely részein alkalma
 \bibitem{soa} Service-oriented architecture, https://en.wikipedia.org/wiki/Service-oriented \textunderscore architecture
 \bibitem{remoteSensingLecture} László, I., Csornai, G., Fekete, I., Giachetta, R.: Távérzékelt felvételek elemzése, Egyetemi jegyzet, Eötvös Loránd Tudományegyetem Informatikai Kar, Budapest, 2014.
 \bibitem{mapAlgebra} Map Algebra: Global, Zonal, Focal and Local Operations, http://gisgeography.com/map-algebra-global-zonal-focal-local/
+\bibitem{aegis} Giachetta, R.: AEGIS - A state-of-the art component based spatio- temporal framework, OSGeo Journal 13.1, pp. 68-77, 2014.
+\bibitem{aegisHadoop} Giachetta, R., Fekete, I.: A case study of advancing remote sensing image analysis, Acta Cybernetica, 22, pp. 57-79, 2015.
 
 \end{thebibliography}
 
