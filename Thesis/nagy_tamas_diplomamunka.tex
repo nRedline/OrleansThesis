@@ -28,6 +28,8 @@
 \usepackage{caption}
 
 \usepackage{chngcntr}
+\usepackage{siunitx}
+
 \counterwithout{figure}{chapter}
 
 \graphicspath {{figures/}}
@@ -148,16 +150,13 @@ Az élet számos területén felhasználhatóak a távérzékeléssel nyert információk, p
 A felhasználási területek közül fõként a katasztrófavédelemnél kiemelten fontos, hogy az érzékelés pillanatától számítva 
 mennyi késéssel juthatunk hozzá a kiértékelt adatokhoz - árvíz esetén például órák alatt változhat a vízszint, amelyrõl ha idõben
 értesülünk, megtehetjük a megfelelõ óvintézkedéseket, késlekedés esetén azonban jelentõs károk keletkezhetnek. A mûholdak visszatérési
-ideje csupán egy tényezõ az eredmény elõállításának gyorsaságában - kritikus lehet a meglévõ adatok kiértékelésének sebessége is,
-tekintve hogy hatalmas méretû adatokkal kell dolgoznunk, a kiértékelõ eljárások legtöbbje pedig meglehetõsen komplex.
-Ez felveti olyan adatfeldolgozó megoldások kutatásának szükségességét, amellyel a kiértékelés ideje csökkenthetõ.
-
+ideje csupán egy tényezõ az eredmény elõállításának gyorsaságában - kritikus lehet a meglévõ adatok kiértékelésének sebessége is.
 
 \section{Távérzékelt felvételek feldolgozása}
 A távérzékelés általánosságban a felvételezéstõl a tematikus információ-kivonásig tart. Elsõ lépésként a felvételek egy elõfeldolgozó
 fázison mennek keresztül, majd ezt követi a felvételek kiértékelése. A dolgozat során elemzett mûveletek egy része az elõfeldolgozásban, 
 a többi mûvelet pedig a képelemzésben használt, így megfelelõ képet kaphatunk, mely feldolgozási fázisban milyen hatékonysággal 
-használható a vizsgált rendszer. s
+használható a vizsgált rendszer.
 
 \subsection{Elõfeldolgozás}
 Manapság számos mûhold szolgáltat távérzékelt ûrfelvételeket, melyek - a megfelelõ eszközök birtokában - 
@@ -195,14 +194,27 @@ A \textit{tematikus osztályozás} egy kvantitatív kiértékelési mód, melynek célja
 elkészítése, mely véges számú célosztállyal írja le a vizsgált területet. A tematikus térkép minden pixeléhez a
 célosztály egy értéke tartozik.
 
-%TODO: Extend and recompose!
-
 A tematikus osztályozási módszerek lehetnek pontonkénti mûveletek,
 melyek figyelmen kívül hagyják a homogén területek szomszédos képpontjainak azonosságát (pl.: \textit{küszöbölõ eljárások}),
-valamint olyan mûveletek, amelyek már homogén területek sorozatán képesek elvégezni az osztályozást. Ezen homogén területek feltárásának
-és összekapcsolásának módja a \textit{szegmentálás}. A szegmentálás eredményeként egy tematikus térképet kapunk, mely minden képpontra
-megadja a pontot tartalmazó szegmens sorszámát. Szegmentálás használata esetén elmondható, hogy homogén területen a kategóriák
+valamint szegmensenkénti mûveletek amelyek már homogén területek sorozatán képesek elvégezni az osztályozást 
+(pl.: \textit{klaszterezés}). Ezen homogén területek feltárásának és összekapcsolásának módja a \textit{szegmentálás}.
+A szegmentálás eredményeként egy tematikus térképet kapunk, mely minden képpontra megadja a pontot 
+tartalmazó szegmens sorszámát. Szegmentálás használata esetén elmondható, hogy homogén területen a kategóriák
 kevésbé keverednek.
+
+\begin{figure}[ht!]
+	\centering
+	\captionsetup{width=0.6\textwidth, justification=centering}
+	\includegraphics[width=90mm]{figures/intensitySpace.jpg}
+	\caption{Az egyes felszíndarabok sugárzási értékei  $x_1 = 0.5\si{\micro\metre}$ 
+		és $x_2 = 0.9\si{\micro\metre}$ hullámhosszon \label{intensitySpaces}}
+\end{figure}
+
+A tematikus osztályozás a képpontok vagy szegmensek \textit{intenzitástér}ben való elhelyezkedése alapján 
+határolja be az egyes elemeket a megfelelõ osztályokba. Az intenzitástérben a kép egy pixelének sávonkénti
+intenzitásértékei adják a pont koordinátáit. A \ref{intensitySpaces}. ábrán látható, hogy az egyes intenzitásértékek
+jellemzõen nem pontokba tömörülnek, hanem rendelkeznek bizonyos mértékû szórással. A tematikus osztályozás során
+ezen térben keressük az összetartozó elemeket, és ez alapján alakítjuk ki a végsõ osztályhalmazokat. 
 \cite{remoteSensingLecture}
 
 \subsection{Feldolgozó mûveletek munkaterülete}
@@ -255,7 +267,8 @@ van szükség. Ez alapján négy csoportot különböztetünk meg
 	\endminipage\hfill
 \end{figure}
 
-A mûveletek ezen tulajdonsága kulcsfontosságú az elosztott feldolgozás témakörében - lokális mûveletek esetén a feldolgozandó adat könnyedén particionálható, a feldolgozás pedig tetszõleges számú párhuzamos szálon futtatható.
+A mûveletek ezen tulajdonsága kulcsfontosságú az elosztott feldolgozás témakörében - lokális mûveletek esetén 
+a feldolgozandó adat könnyedén particionálható, a feldolgozás pedig tetszõleges számú párhuzamos szálon futtatható.
 
 Fokális mûveleteknél biztosítanunk kell, hogy az egyes képpontok mindegyike rendelkezzen információval a környezetérõl
 - ezt megtehetjük például a partíciókra bevezetett \textit{átfedés} definiálásával, központi
@@ -270,16 +283,47 @@ dinamikusan változhat.
 Sok esetben globális mûveletek is elvégezhetõk particionált módon, itt azonban mindenképp szükséges egy központi
 összefuttató lépés - ennek módszere az alkalmazott mûvelettõl függ.\cite{remoteSensingLecture}
 
-\section{Adatkezelés}
-%TODO: Compose
+\section{Adatfeldolgozás}
+Az alkalmazási területeknél már említésre került, hogy a feldolgozási idõ kritikus lehet az adatkiértékelés szempontjából.
+Ezt nehezíti az a tény, hogy a kiértékelõ eljárások többsége meglehetõsen komplex, illetve hogy gyakran hatalmas mennyiségû
+adathalmazzal kell dolgoznunk.
+Ez felveti olyan megoldások kutatásának szükségességét, amellyel a kiértékelés ideje csökkenthetõ.
 
+A legkézenfekvõbb lehetõség a feldolgozó egységek \textit{számítási kapacitás}ának megnövelése. Erõsebb \textit{processzor}, 
+több \textit{memória}, I/O mûveletek gyorsabb elvégzésére alkalmas \textit{háttértár}ak
+beszerzése esetén a számítási teljesítményünk is növekszik. A megoldás legnagyobb elõnye, hogy a meglévõ algoritmusok a megnövelt 
+teljesítményû környezetben is felhasználhatóak, a feldolgozás szoftveres része nem igényel adaptációt. Azonban a
+rendszer teljesítménynövelésének ezen módja költséges, és a fejlesztéssel nyert számítási kapacitás aránya egy bizonyos szint után csökken.
+
+A teljesítménynövelés másik lehetséges módja az évek óta kutatott\cite{distributedImageProcessing}, és a számítási
+felhõk elterjedésével az utóbbi idõben leginkább teret nyert \textit{elosztott feldolgozás}.
+Az elosztott rendszerek olyan szoftverrendszerek, melyek komponensei fizikailag elkülönítve futnak, és futás során
+egymással hálózaton keresztül kommunikálnak.
+Az elosztott architektúra több jelentõs elõnnyel is rendelkezik az egy számítási egységgel rendelkezõ rendszerrel szemben:
+nagyobb \textit{hibatûrés}, hatékony \textit{terheléselosztás}, olcsó \textit{bõvíthetõség}.
+Az elosztott feldolgozás hátránya a komplexitásában nyilvánul meg - legtöbb esetben a feldolgozó mûveletek elosztott
+környezetre való felkészítése az algoritmusok módosításával jár.
+
+Távérzékelt felvételek elosztott feldolgozása úgy történik, hogy a feldolgozandó kép alkotó elemeit valamilyen tulajdonság alapján 
+(pixel értékek, spektrális intenzitásértékek) \textit{feldarabolunk}, az egyes feldolgozó egységek pedig ezen darabokat dolgozzák fel.
+Ekkor - a mûvelet korábban ismertetett munkaterületének megfelelõen - a feldolgozó egységeknek szükségük lehet olyan információkra, melyek
+a teljes adat egy részének vagy egészének ismeretében számíthatók csak ki. Ezen adatok gyors és hatékony rendelkezésre állása
+kulcsfontosságú egy elosztott rendszer teljesítményében.
 
 % ------------------------------------------------------------------------------
 
 \chapter{Elosztott alkalmazások fejlesztése}
 
+\section{Szolgáltatásorientált architektúra}
 
 \section{MapReduce}
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=150mm]{figures/histogram_map_reduce.jpg}
+	\caption{Hisztogramkiegyenlítés \textit{MapReduce} alkalmazásával \cite{aegisHadoop}
+		\label{fig:histogram_map_reduce}}
+\end{figure}
 
 \section{Hadoop}
 
@@ -404,19 +448,12 @@ feldolgozó mûveletek módosítás nélkül végrehajthatóak egyszerû \textit{Map-}, il
 \cite{aegisHadoop}
 Ez a korábban részletezett mûveletek munkaterületei közül a lokális illetve a fokális mûveletekre könnyedén
 alkalmazható, regionális és globális mûveletek esetén általában szükséges egy olyan alternatív algoritmus alkalmazása,
-amely az eredeti algoritmus kibõvítése egy utófeldolgozó lépéssel.
+amely az eredeti algoritmus kibõvítése egy központi feldolgozó (\textit{Reduce}) lépéssel.
 Például a \textit{hisztogram kiegyenlítés} mûvelet egy globális mûvelet, melynek szüksége van az egész képre vonatkozó
 hisztogram értékekre. Ekkor Hadoop architektúrán a mûvelet három különbözõ lépésbõl áll. Elõször egy \textit{Map}
 függvényben kiszámítjuk az egyes hisztogram értékeket minden fájldarabra. A második, \textit{Reduce} lépés
 összefésüli ezeket az értékeket, és elõállítja a teljes hisztogramot. A harmadik lépésben pedig egy újabb \textit{Map}
 utasítás alkalmazza a hisztogramkiegyenlítést a kiszámított teljes hisztogramértékek alapján.
-
-\begin{figure}[ht!]
-	\centering
-	\includegraphics[width=150mm]{figures/histogram_map_reduce.jpg}
-	\caption{Hisztogramkiegyenlítés \textit{MapReduce} alkalmazásával \cite{aegisHadoop}
-		\label{fig:histogram_map_reduce}}
-\end{figure}
 
 A legtöbb esetben a mûveletek könnyedén adaptálhatóak Hadoop környezetbe, azonban néhány alkalommal komplex módosításokra van szükség, és a portolt algoritmus helyfoglalási igénye sokkal nagyobb lehet, mint az eredeti mûveleté.
 Ezek a tényezõk indokolták alternatív feldolgozó mechanizmusok kutatásának szükségességét.
@@ -472,6 +509,8 @@ mûveletek, ezáltal átfogó képet kaphatunk, a képfeldolgozás mely részein alkalma
 \bibitem{orleansMSR} Philip A. Bernstein, Sergey Bykov, Alan Geller, Gabriel Kliot, Jorgen Thelin: \textit{Orleans: Distributed Virtual Actors for Programmability and Scalability}, Microsoft Research
 
 \bibitem{mapAlgebra} \textit{Map Algebra: Global, Zonal, Focal and Local Operations}, http://gisgeography.com/map-algebra-global-zonal-focal-local/
+
+\bibitem{distributedImageProcessing} Giloi, W. Distributed Image Processing. In \textit{Advances in Digital Image Processing}, pages 249?263. 1979.
 
 \end{thebibliography}
 
