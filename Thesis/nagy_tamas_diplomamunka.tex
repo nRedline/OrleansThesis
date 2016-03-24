@@ -66,26 +66,26 @@ Lorem ipsum...
 
 % ------------------------------------------------------------------------------
 
-
-\chapter{Elméleti alapok}
-A fejezet célja betekintést nyújtani a dolgozat során érintett kulcsfontosságú elméleti témakörökbe.
+\chapter{Távérzékelt felvételek elemzése}
+A fejezet célja betekintést nyújtani távérzékelt felvételkiértékelés folyamatába.
 Elsõként a távérzékelés fogalma, fizikai és technikai alapjai, valamint alkalmazási lehetõségei kerülnek ismertetésre.
-Ezután a távérzékelt felvételek feldolgozási folyamata, és a folyamat során elvégzett mûveletek bemutatása következik.
+Ezután a távérzékelt felvételek kiértékelésének célja, feldolgozási folyamata
+és a folyamat során elvégzett mûveletek bemutatása következik.
 
 \section{A Távérzékelés}
 Távérzékelés alatt olyan adatgyûjtési és feldolgozási eljárásokat értünk, melynek során
-tárgyakról vagy területekrõl közvetve, azok érintése nélkül gyûjtünk és rögzítünk adatokat. \cite{noaa}
+tárgyakról vagy területekrõl közvetve, azok érintése nélkül gyûjtünk és rögzítünk adatokat.
 
 Manapság a távérzékelést leggyakrabban földfelszíni-, illetve légköri adatok begyûjtésére értjük, valamilyen légi, vagy ûrbéli szenzor segítségével. 
-Ezek a szenzorok a földfelszínrõl érkezõ energiát érzékelik, ez által alkotnak képet egy bizonyos területrõl. 
+Ezek a szenzorok a földfelszínrõl érkezõ energiát érzékelik, ez által alkotnak képet egy bizonyos területrõl. \cite{richards}
 
 \subsection{A távérzékelés fizikai és technikai alapjai}
 A távérzékelõ rendszereknek alapvetõen három fõ összetevõje van: A sugárforrás, a megfigyelés tárgyát képezõ földfelszín és az érzékelõ.
 
-Az érzékelt energia forrása alapján beszélhetünk passzív-, illetve aktív távérzékelõ szenzorokról.
-A passzív szenzorok valamilyen természetes energia sugárzását érzékelik, ez lehet a Föld által kibocsátott, vagy
-visszavert energia. Passzív szenzorok által leggyakrabban használt energiaforrás a Napból érkezõ visszavert energia.
-Az aktív szenzorok abban különböznek passzív társaiktól, hogy õk maguk sugározzák a földfelszínre az érzékelni kívánt energiát.
+Az érzékelt energia forrása alapján beszélhetünk \textit{passzív}-, illetve \textit{aktív }távérzékelõ szenzorokról.
+A \textit{passzív} szenzorok valamilyen természetes energia sugárzását érzékelik, ez lehet a Föld által kibocsátott, vagy
+visszavert energia. \textit{Passzív} szenzorok által leggyakrabban használt energiaforrás a Napból érkezõ visszavert energia.
+Az \textit{aktív} szenzorok abban különböznek passzív társaiktól, hogy õk maguk sugározzák a földfelszínre az érzékelni kívánt energiát.
 
 \begin{figure}[ht!]
 	\centering
@@ -93,17 +93,17 @@ Az aktív szenzorok abban különböznek passzív társaiktól, hogy õk maguk sugározzá
 	\caption{A távérzékelési rendszer összetevõi \label{remote_sensing_components}}
 \end{figure}
 
-A távérzékelt felvételek spektrális felbontása meghatározza, hogy az elektromágneses spektrumon belül mely
-hullámsávokat milyen részletességgel vételezi a szenzor. Az ún. \textit{pankromatikus} szenzorok egy spektrális
+A távérzékelt felvételek \textit{spektrális felbontás}a meghatározza, hogy az elektromágneses spektrumon belül mely
+hullámsávokat milyen részletességgel vételezi a szenzor. Az úgynevezett \textit{pankromatikus} szenzorok egy spektrális
 sávot felvételeznek, mely lefedi a teljes látható tartományt, valamint belenyúlhat a közeli infravörös tartományba.
 A \textit{multispektrális} szenzorok több különbözõ elektromágneses hullámsávban érzékelnek. A leggyakrabban használt
-multispektrális szenzorok sávszáma 3 és 7 között van, és a reflektív tartomány mellett a termális infravörös sávot
-is felvételezik.
+\textit{multispektrális} szenzorok sávszáma 3 és 7 között van, és a reflektív tartomány mellett 
+a termális infravörös sávot is felvételezik.
 
 Az érzékelõ a megadott hullámsávban beérkezõ mennyiséget digitális értékekké alakítja - az érzékelõk \textit{radiometriai felbontása} 
 a kvantálás finomságát jelzi. Minél több energiaszintet képes megkülönböztetni az szenzor, annál magasabb
 radiometriai felbontással rendelkezik. A legelterjedtebb nagyfelbontású multispektrális szenzoroknál 
-a legjellemzõbb a 7-8 bites felbontás, mely 128, illetve 256 különbözõ intenzitásszintnek felel meg.
+a 7-8 bites felbontás jellemzõ, mely 128, illetve 256 különbözõ intenzitásszintnek felel meg.
 
 Egy többsávos digitális felvételezés eredménye egy olyan mátrixként értelmezhetõ, melynek minden eleme egy elemi
 felszíndarabnak felel meg - a mátrix elemeinek pozíciója kapcsolatban van a felvételezett felszíndarab földrajzi
@@ -127,7 +127,7 @@ az egyes elemekhez tartozó intenzitásértékek vektora. A mátrix elemeinek koordin
 amelyet az elvégezni kívánt mûvelet megkövetel. \cite{remoteSensingLecture}
 
 \subsection{Távérzékelt felvételek alkalmazási területei}
-Az élet számos területén fehasználhatóak a távérzékeléssel nyert információk, például:
+Az élet számos területén felhasználhatóak a távérzékeléssel nyert információk, például:
 \begin{itemize}
 	\item \textbf{Katasztrófavédelem} 
 	\newline 
@@ -148,16 +148,16 @@ Az élet számos területén fehasználhatóak a távérzékeléssel nyert információk, pé
 A felhasználási területek közül fõként a katasztrófavédelemnél kiemelten fontos, hogy az érzékelés pillanatától számítva 
 mennyi késéssel juthatunk hozzá a kiértékelt adatokhoz - árvíz esetén például órák alatt változhat a vízszint, amelyrõl ha idõben
 értesülünk, megtehetjük a megfelelõ óvintézkedéseket, késlekedés esetén azonban jelentõs károk keletkezhetnek. A mûholdak visszatérési
-ideje csupán egy tényezõ az eredmény elõállításának gyorsaságában - kritikus lehet a már meglévõ adatok feldolgozásának sebessége is,
+ideje csupán egy tényezõ az eredmény elõállításának gyorsaságában - kritikus lehet a meglévõ adatok kiértékelésének sebessége is,
 tekintve hogy hatalmas méretû adatokkal kell dolgoznunk, a kiértékelõ eljárások legtöbbje pedig meglehetõsen komplex.
-Ez felveti olyan adatfeldolozó megoldások kutatásának szükségességét, amellyel a kiértékelés ideje csökkenthetõ.
+Ez felveti olyan adatfeldolgozó megoldások kutatásának szükségességét, amellyel a kiértékelés ideje csökkenthetõ.
 
 
 \section{Távérzékelt felvételek feldolgozása}
 A távérzékelés általánosságban a felvételezéstõl a tematikus információ-kivonásig tart. Elsõ lépésként a felvételek egy elõfeldolgozó
 fázison mennek keresztül, majd ezt követi a felvételek kiértékelése. A dolgozat során elemzett mûveletek egy része az elõfeldolgozásban, 
 a többi mûvelet pedig a képelemzésben használt, így megfelelõ képet kaphatunk, mely feldolgozási fázisban milyen hatékonysággal 
-használható a vizsgált rendszer. A következõ szakaszokban az egyes fázisok ismertetése mellett a vizsgált mûveletek bemutatásra kerülnek.
+használható a vizsgált rendszer. s
 
 \subsection{Elõfeldolgozás}
 Manapság számos mûhold szolgáltat távérzékelt ûrfelvételeket, melyek - a megfelelõ eszközök birtokában - 
@@ -169,21 +169,35 @@ kezelni, melyet \textit{geometriai korrekció}nak nevezünk.
 
 \textit{Intenzitás-korrekció} alatt azokat a mûveleteket értjük, melyekkel a felvétel képpontjaioz és az egyes spektrális sávokhoz tartozó
 sávonkénti intenzitást módosítjuk. Ide tartozik például a \textit{radiometriai korrekció}, valamint a különbözõ látványjavító mûveletek.
-Radiometriai korrekció alkalmazásával következtethetünk a földfelszín fizikai paramétereire. Az elsõ lépés a szenzorhoz ténylegesen eljutó
-sugárzás, a radiancia mennyiségének megállapítása. 
+\textit{Radiometriai korrekció} alkalmazásával következtethetünk a földfelszín fizikai paramétereire. Az elsõ lépés a szenzorhoz ténylegesen eljutó
+sugárzás, a \textit{radiancia} mennyiségének megállapítása. 
 Ebbõl számítható a \textit{ToA-reflektancia} (\textit{Top of Atmosphere - a légkör tetején mérhetõ reflektancia}), 
 mely a visszavert és a beesõ sugárzás arányának olyan közelítése, mely nem veszi figyelembe a sugárzás és a légkör közötti kölcsönhatást.
 
 Az egyes látványjavító mûveletek célja a felvétel vizuális megjelenítési tulajdonságainak megváltoztatása az emberi szemmel történõ
 értelmezés könnyítése érdekében. Látványjavító mûvelet például az \textit{invertálás}, valamint a különbözõ \textit{szûrések}. \cite{remoteSensingLecture}
 
-\subsection{Képelemzés}
-A felvételkiértékelés célja a felszínborítás, földfelszíni objektumok fizikai jellemzõinek megállapítása. A
- kívánt végeredmény rendszerint a megadott terület elemeinek osztályba sorolása, egy tematikus térkép elkészítése, 
- mely véges számú célosztállyal írja le a vizsgált területet. A felvételkiértékelés két alapvetõ módszere a 
-\textit{vizuális interpretáció} és a \textit{kvantitatív, numerikus kiértékelés}. A vizuális interpretáció során a tematikus döntéseket a
-felvételen látható információ alapján hozza meg a kiértékelõ személy, míg a numerikus kiértékelési módszereknél a tematikus döntések
-meghozatala a számítógépen, elõre beprogramozott feltételek alapján történik. Az osztályozási módszerek lehetnek pontonkénti mûveletek,
+\subsection{Tematikus osztályozás}
+A felvételkiértékelés célja a felszínborítás, földfelszíni objektumok fizikai jellemzõinek megállapítása. A felvételkiértékelés két alapvetõ módszere a 
+\textit{vizuális interpretáció} és a \textit{kvantitatív, numerikus kiértékelés}. 
+
+A vizuális interpretáció során a tematikus döntéseket a felvételen \textit{látható} információ alapján hozza meg a
+kiértékelõ személy - ez olyan esetekben hatékony eljárás, amikor \textit{geometriai összefüggések}, 
+\textit{struktúrák} felismerésére van szükség, melyet a számítógép nem képes azonosítani.
+
+Numerikus kiértékelés esetén a tematikus döntések meghozatala a számítógépen, 
+elõre megadott feltételek alapján történik. A számítógépes feldolgozás elõnye, hogy nagy mennyiségû
+adat feldolgozására is alkalmas, illetve az egyes textúrák közötti tónuskülönbségek mérésében és elkülönítésében
+is jobban teljesít, mint az emberi szem és agy rendszere. Mivel mindkét módszer rendelkezik jelentõs elõnyökkel
+a másikkal szemben, gyakran együttesen kerülnek alkalmazásra. 
+
+A \textit{tematikus osztályozás} egy kvantitatív kiértékelési mód, melynek célja egy olyan tematikus térkép
+elkészítése, mely véges számú célosztállyal írja le a vizsgált területet. A tematikus térkép minden pixeléhez a
+célosztály egy értéke tartozik.
+
+%TODO: Extend and recompose!
+
+A tematikus osztályozási módszerek lehetnek pontonkénti mûveletek,
 melyek figyelmen kívül hagyják a homogén területek szomszédos képpontjainak azonosságát (pl.: \textit{küszöbölõ eljárások}),
 valamint olyan mûveletek, amelyek már homogén területek sorozatán képesek elvégezni az osztályozást. Ezen homogén területek feltárásának
 és összekapcsolásának módja a \textit{szegmentálás}. A szegmentálás eredményeként egy tematikus térképet kapunk, mely minden képpontra
@@ -256,14 +270,30 @@ dinamikusan változhat.
 Sok esetben globális mûveletek is elvégezhetõk particionált módon, itt azonban mindenképp szükséges egy központi
 összefuttató lépés - ennek módszere az alkalmazott mûvelettõl függ.\cite{remoteSensingLecture}
 
+\section{Adatkezelés}
+%TODO: Compose
+
+
 % ------------------------------------------------------------------------------
 
-
-\chapter{Technológiai háttér}
-Ebben a fejezetben a távérzékelt felvételek feldolgozásához használt technológiák és platformok kerülnek bemutatásra.
+\chapter{Elosztott alkalmazások fejlesztése}
 
 
-\section{A Microsoft Orleans platform} %TODO Mention Azure!!!
+\section{MapReduce}
+
+\section{Hadoop}
+
+\section{Aktor modell}
+Az \textit{Aktor modell} egy olyan elosztott számítási modell melynek alapegységei az "\textit{aktorok}".
+Az aktorok egymástól izolált egységek, melyek aszinkron üzeneteken keresztül kommunikálnak egymással. 
+Egy aktor futása során mindig valamilyen üzenetre reagál - számítást végezhet, aktorokat hozhat létre, 
+további üzeneteket küldhet. Az aktorok jellemzõen egy számítási szállal rendelkeznek. Ez, valamint az aktorok
+\textit{enkapszuláció}ja és \textit{izolációja} más aktoroktól eliminálja a versenyhelyzetek kezelésének szükségességét
+aktor szinten. A fejlesztõknek nem szükséges \textit{lock}olást, \textit{mutex}eket és más versenyhelyzet-kezelõ megoldásokat
+alkalmazniuk, melyek nem tartoznak az alkalmazás logikájához. Az aktorok dinamikusan jönnek létre
+a rendelkezésre álló erõforrások alapján, ezáltal hatékony terheléselosztás alkalmazható\cite{dotnetOrleans}.
+
+\section{A Microsoft Orleans platform} %TODO Mention Azure
 Az Orleans egy - a Microsoft Research által fejlesztett - keretrendszer, amely megoldást ad 
 felhõalapú, elosztott alkalmazások építésére anélkül, hogy komplex tudást követelne a felhasználóktól
 az elosztott alkalmazásfejlesztés (konkurencia, skálázhatóság, stb.) területén.\cite{dotnetOrleans} 
@@ -295,18 +325,7 @@ logikájától a lehetõ legnagyobb mértékben izolálni. Ehhez egy korábbi ágens alap
 szolgált kiindulási pontként. Ennek egy virtualizált, felhõre felkészített verziója került implementálásra
 az Orleans keretrendszerben.
 
-
-\subsection{Actor model}
-Az \textit{Actor model} egy olyan elosztott számítási modell melynek számítási alapegységei az "\textit{aktorok}".
-Az aktorok egymástól izolált egységek, melyek aszinkron üzeneteken keresztül kommunikálnak egymással. 
-Egy aktor futása során mindig valamilyen üzenetre reagál - számítást végezhet, aktorokat hozhat létre, 
-további üzeneteket küldhet. Az aktorok jellemzõen egy számítási szállal rendelkeznek. Ez, valamint az aktorok
-állapotának enkapszulációja és izolációja más aktoroktól eliminálja a versenyhelyzetek kezelésének szükségességét
-aktor szinten. A fejlesztõknek nem szükséges lockolást, mutexeket és más versenyhezeteket kezelõ megoldásokat
-alkalmazniuk, melyek nem tartoznak az alkalmazás logikájához. Az aktorok dinamikusan jönnek létre
-a rendelkezésre álló erõforrások alapján, ezáltal hatékony terheléselosztás alkalmazható\cite{dotnetOrleans}.
-
-\subsection{Virtual Actor model} %Explain in detail
+\subsection{Virtuális Aktor modell} %Explain in detail
 Az Orleans rendszer egy módosított Actor modellt definiál, amelyet elosztott alkalmazások, valamint az
 Erlang nyelv Actor modellének implementációja ihletett, és teljes egészében a .NET keretrendszerre épül.
 Az Orleans aktorok (\textit{Grain}, szabad fordításban \textit{szemcse, gabonaszem}) a tradicionális
@@ -326,7 +345,7 @@ továbbítódnak, így a továbbítani kívánt objektumra az egyetlen megkötés a szeria
 A keretrendszer támogatja a standard beépített .NET szerializációs megoldásokat, saját szerializálóval is rendelkezik
 valamint lehetõséget biztosít egyedi szerializáló bevezetésére is az egyes üzenetekhez.
 
-\subsection{Alkalmazási lehetõségek} %Not the best section title.
+\subsubsection{Alkalmazási lehetõségek} %Not the best section title.
 Az Orleans környezet alapvetõen a Szolgáltatásorientált architektúra jegyében épült alkalmazások fejlesztését
 támogatja - egymástól teljesen izolált, önálló szervizek összessége, melyek jól skálázódnak, és egy meghatározott 
 mûvelet elvégzésére képesek. Egy komplex alkalmazás több száz, vagy akár több ezer szervizbõl is állhat, és a szervizek
@@ -345,6 +364,13 @@ feldolgozásához gyakran hatalmas méretû adatokkal kell dolgoznunk, a mûveletek k
 folyamatok adataihoz is hozzá kell férniük. A dolgozat része volt ezen szempontbéli különbségek kiküszöbölése
 a megfelelõ eredmény érdekében - a késõbbi fejezetekben az alkalmazott megoldások és az eredmények
 részletesen is tárgyalásra kerülnek.
+
+
+% ------------------------------------------------------------------------------
+
+
+\chapter{Technológiai háttér}
+Ebben a fejezetben a távérzékelt felvételek feldolgozásához használt technológiák és platformok kerülnek bemutatásra.
 
 \section{Az AEGIS térinformatikai keretrendszer}
 Az \textit{AEGIS }keretrendszer \textit{Eötvös Loránd Tudományegyetem Informatikai Karán} jelenleg is fejlesztés alatt
@@ -369,7 +395,7 @@ Az implementált algoritmusok kezelése is egy egységes alapon történik, az egyes 
 rendelkeznek, melynek segítségével kategorizálhatjuk a metódusokat, valamint optimalizálhatjuk a végrehajtást.
 
 
-
+%TODO Move to Hadoop section
 \subsubsection{Feldolgozás Hadoop architektúrán}
 Az AEGIS támogatja a \textit{Hadoop} architektúrával történõ adatkezelést, illetve feldolgozást.
 A rendszer megfelelõen kezeli nagyméretû bináris adatok \textit{Hadoop}ba történõ beolvasását (pl.: \textit{GeoTIFF} formában).
@@ -433,14 +459,19 @@ mûveletek, ezáltal átfogó képet kaphatunk, a képfeldolgozás mely részein alkalma
 % ------------------------------------------------------------------------------
 
 \begin{thebibliography}{9}
-\bibitem{noaa} National Oceanic and Atmospheric Administration, http://oceanservice.noaa.gov/facts/remotesensing.html
-\bibitem{dotnetOrleans} Orleans Documentation, http://dotnet.github.io/orleans
-\bibitem{orleansMSR} Microsoft Research Technical Report on Orleans, \newline http://research.microsoft.com/pubs/210931/Orleans-MSR-TR-2014-41.pdf
-\bibitem{soa} Service-oriented architecture, https://en.wikipedia.org/wiki/Service-oriented \textunderscore architecture
-\bibitem{remoteSensingLecture} László, I., Csornai, G., Fekete, I., Giachetta, R.: Távérzékelt felvételek elemzése, Egyetemi jegyzet, Eötvös Loránd Tudományegyetem Informatikai Kar, Budapest, 2014.
-\bibitem{mapAlgebra} Map Algebra: Global, Zonal, Focal and Local Operations, http://gisgeography.com/map-algebra-global-zonal-focal-local/
-\bibitem{aegis} Giachetta, R.: AEGIS - A state-of-the art component based spatio- temporal framework, OSGeo Journal 13.1, pp. 68-77, 2014.
-\bibitem{aegisHadoop} Giachetta, R., Fekete, I.: A case study of advancing remote sensing image analysis, Acta Cybernetica, 22, pp. 57-79, 2015.
+\bibitem{richards} Richards, J. A., Jia, X.: \textit{Remote Sensing Digital Image Analysis, An Introduction, fifth edition}, Springer, 2013, 978-3-642-30061-5.
+
+\bibitem{remoteSensingLecture} László, I., Csornai, G., Fekete, I., Giachetta, R.: \textit{Távérzékelt felvételek elemzése}, Egyetemi jegyzet, Eötvös Loránd Tudományegyetem Informatikai Kar, Budapest, 2014.
+
+\bibitem{aegis} Giachetta, R.: \textit{AEGIS - A state-of-the art component based spatio- temporal framework}, OSGeo Journal 13.1, pp. 68-77, 2014.
+
+\bibitem{aegisHadoop} Giachetta, R., Fekete, I.: \textit{A case study of advancing remote sensing image analysis}, Acta Cybernetica, 22, pp. 57-79, 2015.
+
+\bibitem{dotnetOrleans} \textit{Microsoft Orleans, A straightforward approach to building distributed, high-scale applications in .NET}, http://dotnet.github.io/orleans
+
+\bibitem{orleansMSR} Philip A. Bernstein, Sergey Bykov, Alan Geller, Gabriel Kliot, Jorgen Thelin: \textit{Orleans: Distributed Virtual Actors for Programmability and Scalability}, Microsoft Research
+
+\bibitem{mapAlgebra} \textit{Map Algebra: Global, Zonal, Focal and Local Operations}, http://gisgeography.com/map-algebra-global-zonal-focal-local/
 
 \end{thebibliography}
 
