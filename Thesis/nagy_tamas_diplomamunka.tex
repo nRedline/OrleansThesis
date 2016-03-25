@@ -30,6 +30,8 @@
 \usepackage{chngcntr}
 \usepackage{siunitx}
 
+%\usepackage[nottoc,numbib]{tocbibind}
+
 \counterwithout{figure}{chapter}
 
 \graphicspath {{figures/}}
@@ -297,12 +299,6 @@ rendszer teljesítménynövelésének ezen módja költséges, és a fejlesztéssel nyert 
 
 A teljesítménynövelés másik lehetséges módja az évek óta kutatott\cite{distributedImageProcessing}, és a számítási
 felhõk elterjedésével az utóbbi idõben leginkább teret nyert \textit{elosztott feldolgozás}.
-Az elosztott rendszerek olyan szoftverrendszerek, melyek komponensei fizikailag elkülönítve futnak, és futás során
-egymással hálózaton keresztül kommunikálnak.
-Az elosztott architektúra több jelentõs elõnnyel is rendelkezik az egy számítási egységgel rendelkezõ rendszerrel szemben:
-nagyobb \textit{hibatûrés}, hatékony \textit{terheléselosztás}, olcsó \textit{bõvíthetõség}.
-Az elosztott feldolgozás hátránya a komplexitásában nyilvánul meg - legtöbb esetben a feldolgozó mûveletek elosztott
-környezetre való felkészítése az algoritmusok módosításával jár.
 
 Távérzékelt felvételek elosztott feldolgozása úgy történik, hogy a feldolgozandó kép alkotó elemeit valamilyen tulajdonság alapján 
 (pixel értékek, spektrális intenzitásértékek) \textit{feldarabolunk}, az egyes feldolgozó egységek pedig ezen darabokat dolgozzák fel.
@@ -313,10 +309,78 @@ kulcsfontosságú egy elosztott rendszer teljesítményében.
 % ------------------------------------------------------------------------------
 
 \chapter{Elosztott alkalmazások fejlesztése}
+A fejezetben bemutatásra kerülnek a fõbb elosztott szoftverrendszerek elméleti alapjai, ezek néhány megvalósítása, valamint
+távérzékelt felvételek feldolgozásában lévõ alkalmazási lehetõségeik, külön részletezve a dolgozat
+témáját, a \textit{Microsoft Orleans} platformot.
 
-\section{Szolgáltatásorientált architektúra}
+Az \textit{elosztott rendszerek} olyan szoftverrendszerek, melyek komponensei fizikailag elkülönítve futnak, és futás során
+egymással hálózaton keresztül kommunikálnak. A komponensek saját processzorral és memóriával rendelkeznek (Szemben a párhuzamos
+rendszerekkel, amelyek a memóriát megosztják egymással).
+
+Az elosztott architektúra több jelentõs elõnnyel is rendelkezik az egy számítási egységgel rendelkezõ rendszerrel szemben:
+\textit{skálázhatóság} (a folyamat áteresztõképességének növelésének képessége), nagyobb \textit{hibatûrés}, 
+hatékony \textit{terheléselosztás}, olcsó \textit{bõvíthetõség}.
+Az elosztott feldolgozás hátránya a \textit{komplexitás}ában nyilvánul meg - 
+az egyes komponensek egymással való \textit{hálózati kommunikáció}ját 
+biztosítani kell, a kommunikációból adódó késést figyelembe kell venni, illetve kezelni kell a fellépõ \textit{konkurenciá}t.
+A hibaelhárítás, valamint a diagnosztizálás is sokkal bonyolultabbá válhat egy elosztott rendszerben.
+
+Ezen tényezõk indokolták olyan \textit{keretrendszerek} és \textit{architekturális koncepciók} kutatását, 
+melyek az elosztott alkalmazások fejlesztésének nehézségeire részben vagy egészben megoldást nyújtanak.
+A következõ részekben ezen koncepciók és néhány megvalósításuk kerül bemutatásra.
 
 \section{MapReduce}
+A \textit{MapReduce} nagy adathalmazok generálására és feldolgozására fejlesztett számítási modell.\cite{mapReduce}
+Egy MapReduce alkalmazás alkotóelemei \textit{Map} és \textit{Reduce} funkciók. A \textit{Map} funkció az input
+elemeibõl köztes \textit{kulcs/érték párok}at állít elõ, a \textit{Reduce} mûvelet pedig összevonja az összes olyan
+köztes elemet, melynek kulcsa megegyezik.
+A MapReduce paradigma alapján írt programok automatikusan párhuzamosíthatók, és skálázhatók. 
+A futtatókörnyezet végzi az adatok \textit{particionálás}át, vezérli a végrehajtást, kezeli a 
+\textit{gépek közötti kommunikáció}t és a fellépõ hibákat.
+Ezzel lehetõséget nyújt elosztott környezetek erõforrásainak kihasználására anélkül, hogy a fejlesztõktõl 
+komoly szaktudást követelne a párhuzamos és elosztott alkalmazásfejlesztés területén.
+
+\begin{figure}[ht!]
+	\centering
+	\captionsetup{width=0.8\textwidth, justification=centering}
+	\includegraphics[width=120mm]{figures/mapReduce.jpg}
+	\caption{A \textit{MapReduce} folyamat \label{mapReduceProcess}}
+\end{figure}
+
+\subsection{Hadoop}
+A MapReduce modell egy implementációja az \textit{Apache Software Foundation} által fejlesztett 
+\textit{Hadoop} keretrendszer. A rendszer komponenseinek tervezésénél a fõ szempont a hibatûrés volt - 
+bármilyen hardveres hiba elõfordulása természetes, és a keretrendszernek automatikusan kezelnie kell.
+
+A rendszer három fõ komponensbõl áll: A \textit{Hadoop Elosztott Fájlrendszer}bõl 
+(\textit{HDFS - Hadoop Distributed File System}), a \textit{Hadoop MapReduce} adatfeldolgozóból, valamint
+a \textit{Hadoop YARN}-ból, mely a rendszer erõforrás-kezelõje.
+A Hadoop a fájlokat blokkokra osztja, és szétosztja az egyes \textit{node}-ok között. Az adatok feldolgozása
+során a Hadoop a feldolgozó szoftvert feltölti minden \textit{node}-ra, így az adatok helyben kerülnek
+feldolgozásra (\textit{adatlokalitás}).
+
+\subsection{Térinformatikai alkalmazása}
+A Hadoop keretrendszer fejlesztésekor az alkalmazás fõ célterülete szöveges adatok feldolgozása volt.
+A rendszer terjedésével azonban megjelent az igény az informatika több különbözõ területén való
+alkalmazására. Ennek megfelelõen megjelentek a keretrendszer térinformatikai kiegészítései is
+(\textit{SpatialHadoop}\cite{spatialHadoop}, \textit{Hadoop-GIS}\cite{hadoopGIS}).
+
+
+%Az egyes
+%feldolgozó mûveletek módosítás nélkül végrehajthatóak egyszerû \textit{Map-}, illetve \textit{Reduce} függvényekként.
+%\cite{aegisHadoop}
+%Ez a korábban részletezett mûveletek munkaterületei közül a lokális illetve a fokális mûveletekre könnyedén
+%alkalmazható, regionális és globális mûveletek esetén általában szükséges egy olyan alternatív algoritmus alkalmazása,
+%amely az eredeti algoritmus kibõvítése egy központi feldolgozó (\textit{Reduce}) lépéssel.
+%Például a \textit{hisztogram kiegyenlítés} mûvelet egy globális mûvelet, melynek szüksége van az egész képre vonatkozó
+%hisztogram értékekre. Ekkor Hadoop architektúrán a mûvelet három különbözõ lépésbõl áll. Elõször egy \textit{Map}
+%függvényben kiszámítjuk az egyes hisztogram értékeket minden fájldarabra. A második, \textit{Reduce} lépés
+%összefésüli ezeket az értékeket, és elõállítja a teljes hisztogramot. A harmadik lépésben pedig egy újabb \textit{Map}
+%utasítás alkalmazza a hisztogramkiegyenlítést a kiszámított teljes hisztogramértékek alapján.
+%
+%A legtöbb esetben a mûveletek könnyedén adaptálhatóak Hadoop környezetbe, azonban néhány alkalommal komplex módosításokra van szükség, és a portolt algoritmus helyfoglalási igénye sokkal nagyobb lehet, mint az eredeti mûveleté.
+%Ezek a tényezõk indokolták alternatív feldolgozó mechanizmusok kutatásának szükségességét.
+
 
 \begin{figure}[ht!]
 	\centering
@@ -325,7 +389,23 @@ kulcsfontosságú egy elosztott rendszer teljesítményében.
 		\label{fig:histogram_map_reduce}}
 \end{figure}
 
-\section{Hadoop}
+
+\section{Szolgáltatásorientált architektúra}
+A legtöbb mai komplex felhõalapú rendszer a \textit{Szolgáltatásorientált architektrúra} alapján épül fel. 
+Az architektúra alapötlete, hogy az alkalmazást több különbözõ (gyakran több száz) szervizre bontjuk, 
+melyeket egymástól függetlenül telepítünk, illetve menedzselünk a rendszerben. Ezek a szervizek külön-külön
+képesek skálázódni, azonban ez nem biztosítja a rendszer egészének megfelelõ skálázódását. 
+
+%TODO Recompose
+A bejövõ terhelés növekedésének kezelési módja \textit{Szolgálatásorientált architektúrában} 
+az adatok felosztása szervizek között. 
+A szervizek dinamikusan, a szolgáltatás szünetelése nélkül particionálódnak, ekkor a partíciók
+nagyméretû konkurenciát generálhatnak a szerviz irányába - a jelenlegi eszközök azonban nem nyújtanak
+hatékony megoldást ennek kezelésére.
+
+Az n-rétegû architektúra a particionálás problémájának kezelését az adattárolási rétegre bízza. 
+Ekkor a megfelelõ teljesítmény elérése érdekében a felsõbb rétegeken különbözõ cachelési megoldások
+alkalmazása szükséges, ez azonban további komplexitást eredményez a rendszerben.\cite{dotnetOrleans} 
 
 \section{Aktor modell}
 Az \textit{Aktor modell} egy olyan elosztott számítási modell melynek alapegységei az "\textit{aktorok}".
@@ -347,23 +427,7 @@ nem szükséges ezzel foglalkozniuk.
 A keretrendszert több jelenleg is futó projekten hatékonyan alkalmazták, 2015 januárjában pedig nyílt forráskódú
 licenccel a nyilvánosság elé tárták.
 
-\subsection{Motiváció}
-A legtöbb mai komplex felhõalapú rendszer a \textit{Szolgáltatásorientált architektrúra} alapján épül fel. 
-Az architektúra alapötlete, hogy az alkalmazást több különbözõ (gyakran több száz) szervizre bontjuk, 
-melyeket egymástól függetlenül telepítünk, illetve menedzselünk a rendszerben. Ezek a szervizek külön-külön
-képesek skálázódni, azonban ez nem biztosítja a rendszer egészének megfelelõ skálázódását. 
-
-%Recompose
-A bejövõ terhelés növekedésének kezelési módja \textit{Szolgálatásorientált architektúrában} 
-az adatok felosztása szervizek között. 
-A szervizek dinamikusan, a szolgáltatás szünetelése nélkül particionálódnak, ekkor a partíciók
-nagyméretû konkurenciát generálhatnak a szerviz irányába - a jelenlegi eszközök azonban nem nyújtanak
-hatékony megoldást ennek kezelésére.
-
-Az n-rétegû architektúra a particionálás problémájának kezelését az adattárolási rétegre bízza. 
-Ekkor a megfelelõ teljesítmény elérése érdekében a felsõbb rétegeken különbözõ cachelési megoldások
-alkalmazása szükséges, ez azonban további komplexitást eredményez a rendszerben.\cite{dotnetOrleans} 
-
+%TODO Link Service-oriented architecture
 Az Orleans rendszer törekszik a fent említett nehézségeket keretrendszer szinten megoldani és az alkalmazás üzleti
 logikájától a lehetõ legnagyobb mértékben izolálni. Ehhez egy korábbi ágens alapú modell, az \textit{Actor model}
 szolgált kiindulási pontként. Ennek egy virtualizált, felhõre felkészített verziója került implementálásra
@@ -390,7 +454,7 @@ A keretrendszer támogatja a standard beépített .NET szerializációs megoldásokat,
 valamint lehetõséget biztosít egyedi szerializáló bevezetésére is az egyes üzenetekhez.
 
 \subsubsection{Alkalmazási lehetõségek} %Not the best section title.
-Az Orleans környezet alapvetõen a Szolgáltatásorientált architektúra jegyében épült alkalmazások fejlesztését
+Az Orleans környezet alapvetõen a Szolgáltatás-orientált architektúra jegyében épült alkalmazások fejlesztését
 támogatja - egymástól teljesen izolált, önálló szervizek összessége, melyek jól skálázódnak, és egy meghatározott 
 mûvelet elvégzésére képesek. Egy komplex alkalmazás több száz, vagy akár több ezer szervizbõl is állhat, és a szervizek
 száma az alkalmazás terheltségének változásával dinamikusan nõhet, illetve csökkenhet.
@@ -443,23 +507,10 @@ rendelkeznek, melynek segítségével kategorizálhatjuk a metódusokat, valamint opt
 \subsubsection{Feldolgozás Hadoop architektúrán}
 Az AEGIS támogatja a \textit{Hadoop} architektúrával történõ adatkezelést, illetve feldolgozást.
 A rendszer megfelelõen kezeli nagyméretû bináris adatok \textit{Hadoop}ba történõ beolvasását (pl.: \textit{GeoTIFF} formában).
-Az input adat opcionálisan particionálható, ezáltal elosztottan, párhuzamos módon is feldolgozható. Az egyes
-feldolgozó mûveletek módosítás nélkül végrehajthatóak egyszerû \textit{Map-}, illetve \textit{Reduce} függvényekként.
-\cite{aegisHadoop}
-Ez a korábban részletezett mûveletek munkaterületei közül a lokális illetve a fokális mûveletekre könnyedén
-alkalmazható, regionális és globális mûveletek esetén általában szükséges egy olyan alternatív algoritmus alkalmazása,
-amely az eredeti algoritmus kibõvítése egy központi feldolgozó (\textit{Reduce}) lépéssel.
-Például a \textit{hisztogram kiegyenlítés} mûvelet egy globális mûvelet, melynek szüksége van az egész képre vonatkozó
-hisztogram értékekre. Ekkor Hadoop architektúrán a mûvelet három különbözõ lépésbõl áll. Elõször egy \textit{Map}
-függvényben kiszámítjuk az egyes hisztogram értékeket minden fájldarabra. A második, \textit{Reduce} lépés
-összefésüli ezeket az értékeket, és elõállítja a teljes hisztogramot. A harmadik lépésben pedig egy újabb \textit{Map}
-utasítás alkalmazza a hisztogramkiegyenlítést a kiszámított teljes hisztogramértékek alapján.
-
-A legtöbb esetben a mûveletek könnyedén adaptálhatóak Hadoop környezetbe, azonban néhány alkalommal komplex módosításokra van szükség, és a portolt algoritmus helyfoglalási igénye sokkal nagyobb lehet, mint az eredeti mûveleté.
-Ezek a tényezõk indokolták alternatív feldolgozó mechanizmusok kutatásának szükségességét.
+Az input adat opcionálisan particionálható, ezáltal elosztottan, párhuzamos módon is feldolgozható. 
 
 
-% ------------------------------------------------------- -----------------------
+% ------------------------------------------------------------------------------
 
 \chapter{Megvalósítás}
 
@@ -495,6 +546,13 @@ mûveletek, ezáltal átfogó képet kaphatunk, a képfeldolgozás mely részein alkalma
 
 % ------------------------------------------------------------------------------
 
+
+\cleardoublepage
+
+\phantomsection
+
+\addcontentsline{toc}{chapter}{Bibliography}
+
 \begin{thebibliography}{9}
 \bibitem{richards} Richards, J. A., Jia, X.: \textit{Remote Sensing Digital Image Analysis, An Introduction, fifth edition}, Springer, 2013, 978-3-642-30061-5.
 
@@ -510,7 +568,16 @@ mûveletek, ezáltal átfogó képet kaphatunk, a képfeldolgozás mely részein alkalma
 
 \bibitem{mapAlgebra} \textit{Map Algebra: Global, Zonal, Focal and Local Operations}, http://gisgeography.com/map-algebra-global-zonal-focal-local/
 
-\bibitem{distributedImageProcessing} Giloi, W. Distributed Image Processing. In \textit{Advances in Digital Image Processing}, pages 249?263. 1979.
+\bibitem{distributedImageProcessing} Giloi, W. Distributed Image Processing. In \textit{Advances in Digital Image Processing}, pages 249-263. 1979.
+
+\bibitem{mapReduce} Dean, J. and Ghemawat, S. \textit{MapReduce: Simplified Data Processing on Large Clusters}. 
+		In \textit{Proceedings of the 6th Conference on Symposium on Opearting Systems Design \& Implementation}, volume 6 of \textit{OSDI?04}, pages 10-10, 2004.
+
+\bibitem{spatialHadoop} Eldawy, A. and Mokbel, M. F. \textit{SpatialHadoop: An Efficient Mapreduce Framework for Spatial Data}. 
+					Data Engineering (ICDE), 2015 IEEE 31st International Conference
+					
+\bibitem{hadoopGIS} Ablimit Aji , Fusheng Wang , Hoang Vo , Rubao Lee , Qiaoling Liu , Xiaodong Zhang , Joel Saltz, 
+\textit{Hadoop GIS: a high performance spatial data warehousing system over mapreduce}, Proceedings of the VLDB Endowment, v.6 n.11, p.1009-1020, August 2013
 
 \end{thebibliography}
 
