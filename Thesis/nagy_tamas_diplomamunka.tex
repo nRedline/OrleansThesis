@@ -29,6 +29,7 @@
 
 \usepackage{chngcntr}
 \usepackage{siunitx}
+\usepackage{float}
 
 %\usepackage[nottoc,numbib]{tocbibind}
 
@@ -231,7 +232,7 @@ van szükség. Ez alapján négy csoportot különböztetünk meg
 	értékek felhasználásával dolgozik. Ide tartoznak például a különbözõ \textit{szûrõ} mûveletek.
 \end{itemize}
 
-\begin{figure}[h!] %TODO: Position
+\begin{figure}[h!]
 	\minipage{0.5\textwidth}
 	\includegraphics[width=\linewidth]{figures/localOperation.png}
 	{\caption{Lokális mûvelet}}\label{fig:localOperation}
@@ -258,7 +259,7 @@ van szükség. Ez alapján négy csoportot különböztetünk meg
 	kialakítása	során a képpont elhelyezkedését már nem vesszük figyelembe, csupán a spektrális tulajdonságait.
 \end{itemize}
 
-\begin{figure}[h!] %TODO: Position
+\begin{figure}[h!]
 	\minipage{0.5\textwidth}
 	\includegraphics[width=\linewidth]{figures/zonalOperation.png}
 	{\caption{Regionális mûvelet}}\label{fig:zonalOperation}
@@ -356,41 +357,73 @@ A rendszer három fõ komponensbõl áll: A \textit{Hadoop Elosztott Fájlrendszer}bõ
 (\textit{HDFS - Hadoop Distributed File System}), a \textit{Hadoop MapReduce} adatfeldolgozóból, valamint
 a \textit{Hadoop YARN}-ból, mely a rendszer erõforrás-kezelõje.
 A Hadoop a fájlokat blokkokra osztja, és szétosztja az egyes \textit{node}-ok között. Az adatok feldolgozása
-során a Hadoop a feldolgozó szoftvert feltölti minden \textit{node}-ra, így az adatok helyben kerülnek
+során a Hadoop a feldolgozó szoftvert tölti fel minden \textit{node}-ra, így az adatok helyben kerülnek
 feldolgozásra (\textit{adatlokalitás}).
 
-\subsection{Térinformatikai alkalmazása}
+\subsubsection{Térinformatikai alkalmazása}
 A Hadoop keretrendszer fejlesztésekor az alkalmazás fõ célterülete szöveges adatok feldolgozása volt.
 A rendszer terjedésével azonban megjelent az igény az informatika több különbözõ területén való
-alkalmazására. Ennek megfelelõen megjelentek a keretrendszer térinformatikai kiegészítései is
-(\textit{SpatialHadoop}\cite{spatialHadoop}, \textit{Hadoop-GIS}\cite{hadoopGIS}).
+alkalmazására. Ennek megfelelõen megjelentek a keretrendszer térinformatikai kiterjesztései is
+\cite{spatialHadoop,hadoopGIS}, melyek
+támogatják téradatok tárolását, indexelését, és \textit{MapReduce} alapú feldolgozását.
+Az egyes feldolgozó mûveletek közül a lokális, illetve a fokális mûveletek könnyedén alkalmazhatók
+egyszerû \textit{Map} függvényekként, regionális és globális esetben általában szükséges egy olyan
+alternatív algoritmus bevezetése, amely az eredeti algoritmus kiegészítése egy (vagy több) 
+\textit{Reduce} lépéssel.
 
-
-%Az egyes
-%feldolgozó mûveletek módosítás nélkül végrehajthatóak egyszerû \textit{Map-}, illetve \textit{Reduce} függvényekként.
-%\cite{aegisHadoop}
-%Ez a korábban részletezett mûveletek munkaterületei közül a lokális illetve a fokális mûveletekre könnyedén
-%alkalmazható, regionális és globális mûveletek esetén általában szükséges egy olyan alternatív algoritmus alkalmazása,
-%amely az eredeti algoritmus kibõvítése egy központi feldolgozó (\textit{Reduce}) lépéssel.
-%Például a \textit{hisztogram kiegyenlítés} mûvelet egy globális mûvelet, melynek szüksége van az egész képre vonatkozó
-%hisztogram értékekre. Ekkor Hadoop architektúrán a mûvelet három különbözõ lépésbõl áll. Elõször egy \textit{Map}
-%függvényben kiszámítjuk az egyes hisztogram értékeket minden fájldarabra. A második, \textit{Reduce} lépés
-%összefésüli ezeket az értékeket, és elõállítja a teljes hisztogramot. A harmadik lépésben pedig egy újabb \textit{Map}
-%utasítás alkalmazza a hisztogramkiegyenlítést a kiszámított teljes hisztogramértékek alapján.
-%
-%A legtöbb esetben a mûveletek könnyedén adaptálhatóak Hadoop környezetbe, azonban néhány alkalommal komplex módosításokra van szükség, és a portolt algoritmus helyfoglalási igénye sokkal nagyobb lehet, mint az eredeti mûveleté.
-%Ezek a tényezõk indokolták alternatív feldolgozó mechanizmusok kutatásának szükségességét.
-
-
-\begin{figure}[ht!]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=150mm]{figures/histogram_map_reduce.jpg}
 	\caption{Hisztogramkiegyenlítés \textit{MapReduce} alkalmazásával \cite{aegisHadoop}
 		\label{fig:histogram_map_reduce}}
 \end{figure}
 
+Például a \textit{hisztogram kiegyenlítés} mûvelet egy globális mûvelet, melynek szüksége van az egész képre vonatkozó
+hisztogram értékekre. Ekkor Hadoop architektúrán a mûvelet három különbözõ lépésbõl áll. Elõször egy \textit{Map}
+függvényben kiszámítjuk az egyes hisztogram értékeket minden fájldarabra. A második, \textit{Reduce} lépés
+összefésüli ezeket az értékeket, és elõállítja a teljes hisztogramot. A harmadik lépésben pedig egy újabb \textit{Map}
+utasítás alkalmazza a hisztogramkiegyenlítést a kiszámított teljes hisztogramértékek alapján.
 
-\section{Szolgáltatásorientált architektúra}
+Összességében elmondható\cite{aegisHadoop}, hogy a legtöbb esetben a mûveletek könnyedén adaptálhatók Hadoop környezetbe, 
+azonban néhány alkalommal komplex módosításokra van szükség, és a portolt algoritmus helyfoglalási idénye sokkal nagyobb
+lehet, mint az eredeti mûveleté. Ezen tényezõk indokolták további alternatív feldolgozó mechanizmusok kutatásának szükségét.
+
+\section{Aktor modell}
+Az \textit{Aktor modell} egy olyan konkurens matematikai modell, melynek alapegységei az "\textit{aktorok}".
+Az aktorok egymástól izolált egységek, melyek direkt módon, aszinkron üzeneteken keresztül kommunikálnak egymással. 
+Egy aktor futása során mindig valamilyen üzenetre reagál - számítást végezhet, aktorokat hozhat létre, 
+további üzeneteket küldhet, valamint beállíthatja, hogyan fog reagálni a következõ üzenetre. 
+
+Az aktorok jellemzõen egy számítási szállal rendelkeznek, az állapotuk enkapszulált, és izolált a többi aktortól. 
+Ez eliminálja a versenyhelyzetek kezelésének szükségességét aktor szinten. 
+A fejlesztõknek nem szükséges \textit{lock}olást, \textit{mutex}eket és más versenyhelyzet-kezelõ megoldásokat
+alkalmazniuk, melyek nem tartoznak az alkalmazás logikájához. Az aktorok dinamikusan jönnek létre
+a rendelkezésre álló erõforrások alapján, ezáltal hatékony terheléselosztás alkalmazható.
+
+%TODO Recompose and Extend!
+%http://www.doc.ic.ac.uk/~nd/surprise_97/journal/vol2/pjm2/
+%http://www.javaworld.com/article/2077999/java-concurrency/understanding-actor-concurrency--part-1--actors-in-erlang.html
+%http://berb.github.io/diploma-thesis/original/054_actors.html
+%http://arxiv.org/ftp/arxiv/papers/1008/1008.1459.pdf
+
+
+\section{A Microsoft Orleans platform} %TODO Mention Azure
+Az \textit{Orleans} egy - a \textit{Microsoft Research} által fejlesztett - keretrendszer, amely megoldást ad 
+felhõalapú, elosztott alkalmazások építésére anélkül, hogy komplex tudást követelne a felhasználóktól
+az elosztott alkalmazásfejlesztés (konkurencia, skálázhatóság, stb.) területén.\cite{dotnetOrleans} 
+A platform igyekszik a felhõalapú fejlesztés nehézségeit a "motorháztetõ alá" rejteni, így a felhasználóknak 
+nem szükséges ezzel foglalkozniuk.
+
+A keretrendszert több jelenleg is futó projekten hatékonyan alkalmazták, 2015 januárjában pedig nyílt forráskódú
+licenccel a nyilvánosság elé tárták.
+
+%TODO This refers to Szolgáltatásorientált architektúra which is presented laters
+Az Orleans rendszer törekszik a fent említett nehézségeket keretrendszer szinten megoldani és az alkalmazás üzleti
+logikájától a lehetõ legnagyobb mértékben izolálni. Ehhez egy korábbi ágens alapú modell, az \textit{Actor model}
+szolgált kiindulási pontként. Ennek egy virtualizált, felhõre felkészített verziója került implementálásra
+az Orleans keretrendszerben.
+
+\subsection{Szolgáltatásorientált architektúra}
 A legtöbb mai komplex felhõalapú rendszer a \textit{Szolgáltatásorientált architektrúra} alapján épül fel. 
 Az architektúra alapötlete, hogy az alkalmazást több különbözõ (gyakran több száz) szervizre bontjuk, 
 melyeket egymástól függetlenül telepítünk, illetve menedzselünk a rendszerben. Ezek a szervizek külön-külön
@@ -407,33 +440,7 @@ Az n-rétegû architektúra a particionálás problémájának kezelését az adattárolási
 Ekkor a megfelelõ teljesítmény elérése érdekében a felsõbb rétegeken különbözõ cachelési megoldások
 alkalmazása szükséges, ez azonban további komplexitást eredményez a rendszerben.\cite{dotnetOrleans} 
 
-\section{Aktor modell}
-Az \textit{Aktor modell} egy olyan elosztott számítási modell melynek alapegységei az "\textit{aktorok}".
-Az aktorok egymástól izolált egységek, melyek aszinkron üzeneteken keresztül kommunikálnak egymással. 
-Egy aktor futása során mindig valamilyen üzenetre reagál - számítást végezhet, aktorokat hozhat létre, 
-további üzeneteket küldhet. Az aktorok jellemzõen egy számítási szállal rendelkeznek. Ez, valamint az aktorok
-\textit{enkapszuláció}ja és \textit{izolációja} más aktoroktól eliminálja a versenyhelyzetek kezelésének szükségességét
-aktor szinten. A fejlesztõknek nem szükséges \textit{lock}olást, \textit{mutex}eket és más versenyhelyzet-kezelõ megoldásokat
-alkalmazniuk, melyek nem tartoznak az alkalmazás logikájához. Az aktorok dinamikusan jönnek létre
-a rendelkezésre álló erõforrások alapján, ezáltal hatékony terheléselosztás alkalmazható\cite{dotnetOrleans}.
-
-\section{A Microsoft Orleans platform} %TODO Mention Azure
-Az Orleans egy - a Microsoft Research által fejlesztett - keretrendszer, amely megoldást ad 
-felhõalapú, elosztott alkalmazások építésére anélkül, hogy komplex tudást követelne a felhasználóktól
-az elosztott alkalmazásfejlesztés (konkurencia, skálázhatóság, stb.) területén.\cite{dotnetOrleans} 
-A platform igyekszik a felhõalapú fejlesztés nehézségeit a "motorháztetõ alá" rejteni, így a felhasználóknak 
-nem szükséges ezzel foglalkozniuk.
-
-A keretrendszert több jelenleg is futó projekten hatékonyan alkalmazták, 2015 januárjában pedig nyílt forráskódú
-licenccel a nyilvánosság elé tárták.
-
-%TODO Link Service-oriented architecture
-Az Orleans rendszer törekszik a fent említett nehézségeket keretrendszer szinten megoldani és az alkalmazás üzleti
-logikájától a lehetõ legnagyobb mértékben izolálni. Ehhez egy korábbi ágens alapú modell, az \textit{Actor model}
-szolgált kiindulási pontként. Ennek egy virtualizált, felhõre felkészített verziója került implementálásra
-az Orleans keretrendszerben.
-
-\subsection{Virtuális Aktor modell} %Explain in detail
+\subsection{Virtuális Aktor modell} %TODO Explain in detail
 Az Orleans rendszer egy módosított Actor modellt definiál, amelyet elosztott alkalmazások, valamint az
 Erlang nyelv Actor modellének implementációja ihletett, és teljes egészében a .NET keretrendszerre épül.
 Az Orleans aktorok (\textit{Grain}, szabad fordításban \textit{szemcse, gabonaszem}) a tradicionális
@@ -453,7 +460,7 @@ továbbítódnak, így a továbbítani kívánt objektumra az egyetlen megkötés a szeria
 A keretrendszer támogatja a standard beépített .NET szerializációs megoldásokat, saját szerializálóval is rendelkezik
 valamint lehetõséget biztosít egyedi szerializáló bevezetésére is az egyes üzenetekhez.
 
-\subsubsection{Alkalmazási lehetõségek} %Not the best section title.
+\subsubsection{Alkalmazási lehetõségek} %TODO Not the best section title.
 Az Orleans környezet alapvetõen a Szolgáltatás-orientált architektúra jegyében épült alkalmazások fejlesztését
 támogatja - egymástól teljesen izolált, önálló szervizek összessége, melyek jól skálázódnak, és egy meghatározott 
 mûvelet elvégzésére képesek. Egy komplex alkalmazás több száz, vagy akár több ezer szervizbõl is állhat, és a szervizek
@@ -503,7 +510,6 @@ Az implementált algoritmusok kezelése is egy egységes alapon történik, az egyes 
 rendelkeznek, melynek segítségével kategorizálhatjuk a metódusokat, valamint optimalizálhatjuk a végrehajtást.
 
 
-%TODO Move to Hadoop section
 \subsubsection{Feldolgozás Hadoop architektúrán}
 Az AEGIS támogatja a \textit{Hadoop} architektúrával történõ adatkezelést, illetve feldolgozást.
 A rendszer megfelelõen kezeli nagyméretû bináris adatok \textit{Hadoop}ba történõ beolvasását (pl.: \textit{GeoTIFF} formában).
@@ -578,6 +584,8 @@ mûveletek, ezáltal átfogó képet kaphatunk, a képfeldolgozás mely részein alkalma
 					
 \bibitem{hadoopGIS} Ablimit Aji , Fusheng Wang , Hoang Vo , Rubao Lee , Qiaoling Liu , Xiaodong Zhang , Joel Saltz, 
 \textit{Hadoop GIS: a high performance spatial data warehousing system over mapreduce}, Proceedings of the VLDB Endowment, v.6 n.11, p.1009-1020, August 2013
+
+\bibitem{actorOrig} Carl Hewitt, et al. \textit{Actor Induction and Meta-evaluation} Conference Record of ACM Symposium on Principles of Programming Languages, January 1974.
 
 \end{thebibliography}
 
