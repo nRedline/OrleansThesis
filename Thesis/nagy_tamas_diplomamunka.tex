@@ -60,6 +60,7 @@
 % ------------------------------------------------------------------------------
 % Tartalomjegyzék
 
+%TODO Fix Bibliography
 \tableofcontents
 
 % ------------------------------------------------------------------------------
@@ -470,31 +471,51 @@ Ebben a fejezetben a távérzékelt felvételek feldolgozásához használt technológiá
 
 \section{Az AEGIS térinformatikai keretrendszer}
 Az \textit{AEGIS} keretrendszer \textit{Eötvös Loránd Tudományegyetem Informatikai Karán} jelenleg is fejlesztés alatt
-álló térinformatikai keretrendszer, melynek fõ célja térinformaikai algoritmusok, megoldások kutatása és fejlesztése.
+álló térinformatikai keretrendszer, melynek fõ célja térinformaikai algoritmusok, megoldások \textit{kutatás}a és \textit{fejlesztés}e.
 A rendszer téradatok széles spektrumát támogatja, például: \textit{vektoros adathalmazok}, \textit{raszter felvételek}
 valamint \textit{pontfelhõk}. A rendszer egy platformfüggetlen osztálykönyvtár, melynek fejlesztése C\# nyelven
 történik, alapja a \textit{.NET keretrendszer}, illetve a \textit{Mono Framework}. A fejlesztés a komponens alapú
 architektúra jegyében történik, mely lehetõséget ad a rendszer bõvítésére, valamint az újrafelhasználhatóságra.
-Ennek segítségével az egyes komponensek könnyedén integrálhatóak más alkalmazásokba. \cite{aegis}
+Ennek segítségével az egyes komponensek könnyedén integrálhatóak más alkalmazásokba \cite{aegis},
+így az Orleans rendszerbe is beilleszthetõ volt. 
+Mindezek mellett az AEGIS keretrendszer rendelkezik azokkal a távérzékelt adatfeldolgozó
+mûveletekkel, amelyek a dolgozatban kutatásra kerültek. Ezek alapján a rendszer megfelelõ környezetet
+biztosított az Orleans térinformatikai kiegészítésére.
 
-\begin{figure}[ht!]
-	\centering
-	\includegraphics[width=90mm]{figures/aegis_components.jpg}
-	\caption{Az \textit{AEGIS} rendszer komponensei \cite{aegis}
-	\label{fig:aegis_components}}
-\end{figure}
+%\begin{figure}[ht!]
+%	\centering
+%	\includegraphics[width=90mm]{figures/aegis_components.jpg}
+%	\caption{Az \textit{AEGIS} rendszer komponensei
+%	\label{fig:aegis_components}}
+%\end{figure}
 
-
+\subsubsection{Adat-, illetve mûveleti modell}
 A rendszer adatmodellje az \textit{Open Geospatial Consortium (OGC)} szervezet által definiált
 \textit{Simple Feature Access (SFA)} szabvány. A szabványnak megfelelõen a rendszer minden téradatot 
 (beleértve a raszteres képi adatokat is) egységes (\textit{Geometry}) formában kezel. 
 Az implementált algoritmusok kezelése is egy egységes alapon történik, az egyes mûveletek (\textit{Operation}) metaadatokkal (\textit{OperationMethod})
 rendelkeznek, melynek segítségével kategorizálhatjuk a metódusokat, valamint optimalizálhatjuk a végrehajtást.
 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=110mm]{figures/aegis_data_model_extensions.png}
+	\caption{Az \textit{AEGIS} adatmodellje
+		\label{fig:aegis_data_model}}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=150mm]{figures/aegis_processing.png}
+	\caption{Az \textit{AEGIS} mûveleti modellje
+		\label{fig:aegis_operations}}
+\end{figure}
+
+
+
 
 \subsubsection{Feldolgozás Hadoop architektúrán}
 Az AEGIS támogatja a \textit{Hadoop} architektúrával történõ adatkezelést, illetve feldolgozást.
-A rendszer megfelelõen kezeli nagyméretû bináris adatok \textit{Hadoop}ba történõ beolvasását (pl.: \textit{GeoTIFF} formában).
+A rendszer megfelelõen kezeli nagyméretû bináris adatok \textit{HDFS}-be történõ beolvasását (pl.: \textit{GeoTIFF} formában).
 Az input adat opcionálisan particionálható, ezáltal elosztottan, párhuzamos módon is feldolgozható. 
 
 
