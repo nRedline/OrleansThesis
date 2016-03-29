@@ -413,24 +413,49 @@ pl.: a \textit{Scala}, illetve a \textit{Microsoft Orleans}.
 \section{A Microsoft Orleans platform} %TODO Mention Azure
 Az \textit{Orleans} egy - a \textit{Microsoft Research} által fejlesztett - keretrendszer, 
 mely lehetõséget ad megbízható és skálázható felhõalapú alkalmazások fejlesztésére.
-A keretrendszer modellje az aktor modellen alapul, így konkurencia és a skálázhatóság
-nem jelenik meg alkalmazás szinten, ezt a rendszer beépítetten kezeli.
 
-A keretrendszert több jelenleg is futó projekten hatékonyan alkalmazták, 2015 januárjában pedig nyílt forráskódú
-licenccel a nyilvánosság elé tárták.
+A tradicionális aktor modell implementációk - jóllehet hatékony megoldást adnak az elosztott alkalmazásfejlesztésre -
+több elosztott rendszerrel kapcsolatos probléma kezelését a fejlesztõkre bízzák. A fejlesztõknek 
+kezelniük kell az aktorok életciklusát (hiba esetén történõ leállás esetén az aktorok újraaktiválását), a rendszerben
+történõ elhelyezését, valamint versenyhelyzetek kezelését.
+Az Orleans programozási modellje (\textit{Virtual Actor Model - Virtuális Aktor Modell})
+az aktor modell egy olyan kiterjesztése, amely az aktorokat virtuális entitásokként kezeli, mely eliminálja a 
+az elosztott erõforráskezelés és a megbízhatóság alkalmazás szinten történõ kezelését, eliminálja a konkurenciát, ezáltal
+nem követel komplex tudást a fejlesztõktõl az elosztott alkalmazásfejlesztés területén.
 
-Az Orleans rendszer törekszik a fent említett nehézségeket keretrendszer szinten megoldani és az alkalmazás üzleti
-logikájától a lehetõ legnagyobb mértékben izolálni. 
-A rendszer alapja az aktor modell, melynek egy virtualizált, felhõre felkészített verziója került
-implementálásra.
+A keretrendszert a \textit{Microsoft Windows Azure} számítási \textit{felhõben} több jelenleg is futó projekten 
+hatékonyan alkalmazták, 2015 januárjában pedig nyílt forráskódú licenccel a nyilvánosság elé tárták.
 
-\subsection{Virtuális Aktor modell} %TODO Explain in detail
+\subsection{Virtuális Aktor modell}
 Az Orleans rendszer egy módosított Aktor modellt definiál, amelyet elosztott alkalmazások, valamint az
 Erlang nyelv Aktor modellének implementációja ihletett, és teljes egészében a .NET keretrendszerre épül.
-Az Orleans aktorok (\textit{Grain}, szabad fordításban \textit{szemcse, gabonaszem}) a tradicionális
-modelltõl eltérõen virtuálisak - Az Orleans futtatókörnyezet kezeli az aktorok aktiválását egy szerveren
-(\textit{Orleans Silo}), valamint ha a példány egy bizonyos ideig kihasználatlanul marad, a futtatókörnyezet
-elvégzi a példány deaktiválását és felszabadítását. A megfelelõ skálázhatóság érdekében a  kommunikáció aszinkron
+Az Orleans aktorok (\textit{Grain}, szabad fordításban \textit{szemcse, gabonaszem}) a rendszer legkisebb
+számítási alapegységei. Egy aktor enkapszulálja az állapotát és a viselkedését, és az aktorok nem osztanak meg
+memóriát egymással, így két aktor között az egyetlen kommunikációs mód az aszinkron üzenetküldés.
+
+Az aktorok az Orleans rendszerben a tradicionális modelltõl eltérõen virtuálisak. 
+Egy aktor így elméletben mindig létezik, nem hozható létre és nem semmisíthetõ
+meg manuálisan. Az aktorok létezése nem függ a példányok számától, és nem függ futtató szerver állapotától.
+Mivel az aktorok mindig léteznek, ezért mindig elérhetõek
+
+Az Orleans futtatókörnyezet automatikusan kezeli az aktorok példányosítását (\textit{aktiváció}) és megsemmisítését. 
+Az alkalmazás futása során minden idõpillanatban egy aktor 0, 1 vagy több aktivációval rendelkezik.
+Ha egy üzenet érkezik egy aktornak, és nincs egyetlen aktivációja sem, a rendszer létrehoz egy példányt az egyik elérhetõ 
+szerveren (\textit{Orleans Silo}), valamint ha a példány egy bizonyos ideig kihasználatlanul marad, 
+a futtatókörnyezet elvégzi a példány deaktiválását és felszabadítását. Ha egy szerver hiba miatt leáll, az 
+Orleans egy másik elérhetõ szerveren automatikusan újrapéldányosítja azokat az aktorokat, 
+amelyek a hibás szerveren futottak, és a nekik küldött üzeneteket erre az új szerverre irányítja.
+Az alkalmazásoknak így nincs szükségük különbözõ \textit{életciklus felügyelet}i logika bevezetésére
+(pl.: \textit{felügyeleti fák} az Erlang nyelvben \cite{erlang}).
+Az aktorok automatikus példányosítása és életciklus-kezelése azt is eredményezi, 
+hogy az aktorok fizikai elhelyezkedésérõl a futó alkalmazásnak nincs tudomása - 
+egy bizonyos idõpillanatban egy aktornak akár 0 vagy egynél több aktivációja is lehet, ezt a 
+keretrendszer tartja nyilván.
+
+%TODO 2.1.4 Automatic Scale-out
+
+A 
+A megfelelõ skálázhatóság érdekében a  kommunikáció aszinkron
 üzenetküldésen alapul, melynek a .NET 4.0-ban bevezetett Taszk alapú aszinkron programozási minta megfelelõ alapot
 biztosít. 
 
@@ -443,6 +468,11 @@ Az aktorok közötti üzenetváltáshoz .NET objektumok széles köre támogatott - Magu
 továbbítódnak, így a továbbítani kívánt objektumra az egyetlen megkötés a szerializálhatóság.
 A keretrendszer támogatja a standard beépített .NET szerializációs megoldásokat, saját szerializálóval is rendelkezik
 valamint lehetõséget biztosít egyedi szerializáló bevezetésére is az egyes üzenetekhez.
+
+\subsection{Grains}
+\subsection{Activations}
+\subsection{Scalability}	
+\subsection{Programming Model?}
 
 \subsubsection{Alkalmazási lehetõségek} %TODO Not the best section title.
 Az Orleans környezet alapvetõen a Szolgáltatás-orientált architektúra jegyében épült alkalmazások fejlesztését
@@ -591,6 +621,8 @@ mûveletek, ezáltal átfogó képet kaphatunk, a képfeldolgozás mely részein alkalma
 \bibitem{actorOrig} Carl Hewitt, et al. \textit{Actor Induction and Meta-evaluation} Conference Record of ACM Symposium on Principles of Programming Languages, January 1974.
 
 \bibitem{actorErlang} Vinoski, Steve: \textit{Concurrency with Erlang}. IEEE Internet Computing (2007), 11: 90-93
+
+\bibitem{erlang} Armstrong, J.: \textit{Erlang}. CACM, 53, 9 (Sept. 2010), 68-75
 
 \end{thebibliography}
 
