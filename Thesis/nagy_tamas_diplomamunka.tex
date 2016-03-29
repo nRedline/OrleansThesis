@@ -389,60 +389,43 @@ azonban néhány alkalommal komplex módosításokra van szükség, és a portolt algori
 lehet, mint az eredeti mûveleté. Ezen tényezõk indokolták további alternatív feldolgozó mechanizmusok kutatásának szükségét.
 
 \section{Aktor modell}
-Az \textit{Aktor modell} egy olyan konkurens matematikai modell, melynek alapegységei az "\textit{aktorok}".
-Az aktorok egymástól izolált egységek, melyek direkt módon, aszinkron üzeneteken keresztül kommunikálnak egymással. 
-Egy aktor futása során mindig valamilyen üzenetre reagál - számítást végezhet, aktorokat hozhat létre, 
-további üzeneteket küldhet, valamint beállíthatja, hogyan fog reagálni a következõ üzenetre. 
+Az \textit{Aktor modell} egy olyan konkurens matematikai modell, melynek alapegységei az "\textit{aktorok}" \cite{actorOrig}.
+Az aktorok egymástól izolált egységek, melyek direkt módon, aszinkron \textit{immutable} üzeneteken keresztül kommunikálnak egymással.
+Minden aktor rendelkezik egy "postaládával", ahová az üzenetek érkeznek, ezeket az üzeneteket dolgozza fel sorban 
+- számítást végezhet, aktorokat hozhat létre, 
+további üzeneteket küldhet, valamint beállíthatja, hogyan fog reagálni a következõ üzenetre.
+Az üzenetek sorrendje nem garantált, de követelmény, hogy minden üzenet beérkezzen.
 
-Az aktorok jellemzõen egy számítási szállal rendelkeznek, az állapotuk enkapszulált, és izolált a többi aktortól. 
+Az aktorok jellemzõen egy számítási szállal rendelkeznek, és nem osztanak meg memóriát egymás között. 
 Ez eliminálja a versenyhelyzetek kezelésének szükségességét aktor szinten. 
 A fejlesztõknek nem szükséges \textit{lock}olást, \textit{mutex}eket és más versenyhelyzet-kezelõ megoldásokat
 alkalmazniuk, melyek nem tartoznak az alkalmazás logikájához. Az aktorok dinamikusan jönnek létre
 a rendelkezésre álló erõforrások alapján, ezáltal hatékony terheléselosztás alkalmazható.
 
-%TODO Recompose and Extend!
-%http://www.doc.ic.ac.uk/~nd/surprise_97/journal/vol2/pjm2/
-%http://www.javaworld.com/article/2077999/java-concurrency/understanding-actor-concurrency--part-1--actors-in-erlang.html
-%http://berb.github.io/diploma-thesis/original/054_actors.html
-%http://arxiv.org/ftp/arxiv/papers/1008/1008.1459.pdf
+Az aktor modell akkor alkalmazható hatékonyan, ha az aktorok "könnyûsúlyúak", gyorsan példányosíthatók,
+és folyamatuk nincs a rendszermag szálaihoz kötve, attól eltérõen ütemezhetõ.
 
+A modellt elõször az \textit{Erlang} programozási nyelvben alkalmazták konkurens alkalmazások fejlesztésére \cite{actorErlang},
+ez hozta meg az ismertségét. Az utóbbi idõben több nyelv és keretrendszer is sikeresen adaptálta a modellt,
+pl.: a \textit{Scala}, illetve a \textit{Microsoft Orleans}.
 
 \section{A Microsoft Orleans platform} %TODO Mention Azure
-Az \textit{Orleans} egy - a \textit{Microsoft Research} által fejlesztett - keretrendszer, amely megoldást ad 
-felhõalapú, elosztott alkalmazások építésére anélkül, hogy komplex tudást követelne a felhasználóktól
-az elosztott alkalmazásfejlesztés (konkurencia, skálázhatóság, stb.) területén.\cite{dotnetOrleans} 
-A platform igyekszik a felhõalapú fejlesztés nehézségeit a "motorháztetõ alá" rejteni, így a felhasználóknak 
-nem szükséges ezzel foglalkozniuk.
+Az \textit{Orleans} egy - a \textit{Microsoft Research} által fejlesztett - keretrendszer, 
+mely lehetõséget ad megbízható és skálázható felhõalapú alkalmazások fejlesztésére.
+A keretrendszer modellje az aktor modellen alapul, így konkurencia és a skálázhatóság
+nem jelenik meg alkalmazás szinten, ezt a rendszer beépítetten kezeli.
 
 A keretrendszert több jelenleg is futó projekten hatékonyan alkalmazták, 2015 januárjában pedig nyílt forráskódú
 licenccel a nyilvánosság elé tárták.
 
-%TODO This refers to Szolgáltatásorientált architektúra which is presented laters
 Az Orleans rendszer törekszik a fent említett nehézségeket keretrendszer szinten megoldani és az alkalmazás üzleti
-logikájától a lehetõ legnagyobb mértékben izolálni. Ehhez egy korábbi ágens alapú modell, az \textit{Actor model}
-szolgált kiindulási pontként. Ennek egy virtualizált, felhõre felkészített verziója került implementálásra
-az Orleans keretrendszerben.
-
-\subsection{Szolgáltatásorientált architektúra}
-A legtöbb mai komplex felhõalapú rendszer a \textit{Szolgáltatásorientált architektrúra} alapján épül fel. 
-Az architektúra alapötlete, hogy az alkalmazást több különbözõ (gyakran több száz) szervizre bontjuk, 
-melyeket egymástól függetlenül telepítünk, illetve menedzselünk a rendszerben. Ezek a szervizek külön-külön
-képesek skálázódni, azonban ez nem biztosítja a rendszer egészének megfelelõ skálázódását. 
-
-%TODO Recompose
-A bejövõ terhelés növekedésének kezelési módja \textit{Szolgálatásorientált architektúrában} 
-az adatok felosztása szervizek között. 
-A szervizek dinamikusan, a szolgáltatás szünetelése nélkül particionálódnak, ekkor a partíciók
-nagyméretû konkurenciát generálhatnak a szerviz irányába - a jelenlegi eszközök azonban nem nyújtanak
-hatékony megoldást ennek kezelésére.
-
-Az n-rétegû architektúra a particionálás problémájának kezelését az adattárolási rétegre bízza. 
-Ekkor a megfelelõ teljesítmény elérése érdekében a felsõbb rétegeken különbözõ cachelési megoldások
-alkalmazása szükséges, ez azonban további komplexitást eredményez a rendszerben.\cite{dotnetOrleans} 
+logikájától a lehetõ legnagyobb mértékben izolálni. 
+A rendszer alapja az aktor modell, melynek egy virtualizált, felhõre felkészített verziója került
+implementálásra.
 
 \subsection{Virtuális Aktor modell} %TODO Explain in detail
-Az Orleans rendszer egy módosított Actor modellt definiál, amelyet elosztott alkalmazások, valamint az
-Erlang nyelv Actor modellének implementációja ihletett, és teljes egészében a .NET keretrendszerre épül.
+Az Orleans rendszer egy módosított Aktor modellt definiál, amelyet elosztott alkalmazások, valamint az
+Erlang nyelv Aktor modellének implementációja ihletett, és teljes egészében a .NET keretrendszerre épül.
 Az Orleans aktorok (\textit{Grain}, szabad fordításban \textit{szemcse, gabonaszem}) a tradicionális
 modelltõl eltérõen virtuálisak - Az Orleans futtatókörnyezet kezeli az aktorok aktiválását egy szerveren
 (\textit{Orleans Silo}), valamint ha a példány egy bizonyos ideig kihasználatlanul marad, a futtatókörnyezet
@@ -480,15 +463,13 @@ folyamatok adataihoz is hozzá kell férniük. A dolgozat része volt ezen szempontb
 a megfelelõ eredmény érdekében - a késõbbi fejezetekben az alkalmazott megoldások és az eredmények
 részletesen is tárgyalásra kerülnek.
 
-
 % ------------------------------------------------------------------------------
-
 
 \chapter{Technológiai háttér}
 Ebben a fejezetben a távérzékelt felvételek feldolgozásához használt technológiák és platformok kerülnek bemutatásra.
 
 \section{Az AEGIS térinformatikai keretrendszer}
-Az \textit{AEGIS }keretrendszer \textit{Eötvös Loránd Tudományegyetem Informatikai Karán} jelenleg is fejlesztés alatt
+Az \textit{AEGIS} keretrendszer \textit{Eötvös Loránd Tudományegyetem Informatikai Karán} jelenleg is fejlesztés alatt
 álló térinformatikai keretrendszer, melynek fõ célja térinformaikai algoritmusok, megoldások kutatása és fejlesztése.
 A rendszer téradatok széles spektrumát támogatja, például: \textit{vektoros adathalmazok}, \textit{raszter felvételek}
 valamint \textit{pontfelhõk}. A rendszer egy platformfüggetlen osztálykönyvtár, melynek fejlesztése C\# nyelven
@@ -502,6 +483,7 @@ Ennek segítségével az egyes komponensek könnyedén integrálhatóak más alkalmazáso
 	\caption{Az \textit{AEGIS} rendszer komponensei \cite{aegis}
 	\label{fig:aegis_components}}
 \end{figure}
+
 
 A rendszer adatmodellje az \textit{Open Geospatial Consortium (OGC)} szervezet által definiált
 \textit{Simple Feature Access (SFA)} szabvány. A szabványnak megfelelõen a rendszer minden téradatot 
@@ -586,6 +568,8 @@ mûveletek, ezáltal átfogó képet kaphatunk, a képfeldolgozás mely részein alkalma
 \textit{Hadoop GIS: a high performance spatial data warehousing system over mapreduce}, Proceedings of the VLDB Endowment, v.6 n.11, p.1009-1020, August 2013
 
 \bibitem{actorOrig} Carl Hewitt, et al. \textit{Actor Induction and Meta-evaluation} Conference Record of ACM Symposium on Principles of Programming Languages, January 1974.
+
+\bibitem{actorErlang} Vinoski, Steve: \textit{Concurrency with Erlang}. IEEE Internet Computing (2007), 11: 90-93
 
 \end{thebibliography}
 
