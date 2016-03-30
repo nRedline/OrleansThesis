@@ -452,29 +452,52 @@ hogy az aktorok fizikai elhelyezkedésérõl a futó alkalmazásnak nincs tudomása -
 egy bizonyos idõpillanatban egy aktornak akár 0 vagy egynél több aktivációja is lehet, ezt a 
 keretrendszer tartja nyilván.
 
-%TODO 2.1.4 Automatic Scale-out
+Jelenleg az Orleans rendszer kétféle aktivációs módot támogat: az \textit{állapot}tal rendelkezõ aktorok
+egyszerre maximum egy aktivációval rendelkezhetnek, míg az \textit{állapotmentes} (\textit{Stateless Worker})
+aktoroknak szimultán több egymástól független aktivációja is megengedett a klaszterben.
 
-A 
-A megfelelõ skálázhatóság érdekében a  kommunikáció aszinkron
-üzenetküldésen alapul, melynek a .NET 4.0-ban bevezetett Taszk alapú aszinkron programozási minta megfelelõ alapot
-biztosít. 
+\subsubsection{Aktorok kommunikációja}
+Az egyes aktorok azokon a metódusokon keresztül tudnak kommunikálni egymással, 
+melyek az aktor interfészében definiálásra kerültek. Az összes metódus amelyet az interfészen
+definiáltak, aszinkron (\textit{Task} visszatérési értékû) kell, hogy legyen.
 
-Ha egy üzenetet elküldünk egy \textit{Grain}-nek, és az adott idõpillanatban egyetlen aktivációja sincs, akkor a környezet
-választ egy helyet, és létrehozza a példányt. Mivel az aktorok virtuálisak, elméletben mindig létezik aktivációjuk,
-így nem szükséges tesztelni egy aktiváció meglétét valamint egy esetleges hiba utáni helyreállítását, az Orleans 
-környezet ezt elvégzi helyettünk.
+Ahhoz, hogy egy aktor üzenetet küldhessen egy másik aktornak, szükséges \textit{referenciá}val
+rendelkeznie a másik aktorra. Ezek a referenciák virtuálisak abban a tekintetben, hogy nem 
+szolgálnak semmilyen információval a referált aktor fizikai elhelyezkedésérõl. 
+A kommunikáció egy lokális \textit{proxy objektum}on keresztül történik, és az üzenetet
+a futtatókörnyezet továbbítja a tényleges aktornak.
 
-Az aktorok közötti üzenetváltáshoz .NET objektumok széles köre támogatott - Maguk az üzenetek szerializálva 
-továbbítódnak, így a továbbítani kívánt objektumra az egyetlen megkötés a szerializálhatóság.
-A keretrendszer támogatja a standard beépített .NET szerializációs megoldásokat, saját szerializálóval is rendelkezik
-valamint lehetõséget biztosít egyedi szerializáló bevezetésére is az egyes üzenetekhez.
+Az egyes üzenetek szerializálva kerülnek továbbításra - a beépített .NET [Serializable]
+attribútummal ellátott objektumok is használhatók és az Orleans keretrendszer is rendelkezik
+beépített szerializálóval, amely képes tömbök, illetve generikus objektumok 
+szerializálására is, mindezek mellett pedig megtartja az objektumok identitását 
+(ha két pointer ugyanarra az objektumra mutat, akkor deszerializálás után 
+is ugyanarra az objektumra fognak mutatni).
 
-\subsection{Grains}
-\subsection{Activations}
-\subsection{Scalability}	
-\subsection{Programming Model?}
+\subsubsection{Elosztottság, Fordulók} 
+Az aktorok minden aktivációja egyszálú, és \textit{fordulók}nak nevezett részletekben dolgoznak.
+Az Orleans rendszer különbözõ aktivációk fordulóit futtathatja párhuzamosan, azonban minden
+aktiváció csupán egy fordulót dolgoz fel egyszerre.
+Ennek eredményeként aktor szinten nem jelenik meg párhuzamosság a rendszerben.
+A forduló alapú modell ugyan megengedi több kérés fordulóinak átfedését 
+(pl.: Amíg az egyik forduló egy \textit{I/O mûvelet} befejeztére vár,
+egy másik forduló feldolgozása is elkezdõdhet), azonban ezt az Orleans rendszer
+alapértelmezetten nem engedélyezi. Ez a viselkedés felüldefiniálható, és a fordulók
+átfedhetnek, ha az aktor osztályt megjelöljük a [Reentrant] attribútummal.
 
-\subsubsection{Alkalmazási lehetõségek} %TODO Not the best section title.
+\subsection{A keretrendszer implementációja}
+Az Orleans rendszer egy szerverek egy csoportján fut, és három fõ alrendszere van - 
+\textit{Üzenetküldés}, \textit{Végrehajtás} valamint \text{Futtatókörnyezet}.
+
+Az üzenetküldés alrendszer minden szervert egyszerû TCP kapcsolattal köt össze, 
+és több kommunikációs szálon keresztül továbbítja az egyes üzeneteket.
+
+A futtatókörnyezet alrendszer dönt az aktivációk elhelyezésérõl a klaszterben, a
+végrehajtás pedig a rendelkezésre álló számítási szálak alapján futtatja az
+aktorok kódját.
+
+
+\subsection{Alkalmazási lehetõségek} %TODO Not the best section title.
 Az Orleans környezet alapvetõen a Szolgáltatás-orientált architektúra jegyében épült alkalmazások fejlesztését
 támogatja - egymástól teljesen izolált, önálló szervizek összessége, melyek jól skálázódnak, és egy meghatározott 
 mûvelet elvégzésére képesek. Egy komplex alkalmazás több száz, vagy akár több ezer szervizbõl is állhat, és a szervizek
