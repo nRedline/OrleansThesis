@@ -206,10 +206,11 @@ A szegmentálás eredményeként egy tematikus térképet kapunk, mely minden képpontr
 tartalmazó szegmens sorszámát. Szegmentálás használata esetén elmondható, hogy homogén területen a kategóriák
 kevésbé keverednek.
 
+%TODO Replace with better figure
 \begin{figure}[ht!]
 	\centering
 	\captionsetup{width=0.6\textwidth, justification=centering}
-	\includegraphics[width=90mm]{figures/intensitySpace.jpg}
+	\includegraphics[width=110mm]{figures/coordinateSystem2.jpg}
 	\caption{Az egyes felszíndarabok sugárzási értékei  $x_1 = 0.5\si{\micro\metre}$ 
 		és $x_2 = 0.9\si{\micro\metre}$ hullámhosszon \label{intensitySpaces}}
 \end{figure}
@@ -260,7 +261,7 @@ van szükség. Ez alapján négy csoportot különböztetünk meg
 	kialakítása	során a képpont elhelyezkedését már nem vesszük figyelembe, csupán a spektrális tulajdonságait.
 \end{itemize}
 
-\begin{figure}[h!]
+\begin{figure}[h!] %TODO Mark with citation
 	\minipage{0.5\textwidth}
 	\includegraphics[width=\linewidth]{figures/zonalOperation.png}
 	{\caption{Regionális mûvelet}}\label{fig:zonalOperation}
@@ -287,7 +288,7 @@ dinamikusan változhat.
 Sok esetben globális mûveletek is elvégezhetõk particionált módon, itt azonban mindenképp szükséges egy központi
 összefuttató lépés - ennek módszere az alkalmazott mûvelettõl függ.\cite{remoteSensingLecture}
 
-\section{Adatfeldolgozás}
+\section{Adatkezelés}
 Az alkalmazási területeknél már említésre került, hogy a feldolgozási idõ kritikus lehet az adatkiértékelés szempontjából.
 Ezt nehezíti az a tény, hogy a kiértékelõ eljárások többsége meglehetõsen komplex, illetve hogy gyakran hatalmas mennyiségû
 adathalmazzal kell dolgoznunk.
@@ -389,13 +390,22 @@ utasítás alkalmazza a hisztogramkiegyenlítést a kiszámított teljes hisztogramért
 azonban néhány alkalommal komplex módosításokra van szükség, és a portolt algoritmus helyfoglalási idénye sokkal nagyobb
 lehet, mint az eredeti mûveleté. Ezen tényezõk indokolták további alternatív feldolgozó mechanizmusok kutatásának szükségét.
 
-\section{Aktor modell}
+\section{Aktor modell} %TODO Extend
 Az \textit{Aktor modell} egy olyan konkurens matematikai modell, melynek alapegységei az "\textit{aktorok}" \cite{actorOrig}.
 Az aktorok egymástól izolált egységek, melyek direkt módon, aszinkron \textit{immutable} üzeneteken keresztül kommunikálnak egymással.
 Minden aktor rendelkezik egy "postaládával", ahová az üzenetek érkeznek, ezeket az üzeneteket dolgozza fel sorban 
 - számítást végezhet, aktorokat hozhat létre, 
 további üzeneteket küldhet, valamint beállíthatja, hogyan fog reagálni a következõ üzenetre.
 Az üzenetek sorrendje nem garantált, de követelmény, hogy minden üzenet beérkezzen.
+
+\begin{figure}[H]
+	\centering
+	\captionsetup{width=0.8\textwidth, justification=centering}
+	\includegraphics[width=120mm]{figures/actorModel.png}
+	\caption{Az \textit{aktor modell}. Mindegyik aktor rendelkezik egy saját postaládával,
+		 és izoláltan eltárolja az állapotát
+		\label{fig:actorModel}}
+\end{figure}
 
 Az aktorok jellemzõen egy számítási szállal rendelkeznek, és nem osztanak meg memóriát egymás között. 
 Ez eliminálja a versenyhelyzetek kezelésének szükségességét aktor szinten. 
@@ -406,21 +416,26 @@ a rendelkezésre álló erõforrások alapján, ezáltal hatékony terheléselosztás alka
 Az aktor modell akkor alkalmazható hatékonyan, ha az aktorok "könnyûsúlyúak", gyorsan példányosíthatók,
 és folyamatuk nincs a rendszermag szálaihoz kötve, attól eltérõen ütemezhetõ.
 
-A modellt elõször az \textit{Erlang} programozási nyelvben alkalmazták konkurens alkalmazások fejlesztésére \cite{actorErlang},
-ez hozta meg az ismertségét. Az utóbbi idõben több nyelv és keretrendszer is sikeresen adaptálta a modellt,
-pl.: a \textit{Scala}, illetve a \textit{Microsoft Orleans}.
+\subsubsection{Aktor implementációk}
+A modellt elõször az \textit{Erlang} programozási nyelvben alkalmazták konkurens alkalmazások fejlesztésére \cite{actorErlang}, majd a modell népszerûségének 
+növekedésével több nyelv és keretrendszer is sikeresen 
+adaptálta a modellt, pl.: a \textit{Scala} \cite{actorScala}, 
+vagy az \textit{Akka} keretrendszer\cite{actorAkka}.
+
+Ezek az aktor modell implementációk - jóllehet hatékony megoldást adnak az elosztott 
+alkalmazásfejlesztésre - több elosztott rendszerrel kapcsolatos probléma kezelését a 
+fejlesztõkre bízzák. A fejlesztõknek kezelniük kell az aktorok életciklusát (hiba esetén történõ leállás esetén az aktorok újraaktiválását), a rendszerben
+történõ elhelyezését, valamint versenyhelyzetek kezelését. Ezek a limitációk, és a 
+kiküszöbölésükre való törekvés hívta életre a \textit{Microsoft Orleans} keretrendszert.
+
 
 \section{A Microsoft Orleans platform} %TODO Mention Azure
 Az \textit{Orleans} egy - a \textit{Microsoft Research} által fejlesztett - keretrendszer, 
 mely lehetõséget ad megbízható és skálázható felhõalapú alkalmazások fejlesztésére.
 
-A tradicionális aktor modell implementációk - jóllehet hatékony megoldást adnak az elosztott alkalmazásfejlesztésre -
-több elosztott rendszerrel kapcsolatos probléma kezelését a fejlesztõkre bízzák. A fejlesztõknek 
-kezelniük kell az aktorok életciklusát (hiba esetén történõ leállás esetén az aktorok újraaktiválását), a rendszerben
-történõ elhelyezését, valamint versenyhelyzetek kezelését.
 Az Orleans programozási modellje (\textit{Virtual Actor Model - Virtuális Aktor Modell})
 az aktor modell egy olyan kiterjesztése, amely az aktorokat virtuális entitásokként kezeli, mely eliminálja a 
-az elosztott erõforráskezelés és a megbízhatóság alkalmazás szinten történõ kezelését, eliminálja a konkurenciát, ezáltal
+az elosztott erõforráskezelés és a megbízhatóság alkalmazás szinten történõ kezelését, megszünteti a konkurenciát, ezáltal
 nem követel komplex tudást a fejlesztõktõl az elosztott alkalmazásfejlesztés területén.
 
 A keretrendszert a \textit{Microsoft Windows Azure} számítási \textit{felhõben} több jelenleg is futó projekten 
@@ -430,14 +445,13 @@ hatékonyan alkalmazták, 2015 januárjában pedig nyílt forráskódú licenccel a nyil
 Az Orleans rendszer egy módosított Aktor modellt definiál, amelyet elosztott alkalmazások, valamint az
 Erlang nyelv Aktor modellének implementációja ihletett, és teljes egészében a .NET keretrendszerre épül.
 Az Orleans aktorok (\textit{Grain}, szabad fordításban \textit{szemcse, gabonaszem}) a rendszer legkisebb
-számítási alapegységei. Egy aktor enkapszulálja az állapotát és a viselkedését, és az aktorok nem osztanak meg
-memóriát egymással, így két aktor között az egyetlen kommunikációs mód az aszinkron üzenetküldés.
+számítási alapegységei. Egy aktor enkapszulálja az állapotát és a viselkedését, és nem
+oszt meg memóriát más aktorokkal, így két aktor között az egyetlen kommunikációs mód az aszinkron üzenetküldés.
 
 Az aktorok az Orleans rendszerben a tradicionális modelltõl eltérõen virtuálisak. 
-Egy aktor így elméletben mindig létezik, nem hozható létre és nem semmisíthetõ
+Egy aktor elméletben mindig létezik, nem hozható létre és nem semmisíthetõ
 meg manuálisan. Az aktorok létezése nem függ a példányok számától, és nem függ futtató szerver állapotától.
-Mivel az aktorok mindig léteznek, ezért mindig elérhetõek
-
+Mivel az aktorok mindig léteznek, ezért mindig elérhetõek.
 Az Orleans futtatókörnyezet automatikusan kezeli az aktorok példányosítását (\textit{aktiváció}) és megsemmisítését. 
 Az alkalmazás futása során minden idõpillanatban egy aktor 0, 1 vagy több aktivációval rendelkezik.
 Ha egy üzenet érkezik egy aktornak, és nincs egyetlen aktivációja sem, a rendszer létrehoz egy példányt az egyik elérhetõ 
@@ -487,18 +501,81 @@ alapértelmezetten nem engedélyezi. Ez a viselkedés felüldefiniálható, és a fordu
 
 \subsection{A keretrendszer implementációja}
 Az Orleans rendszer egy szerverek egy csoportján fut, és három fõ alrendszere van - 
-\textit{Üzenetküldés}, \textit{Végrehajtás} valamint \text{Futtatókörnyezet}.
+\textit{Üzenetküldés}, \textit{Végrehajtás} valamint \textit{Futtatókörnyezet}. %TODO come up w/ better name 4 hosting
 
 Az üzenetküldés alrendszer minden szervert egyszerû TCP kapcsolattal köt össze, 
 és több kommunikációs szálon keresztül továbbítja az egyes üzeneteket.
 
-A futtatókörnyezet alrendszer dönt az aktivációk elhelyezésérõl a klaszterben, a
+A környezet alrendszer dönt az aktivációk elhelyezésérõl a klaszterben, a
 végrehajtás pedig a rendelkezésre álló számítási szálak alapján futtatja az
 aktorok kódját.
 
+Amikor egy aktor egy másik aktort hív, a Végrehajtás a függvényhívást üzenetté
+konvertálja, és átadja az üzenetküldésnek a cél aktor identitásával együtt.
+Az üzenetküldés lekéri a környezettõl, hogy melyik szerver hosztolja
+az aktort. A környezet egy \textit{elosztott könyvtár} segítségével tartja nyilván
+az aktorok összes aktivációját a rendszerben. A könyvtárban vagy egy létezõ aktivációt
+talál, vagy kiválaszt egy szervert, és létrehoz egy új aktivációt. Az üzenetküldés 
+ezután szerializálja az üzenetet, és a nyitott TCP kapcsolaton keresztül továbbítja 
+a célszervernek. A célszerver üzenetküldés alrendszer deszerializálja az üzenetet,
+és átadja a végrehajtásnak, mely ezután ütemezi a hívást. Ha egy aktor éppen egy
+másik hívást dolgoz fel, az üzenet sorban áll addig, amíg a feldolgozás be nem fejezõdik.
+
+%TODO Add figure
+%\begin{figure}[ht!]
+%	\centering
+%	\includegraphics[width=90mm]{figures/}
+%	\caption{
+%	\label{fig:}}
+%\end{figure}
+
+A környezet felel a lokális erõforrások kezeléséért is. Ha egy aktorra egy bizonyos
+(elõre definiált) ideje nem volt szükség, vagy ha a szerver erõforráshiányt észlel,
+a környezet automatikusan deaktiválja az aktort, és visszaveszi az erõforrásait.
+
+\subsubsection{Izoláció}
+Az Orleans aktorok nem osztanak meg memóriát és izoláltak egymástól.
+Az aszinkron üzenetküldés az egyedüli kommunikációs mód köztük, amelyek
+metódusok formájában jelennek meg az aktorok interfészén. Ezen felül a metódushívások
+paraméterei és visszatérési értékei a hívás során lemásolódnak (még akkor is,
+ha a metódushívás két ugyanazon a szerveren lévõ aktor között megy végbe),
+ezzel biztosítva hogy az elküldött üzenet ne módosulhasson.
+
+\subsubsection{Kooperatív multitasking}
+Az Orleans az egyes fordulókat \textit{kooperatív multitasking} formában ütemezi. Ez azt jelenti, hogy
+egy alkalmazás forduló az elindítása után megszakítás nélkül végrehajtódik. Az Orleans ütemezõje
+az aktorok futtatásához és ütemezéséhez tipikusan annyi számítási szálat használ, 
+amennyi processzormaggal rendelkezik az adott rendszer. 
+
+Egy komplex rendszerben az aktor aktivációk száma akár milliós nagyságrendû is lehet. 
+\textit{Preemptív multitasking} használata esetén az összes aktiváció saját szálat kapna, ez pedig egy bizonyos
+számú aktiváció felett több lenne, mint amit a rendszerek képesek kezelni, ráadásul a kontextusváltás
+drága, így ez is rontana a teljesítményen.
+
+\subsubsection{Megbízhatóság}
+A rendszer a megbízhatóság összes aspektusát automatikusan kezeli, kivéve az aktorok perzisztens állapotának
+menedzselését. A rendszer automatikusan menedzseli a klaszterben lévõ szervereket. Az egyes szerverek
+\textit{ping} üzeneteket küldenek egymásnak, és ha egy bizonyos szervertõl több másik szerver sem kap választ,
+akkor a szervert leálltnak tekintik.
+
+Ha egy szerver leállt, az összes rajta futó aktiváció elveszik. Ekkor a többi szervernek ezekre az aktivációkra
+vonatkozó információkat ki kell törölniük a rendszer elosztott könyvtárából. 
+Mivel az aktorok virtuálisak, egy aktor nem áll le ha az õt futtató szerver leáll.
+Ehelyett a következõ üzenet, amelyet a leállt szerveren lévõ aktornak küldenek, egy új aktivációt fog létrehozni
+egy másik, élõ szerveren. 
+
+Egy aktor állapotának mentési stratégiája nagymértékben függ az aktor feladatától. Ha például
+az aktorunk egy eszközt (\textit{mobiltelefon}, \textit{szenzor}) reprezentál, melyet az eszköz az adataival
+periodikusan frissít, akkor nem szükséges elmentenünk az aktor állapotát, mivel az új aktiváció a következõ
+frissítéssel küldött adatokból képes lesz azt elõállítani.
+Ha nem engedhetünk meg állapotvesztést, akkor a mentés minden üzenet feldolgozása után szükséges, 
+vagy megengedõbb esetben, megadott idõközönként esedékes a mentés.
+
+Tekintve, hogy egy aktor (és az egész rendszer) teljesítményét nagymértékben befolyásolhatja, és minden aktorra
+különbözhet a mentési stratégia, a rendszer nem kezeli az állapotok automatikus mentését, ezt a fejlesztõkre bízza. 
 
 \subsection{Alkalmazási lehetõségek} %TODO Not the best section title.
-Az Orleans környezet alapvetõen a Szolgáltatás-orientált architektúra jegyében épült alkalmazások fejlesztését
+Az Orleans környezet alapvetõen a \textit{Szolgáltatás-orientált architektúra} jegyében épült alkalmazások fejlesztését
 támogatja - egymástól teljesen izolált, önálló szervizek összessége, melyek jól skálázódnak, és egy meghatározott 
 mûvelet elvégzésére képesek. Egy komplex alkalmazás több száz, vagy akár több ezer szervizbõl is állhat, és a szervizek
 száma az alkalmazás terheltségének változásával dinamikusan nõhet, illetve csökkenhet.
@@ -510,6 +587,8 @@ alapértelmezés szerint az aktor entitás egyszerre csak egy üzenetet dolgozhat fe
 Mivel az aktorok virtuálisak, így a futtatókörnyezet az skálázást a terhelésnek és a rendelkezésre álló 
 erõforrásoknak megfelelõen alakíthatja.
 
+\subsubsection{Térinformatikai alkalmazás}
+
 A dolgozat által vizsgált feladat számos ponton különbözik a fent felsorolt szempontoktól - távérzékelt adatok
 feldolgozásához gyakran hatalmas méretû adatokkal kell dolgoznunk, a mûveletek költségesek, és akár több 
 órát is igénybe vehetnek, valamint a mûveletek legtöbbjének párhuzamosítása esetén az egyes folyamatoknak más
@@ -517,23 +596,30 @@ folyamatok adataihoz is hozzá kell férniük. A dolgozat része volt ezen szempontb
 a megfelelõ eredmény érdekében - a késõbbi fejezetekben az alkalmazott megoldások és az eredmények
 részletesen is tárgyalásra kerülnek.
 
+%TODO Extend, Recompose?
+Az Orleans térinformatikai kiegészítéséhez szükséges volt egy olyan keretrendszer integrációja és felhasználása,
+amelynek segítségével egységesen kezelhetünk és dolgozhatunk fel téradatokat. Így esett a választás az \textit{AEGIS}
+keretrendszerre, mely a következõ fejezetben kerül tárgyalásra.
+
 % ------------------------------------------------------------------------------
 
-\chapter{Technológiai háttér}
-Ebben a fejezetben a távérzékelt felvételek feldolgozásához használt technológiák és platformok kerülnek bemutatásra.
-
-\section{Az AEGIS térinformatikai keretrendszer}
+\chapter{Az AEGIS térinformatikai keretrendszer}
 Az \textit{AEGIS} keretrendszer \textit{Eötvös Loránd Tudományegyetem Informatikai Karán} jelenleg is fejlesztés alatt
-álló térinformatikai keretrendszer, melynek fõ célja térinformaikai algoritmusok, megoldások \textit{kutatás}a és \textit{fejlesztés}e.
+álló térinformatikai keretrendszer, melynek fõ célja térinformatikai algoritmusok, megoldások \textit{kutatás}a és \textit{fejlesztés}e.
 A rendszer téradatok széles spektrumát támogatja, például: \textit{vektoros adathalmazok}, \textit{raszter felvételek}
 valamint \textit{pontfelhõk}. A rendszer egy platformfüggetlen osztálykönyvtár, melynek fejlesztése C\# nyelven
 történik, alapja a \textit{.NET keretrendszer}, illetve a \textit{Mono Framework}. A fejlesztés a komponens alapú
 architektúra jegyében történik, mely lehetõséget ad a rendszer bõvítésére, valamint az újrafelhasználhatóságra.
-Ennek segítségével az egyes komponensek könnyedén integrálhatóak más alkalmazásokba \cite{aegis},
-így az Orleans rendszerbe is beilleszthetõ volt. 
+Ennek segítségével az egyes komponensek könnyedén integrálhatóak más alkalmazásokba\cite{aegis}.
 Mindezek mellett az AEGIS keretrendszer rendelkezik azokkal a távérzékelt adatfeldolgozó
 mûveletekkel, amelyek a dolgozatban kutatásra kerültek. Ezek alapján a rendszer megfelelõ környezetet
 biztosított az Orleans térinformatikai kiegészítésére.
+
+Az AEGIS keretrendszert felépítõ fõbb komponensek: \textit{Core, IO, Operations, Temporal}.
+A \textit{Core} komponens a rendszer adatmodellével kapcsolatos osztályokat tartalmazza, az \textit{IO} 
+téradatok betöltéséért és írásáért felel (pl.: \textit{Shapefile} vagy \textit{GeoTIFF} formában),  %TODO cite Shapefile and tiff?
+az \textit{Operations} komponens tartalmazza a téradatokon végezhetõ mûveleteket, valamint ezek futtatókörnyezetét,
+a \textit{Temporal} komponens pedig az adatmodell kiterjesztése idõbeliség kezelésével.
 
 %\begin{figure}[ht!]
 %	\centering
@@ -542,20 +628,39 @@ biztosított az Orleans térinformatikai kiegészítésére.
 %	\label{fig:aegis_components}}
 %\end{figure}
 
-\subsubsection{Adat-, illetve mûveleti modell}
+\section{Adat-, illetve mûveleti modell}
 A rendszer adatmodellje az \textit{Open Geospatial Consortium (OGC)} szervezet által definiált
-\textit{Simple Feature Access (SFA)} szabvány. A szabványnak megfelelõen a rendszer minden téradatot 
-(beleértve a raszteres képi adatokat is) egységes (\textit{Geometry}) formában kezel. 
-Az implementált algoritmusok kezelése is egy egységes alapon történik, az egyes mûveletek (\textit{Operation}) metaadatokkal (\textit{OperationMethod})
-rendelkeznek, melynek segítségével kategorizálhatjuk a metódusokat, valamint optimalizálhatjuk a végrehajtást.
+\textit{Simple Feature Access (SFA)}\cite{sfa} szabvány. A szabványban a központi geometriai 
+primitív a \textit{Geometry} osztály, mely a térbeli tulajdonságokat, és az egyes térbeli objektumok 
+között elvégezhetõ mûveleteket definiálja. Az adatmodell két-, illetve háromdimenziós vektoros 
+adatok tárolására koncentrál, idõbeliség nélkül. Az egyes mûveletek egységes alkalmazhatósága érdekében
+az implementáció során a szabvány kiterjesztésre került raszteres adatok támogatásával is, így a 
+\textit{Raster} osztály a \textit{Geometry} leszármazottja.
 
+%TODO Replace model
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=110mm]{figures/aegis_data_model_extensions.png}
-	\caption{Az \textit{AEGIS} adatmodellje
+	\captionsetup{width=0.9\textwidth, justification=centering}
+	\includegraphics[width=120mm]{figures/aegis_data_model_extensions.png}
+	\caption{Az \textit{AEGIS} adatmodellje az SFA szabvány alapján, 
+		valamint raszteres adatok támogatásával való kiterjesztése
 		\label{fig:aegis_data_model}}
 \end{figure}
+ 
+Az \textit{Operations} komponensben implementált algoritmusok kezelése is egységes alapon történik, minden mûvelet
+közös õse az absztrakt \textit{Operation} osztály. A mûveletek rendelkeznek egy leíró osztállyal is (\textit{OperationMethod})
+rendelkeznek, melynek segítségével kategorizálhatjuk a metódusokat, valamint optimalizálhatjuk a végrehajtást.
+A mûveletek paramétereinek objektuma az \textit{OperationMethodParameter}, amely tartalmazza a paraméter típusát,
+valamint értékét (\ref{fig:aegis_operations}. Ábra).
 
+A mûveletet az Operation osztály \textit{Execute()} metódusával futtathatjuk. Az \textit{Execute()} metódus
+futása során rendre három alfüggvényt hív meg, ezek: \textit{PrepareResult(), ComputeResult(), FinalizeResult()}.
+A \textit{PrepareResult()} a számításokhoz elõállítja a kiinduló adathalmazt, a \textit{ComputeResult()} a tényleges 
+számításokat hajtja végre, a \textit{FinalizeResult()} metódus pedig összegzi és véglegesíti az eredményt.
+A leszármazott osztályok ezen metódusok felüldefiniálásával határozhatják meg a mûvelet mûködését.
+
+
+%TODO Replace model
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=150mm]{figures/aegis_processing.png}
@@ -563,18 +668,34 @@ rendelkeznek, melynek segítségével kategorizálhatjuk a metódusokat, valamint opt
 		\label{fig:aegis_operations}}
 \end{figure}
 
+Minden térbeli mûvelet, amely vektoros
+adatokra definiált (\textit{metszet, projekció}), alkalmazható raszteres felvételekre is.
+A csak raszteres adatokon futó mûveleteket (\textit{szûrés, küszöbölés, hisztogram-transzformáció})
+pedig olyan metaadattal látjuk el, amely megakadályozza a vektoros adathalmazon történõ futtatást.
+Ezek a raszteres mûveletek az \textit{Operations} komponens \textit{Spectral} kiterjesztésében
+helyezkednek. A dolgozat során az itt implementált mûveletek kerültek felhasználásra.
+
+%TODO Can we place a package diagram here?
 
 
-
-\subsubsection{Feldolgozás Hadoop architektúrán}
+\section{Feldolgozás Hadoop architektúrán}
 Az AEGIS támogatja a \textit{Hadoop} architektúrával történõ adatkezelést, illetve feldolgozást.
 A rendszer megfelelõen kezeli nagyméretû bináris adatok \textit{HDFS}-be történõ beolvasását (pl.: \textit{GeoTIFF} formában).
-Az input adat opcionálisan particionálható, ezáltal elosztottan, párhuzamos módon is feldolgozható. 
+Az input adat opcionálisan particionálható, az egyes partíciók így elosztottan is feldolgozhatók (A fent említett
+mûveletek módosítás nélkül alkalmazhatók Map-, illetve Reduce függvényekként).
 
+\section{Integrálás az Orleans keretrendszerbe}
+Távérzékelt felvételek Orleans rendszeren való feldolgozásához szükség volt egy egységes téradatmodellre,
+a felvételek beolvasására, a végrehajtandó mûveletekre, illetve az eredmények lemezre történõ kiírására.
+Ennek megfelelõen az \textit{AEGIS} keretrendszer \textit{Core, IO}, valamint \textit{Operations} komponenseire volt
+szükség, ezek kerültek integrálásra. Mivel mindkét rendszer a .NET keretrendszerre épül, 
+így az integráció is egyszerû volt, csupán az AEGIS által nyújtott komponensek \textit{.NET szerelvények} 
+(\textit{assembly}) formájában történõ referálására volt szükség az Orleans projektben.
 
 % ------------------------------------------------------------------------------
 
 \chapter{Megvalósítás}
+
 
 \section{Vizsgált algoritmusok}
 Az elemzett algoritmusok megválasztásánál fontos szempont volt a sokszínûség - a távérzékelt felvételek 
@@ -646,6 +767,12 @@ mûveletek, ezáltal átfogó képet kaphatunk, a képfeldolgozás mely részein alkalma
 \bibitem{actorErlang} Vinoski, Steve: \textit{Concurrency with Erlang}. IEEE Internet Computing (2007), 11: 90-93
 
 \bibitem{erlang} Armstrong, J.: \textit{Erlang}. CACM, 53, 9 (Sept. 2010), 68-75
+
+\bibitem{actorScala} Philipp Haller, Martin Odersky, \textit{Scala Actors: Unifying thread-based and event-based programming}, Theoretical Computer Science, v.410 n.2-3, p.202-220, February, 2009
+
+\bibitem{actorAkka} GUPTA, Munish. \textit{Akka essentials}. Packt Publishing Ltd, 2012.
+
+\bibitem{sfa} Herring, J. \textit{OpenGIS Implementation Standard for Geographic information-Simple feature access-Part 1: Common architecture.} OGC Document 4.21 (2011): 122-127.
 
 \end{thebibliography}
 
