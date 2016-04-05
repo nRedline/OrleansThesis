@@ -517,6 +517,7 @@ alapértelmezetten nem engedélyezi. Ez a viselkedés felüldefiniálható, és a fordu
 átfedhetnek, ha az aktor osztályt megjelöljük a [Reentrant] attribútummal.
 
 \subsection{A keretrendszer implementációja}
+
 Az Orleans rendszer egy szerverek egy csoportján fut, és három fõ alrendszere van - 
 \textit{Üzenetküldés}, \textit{Végrehajtás} valamint \textit{Futtatókörnyezet}. %TODO come up w/ better name 4 hosting
 
@@ -590,6 +591,41 @@ vagy megengedõbb esetben, megadott idõközönként esedékes a mentés.
 
 Tekintve, hogy egy aktor (és az egész rendszer) teljesítményét nagymértékben befolyásolhatja, és minden aktorra
 különbözhet a mentési stratégia, a rendszer nem kezeli az állapotok automatikus mentését, ezt a fejlesztõkre bízza. 
+
+\subsubsection{Aktorok elhelyezése}
+Az Orleans rendszer futása során automatikusan és transzparensen hozza létre az aktorokat.
+Ez azt jelenti hogy nem szolgáltat információt azok fizikai elhelyezkedésérõl, 
+tehát arról, hogy a létrehozott \textit{Grain} aktiváció melyik szerveren helyezkedik el a klaszterben.
+Az aktorok elhelyezését direkt módon nem vezérelhetjük, azonban a \textit{Placement} attribútumok
+használatával egy \textit{Grain} osztályon, közvetetten befolyásolhatjuk, hová "szeretnénk", 
+hogy az új aktiváció kerüljön. 
+
+Az Orleans jelenleg 3 fajta elhelyezési (\textit{Placement})
+stratégiát támogat: 
+\textit{Aktivációk száma alapján} történõ elhelyezés (\textit{ActivationCountBasedPlacement}), 
+\textit{Lokális} elhelyezés (\textit{LocalPlacement}), 
+valamint \textit{véletlenszerû} elhelyezés (\textit{RandomPlacement}). A véletlenszerû elhelyezés 
+használatával az összes szerverre egyenlõ valószínûséggel kerül az új aktiváció. Lokális elhelyezés
+során az aktivációt kérõ \textit{Grain} szerverére történik az elhelyezés. Ha az aktiváló nem egy 
+\textit{Grain}, hanem a kliens volt, ennek az elhelyezési stratégiának nincs hatása, és a 
+\textit{RandomPlacement} stratégia alapján kerül az új aktiváció elhelyezésre. Az aktivációk száma alapján
+történõ elhelyezés a legkevesebb aktivációval rendelkezõ szerverre helyezi el a 
+kért \textit{Grain} aktivációt.
+
+\subsection{Orleans projektek felépítése} \label{subs:orleansProjects}
+Egy Orleans alkalmazást 3 fõ komponens épít fel: \textit{Aktorok} (\textit{Grains}), 
+\textit{Aktor interfészek} (\textit{Grain Interfaces}) valamint a \textit{Kliens} (\textit{Client}). Ezek a komponensek 
+különálló alprojektekként jelennek meg a rendszerben.
+
+A \textit{Grain interfaces} komponensben definiálhatjuk a projektben használt aktorokat, 
+valamint ezek metódusait és a metódusok szignatúráját. Csak az itt definiált aktor típusok lesznek késõbb
+felhasználhatóak, melyek implementációját a \textit{Grains} komponens tartalmazza.
+
+A \textit{Client} komponens köti össze a külvilágot a rendszerrel, tulajdonképp egy belépési pont
+az Orleans környezetbe. A kliens rendelkezhet \textit{Grain} referenciákkal, 
+valamint üzenetet is küldhet \textit{Grain}-eknek. A megfelelõ kommunikáció érdekében a \textit{Client}
+illetve a \textit{Grains} komponensnek is rendelkeznie kell ugyanazzal a \textit{Grain Interfaces} komponenssel.
+
 
 \subsection{Alkalmazási lehetõségek} %TODO Not the best section title.
 Az Orleans környezet alapvetõen a \textit{Szolgáltatás-orientált architektúra} jegyében épült alkalmazások fejlesztését
@@ -690,7 +726,7 @@ adatokra definiált (\textit{metszet, projekció}), alkalmazható raszteres felvéte
 A csak raszteres adatokon futó mûveleteket (\textit{szûrés, küszöbölés, hisztogram-transzformáció})
 pedig olyan metaadattal látjuk el, amely megakadályozza a vektoros adathalmazon történõ futtatást.
 Ezek a raszteres mûveletek az \textit{Operations} komponens \textit{Spectral} kiterjesztésében
-helyezkednek. A dolgozat során az itt implementált mûveletek kerültek felhasználásra.
+helyezkednek el. A dolgozat során az itt implementált mûveletek kerültek felhasználásra.
 
 %TODO Can we place a package diagram here?
 
@@ -714,24 +750,12 @@ tartozó mûveletek csoportonként eltérõ megközelítést igényeltek az elosztott fel
 így ezen csoportokon végighaladva tárgyaljuk az alkalmazott ötleteket és megvalósításukat.
 
 \section{Az Orleans térinformatikai kiterjesztése} 
-
+%TODO Write something here
 \subsection{Projektfelépítés}
-Egy Orleans alkalmazást 3 fõ komponens épít fel: \textit{Aktorok} (\textit{Grains}), 
-\textit{Aktor interfészek} (\textit{Grain Interfaces}) valamint a \textit{Kliens} (\textit{Client}). Ezek a komponensek 
-különálló projektekként jelennek meg a rendszerben.
-
-A \textit{Grain interfaces} komponensben definiálhatjuk a projektben használt aktorokat, 
-valamint ezek metódusait és a metódusok szignatúráját. Csak az itt definiált aktor típusok lesznek késõbb
-felhasználhatóak a projektben, ezek implementációját pedig a 
-\textit{Grains} komponens tartalmazza.
-
-A \textit{Client} komponens köti össze a külvilágot a rendszerrel, tulajdonképp egy belépési pont
-az Orleans környezetbe. A kliens rendelkezhet \textit{Grain} referenciákkal, 
-valamint üzenetet is küldhet \textit{Grain}-eknek. A megfelelõ kommunikáció érdekében a \textit{Client}
-illetve a \textit{Grains} komponensnek is rendelkeznie kell ugyanazzal a \textit{Grain Interfaces} komponenssel.
-
-A dolgozat során elkészített prototípus alkalmazás (\textit{OrleansSpectral}) felépítése is hasonló, a fent felsorolt
-3 komponens felhasználásán túl rendelkezik még egy \textit{Common} projekttel, amely az egyes komponensek mindegyike
+A dolgozat során elkészített prototípus alkalmazás (\textit{OrleansSpectral}) felépítése hasonló a 
+tradicionális Orleans alkalmazásokhoz, rendelkezik a \ref{subs:orleansProjects}. szakaszban említett
+3 komponenssel (\textit{Grains}, \textit{Grain interfaces}, \textit{Client}), valamint ezeken túl 
+egy \textit{Common} projekttel, amely az egyes komponensek mindegyike
 által használt osztályokat és mûveleteket tartalmazza.
 
 \begin{figure}[ht!]
@@ -760,23 +784,72 @@ valamint további metainformációkat (pl: a particionáláshoz használt algoritmus).
 Ezen felül a leíró fájl tartalmazza az 
 eredeti kép \textit{hisztogram-értékei}t, ez az információ késõbb felhasználható az egyes mûveletekben.
 
-
-%TODO Illustration about partition descriptor?
-
 Mivel a Hadoop \textit{HDFS} rendszerrel ellentétben az Orleans keretrendszer nem definiál saját elosztott
 fájlrendszert, így a feldarabolt kép darabjainak szétosztása manuálisan történik a klaszterben. Az egyes darabokat
 fel kell töltenünk a feldolgozó egységekre, és az elérési útvonalukat 
 rögzítenünk kell a partíció-leíróba.
 
 \subsection{Adatok feltérképezése, azonosítása és beolvasása}
-%Hogyan kell létrehozni a master graineket, hogyan lehet az adatok pozícióját feltérképezni
-%Osztálydiagram a client, Manager és a transformation grain kapcsolatáról
-%Aktivitás diagram a feltérképezésrõl és a partition descriptor frissítésének és propagálásának menetérõl
+Az adatok elhelyezése után az õket feldolgozó aktorok létrehozása következik.
+A megfelelõ teljesítmény érdekében minden partíciót külön aktor fog feldolgozni,
+ehhez szükséges tudnunk mely szerveren hány fájlpartíció helyezkedik el, és ezek mindegyikére
+létrehozni egy aktor entitást.
+
+Mint korábban említésre került, direkt módon nem határozhatjuk meg az aktorok elhelyezését a
+klaszterben, azonban az elhelyezési stratégiát befolyásolhatjuk a \textit{Placement} attribútumokkal.
+Sajnos jelenleg a rendszer nem tartalmaz olyan \textit{Placement} stratégiát, amellyel meghatározott mennyiségû
+\textit{Grain}-t tudnánk létrehozni az összes szerveren (Az \textit{ActivationCountBasedPlacement} áll
+legközelebb a feladathoz, azonban ez a stratégia fõként nagyobb klaszterek esetén tud hatékony lenni
+a dolgozat során nem produkált használható teljesítményt).
+
+\begin{figure}[h!]
+	\centering
+	\captionsetup{width=0.8\textwidth, justification=centering}
+	\includegraphics[width=110mm]{figures/getOneGrainFromEachSilo.png}
+	\caption{Minden szerverrõl egy menedzser aktor aktiválása \label{fig:getOneGrainFromEachSilo}}
+\end{figure}
+
+A fenti limitációk megkerülése érdekében egy saját stratégia került alkalmazásra - bevezetünk egy
+"\textit{manager}" aktort (\textit{OperationManagerGrain}), 
+melyet a \textit{RandomPlacement} attribútummal látunk el. A \textit{manager} %TODO check if RandomPlacement is used
+aktorból addig hozunk létre új aktivációkat, amíg a klaszter minden szerverén legalább egy létre nem jön
+(alapértelmezés szerint az aktort hosztoló szerver identitása is transzparens az alkalmazás számára, 
+azonban ez az információ a \textit{Grain}-ek identitásából visszafejthetõ)
+Mivel a véletlenszerû elhelyezés közel normális eloszlású, és mivel az aktorok létrehozása nem költséges
+mûvelet, így ez a fázis nem okoz teljesítményromlást a feldolgozásban. 
+A létrehozott aktorok közül minden szerverrõl egyet választunk, ez lesz a szerver "menedzsere". 
+
+\begin{figure}[h] %TODO Place and check if it can be seen correctly
+	\centering
+	\captionsetup{width=0.8\textwidth, justification=centering}
+	\includegraphics[width=150mm]{figures/grainsClassDiagram2.png}
+	\caption{Az aktorok osztálydiagramja \label{fig:grainClassDiagram}}
+\end{figure}
 
 
+A menedzser entitás nem végez spektrális mûveleteket, hanem a mûveleteket feldolgozó aktorok 
+példányosításáért és a kliensnek való továbbításáért felel. Egy elõkészítési fázisban
+minden menedzser \textit{Grain} feltérképezi a szerverén lévõ feldolgozandó fájldarabokat
+(a partíció leíróban megadott útvonalon), és ennek megfelelõ mennyiségû feldolgozó \textit{Grain}-t
+(\textit{SpectralOperationGrain}) példányosít. A \textit{SpectralOperationGrain}-t a \textit{LocalPlacement}
+attribútummal látjuk el, így minden új aktiváció az õt példányosító menedzser alkalmazás szerverén
+fog létrejönni. A létrehozott \textit{Grain}-eket ezután hozzárendeljük a feltérképezett fájldarabokhoz.
+Így szerver szinten minden entitásról tudjuk hogy melyik fájldarabot dolgozza fel. 
 
+Azonban a megfelelõ
+kommunikáció érdekében minden szerveren minden Grain-nek tudnia kell az összes fájldarabról, és annak
+elérhetõségérõl. Ehhez minden menedzser továbbítja a szerveren lévõ feldolgozó \textit{Grain}-ek 
+identitását és a hozzá tartozó fájldarabokat a kliensnek (erre egy dedikált \textit{Grain} is definiálható
+lett volna, azonban a feldolgozó aktorokkal való direkt kommunikációhoz egyébként is szükséges
+továbbítani az identitásukat a kliensnek). A kliens a korábban említett partíció leíróban kiegészíti
+az összes fájldarabra vonatkozó információt a feldolgozó \textit{Grain}-ek identitásával. 
+Ezután elküldi a kiegészített leíró fájlt ezeknek az aktoroknak.
 
+%TODO Activity Diagram about merging association into one and propagating back to the worker actors
 
+Az mûveleteket végzõ aktorok létrehozása és megfelelõ információval való ellátása után következik a 
+kívánt mûvelet végrehajtása. A mûveletet valamint paramétereit az alkalmazás indításánál paraméterekként 
+adhatjuk meg.
 
 \section{Vizsgált algoritmusok}
 Az elemzett algoritmusok megválasztásánál fontos szempont volt a sokszínûség - a távérzékelt felvételek 
