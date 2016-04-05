@@ -72,7 +72,7 @@ Lorem ipsum...
 
 % ------------------------------------------------------------------------------
 
-\chapter{Távérzékelt felvételek elemzése}
+\chapter{Távérzékelt felvételek elemzése} \label{ch:remoteSensingAnalysis}
 A fejezet célja betekintést nyújtani távérzékelt felvételkiértékelés folyamatába.
 Elsõként a távérzékelés fogalma, fizikai és technikai alapjai, valamint alkalmazási lehetõségei kerülnek ismertetésre.
 Ezután a távérzékelt felvételek kiértékelésének célja, feldolgozási folyamata
@@ -304,10 +304,27 @@ A teljesítménynövelés másik lehetséges módja az évek óta kutatott\cite{distribut
 felhõk elterjedésével az utóbbi idõben leginkább teret nyert \textit{elosztott feldolgozás}.
 
 Távérzékelt felvételek elosztott feldolgozása úgy történik, hogy a feldolgozandó kép alkotó elemeit valamilyen tulajdonság alapján 
-(pixel értékek, spektrális intenzitásértékek) \textit{feldarabolunk}, az egyes feldolgozó egységek pedig ezen darabokat dolgozzák fel.
+(pixel értékek, spektrális intenzitásértékek) \textit{feldarabolunk} (\textit{particionálás}), az egyes feldolgozó egységek pedig ezen darabokat dolgozzák fel.
 Ekkor - a mûvelet korábban ismertetett munkaterületének megfelelõen - a feldolgozó egységeknek szükségük lehet olyan információkra, melyek
-a teljes adat egy részének vagy egészének ismeretében számíthatók csak ki. Ezen adatok gyors és hatékony rendelkezésre állása
-kulcsfontosságú egy elosztott rendszer teljesítményében.
+a teljes adat egy részének vagy egészének ismeretében számíthatók csak ki. 
+Egyszerûbb esetben ezt megoldhatjuk \textit{átfedések} alkalmazásával - az input adatot úgy particionáljuk,
+hogy az eredetileg neki szánt területnél valamennyivel nagyobb területet tartalmazzon. 
+Ez fõként fokális mûveleteknél hasznos, ahol a pixelek kiszámítása egy meghatározott sugarú környezet
+pixelértékeinek felhasználásával történik. Ekkor az átfedések segítségével akár más partíció felhasználása 
+nélkül is kiszámítható az eredmény.
+
+\begin{figure}[ht!]
+	\centering
+	\captionsetup{width=0.6\textwidth, justification=centering}
+	\includegraphics[width=80mm]{figures/imagePartitioning_withOverlap.png}
+	\caption{Input kép feldarabolása \textit{átfedés}ek alkalmazásával \label{fig:imagePartitioning}}
+\end{figure}
+
+Regionális esetben is felhasználhatóak az átfedett területek, azonban az egyes régiók méretének
+dinamikus változása miatt kisebb valószínûséggel lesz elég az átfedések által tartalmazott adat.
+Emiatt szükséges lehet a feldolgozó egységeknek egymással kommunikálniuk feldolgozás közben,
+hogy biztosíthassák a számításokhoz szükséges adatokat. Ezen adatok gyors és hatékony 
+rendelkezésre állása kulcsfontosságú egy elosztott rendszer teljesítményében.
 
 % ------------------------------------------------------------------------------
 
@@ -684,17 +701,81 @@ A rendszer megfelelõen kezeli nagyméretû bináris adatok \textit{HDFS}-be történõ
 Az input adat opcionálisan particionálható, az egyes partíciók így elosztottan is feldolgozhatók (A fent említett
 mûveletek módosítás nélkül alkalmazhatók Map-, illetve Reduce függvényekként).
 
-\section{Integrálás az Orleans keretrendszerbe}
-Távérzékelt felvételek Orleans rendszeren való feldolgozásához szükség volt egy egységes téradatmodellre,
-a felvételek beolvasására, a végrehajtandó mûveletekre, illetve az eredmények lemezre történõ kiírására.
-Ennek megfelelõen az \textit{AEGIS} keretrendszer \textit{Core, IO}, valamint \textit{Operations} komponenseire volt
-szükség, ezek kerültek integrálásra. Mivel mindkét rendszer a .NET keretrendszerre épül, 
-így az integráció is egyszerû volt, csupán az AEGIS által nyújtott komponensek \textit{.NET szerelvények} 
-(\textit{assembly}) formájában történõ referálására volt szükség az Orleans projektben.
-
 % ------------------------------------------------------------------------------
 
 \chapter{Megvalósítás}
+A fejezet célja az Orleans rendszer távérzékelt felvételek feldolgozására való kiterjesztésének 
+a gyakorlatban való bemutatása. Ehhez szükséges volt egy olyan prototípus alkalmazás megvalósítása, 
+melynek segítségével tesztelhetõek az Orleans rendszer képességei távérzékelt felvételek feldolgozásában. 
+Az alkalmazás felépítésének és mûködésének részletes bemutatása után a vizsgált mûveletek kerülnek taglalásra.
+
+Az egyes munkaterület-csoportokba
+tartozó mûveletek csoportonként eltérõ megközelítést igényeltek az elosztott feldolgozás során,
+így ezen csoportokon végighaladva tárgyaljuk az alkalmazott ötleteket és megvalósításukat.
+
+\section{Az Orleans térinformatikai kiterjesztése} 
+
+\subsection{Projektfelépítés}
+Egy Orleans alkalmazást 3 fõ komponens épít fel: \textit{Aktorok} (\textit{Grains}), 
+\textit{Aktor interfészek} (\textit{Grain Interfaces}) valamint a \textit{Kliens} (\textit{Client}). Ezek a komponensek 
+különálló projektekként jelennek meg a rendszerben.
+
+A \textit{Grain interfaces} komponensben definiálhatjuk a projektben használt aktorokat, 
+valamint ezek metódusait és a metódusok szignatúráját. Csak az itt definiált aktor típusok lesznek késõbb
+felhasználhatóak a projektben, ezek implementációját pedig a 
+\textit{Grains} komponens tartalmazza.
+
+A \textit{Client} komponens köti össze a külvilágot a rendszerrel, tulajdonképp egy belépési pont
+az Orleans környezetbe. A kliens rendelkezhet \textit{Grain} referenciákkal, 
+valamint üzenetet is küldhet \textit{Grain}-eknek. A megfelelõ kommunikáció érdekében a \textit{Client}
+illetve a \textit{Grains} komponensnek is rendelkeznie kell ugyanazzal a \textit{Grain Interfaces} komponenssel.
+
+A dolgozat során elkészített prototípus alkalmazás (\textit{OrleansSpectral}) felépítése is hasonló, a fent felsorolt
+3 komponens felhasználásán túl rendelkezik még egy \textit{Common} projekttel, amely az egyes komponensek mindegyike
+által használt osztályokat és mûveleteket tartalmazza.
+
+\begin{figure}[ht!]
+	\centering
+	\captionsetup{width=0.8\textwidth, justification=centering}
+	\includegraphics[width=130mm]{figures/orleansSpectralComponents.png}
+	\caption{Az alkalmazás komponensdiagramja \label{fig:orleansSpectralComponents}}
+\end{figure}
+
+\subsubsection{Az AEGIS keretrendszer integrációja}
+Távérzékelt felvételek feldolgozásához szükség volt egy egységes téradatmodellre,
+a felvételek beolvasására, a végrehajtandó mûveletekre, illetve az eredmények lemezre történõ kiírására.
+Ennek megfelelõen az \textit{AEGIS} keretrendszer \textit{Core, IO}, valamint \textit{Operations} komponenseire volt
+szükség, ezek kerültek integrálásra. Mivel mindkét rendszer a \textit{.NET} keretrendszerre épül, 
+így az integráció is egyszerû volt, csupán az AEGIS által nyújtott \textit{.NET szerelvények} 
+(\textit{assembly}) referálására volt szükség a fent felsorolt projektekben.
+
+\subsection{Input adatok particionálása és feltöltése} %TODO Not the best section title
+A \ref{ch:remoteSensingAnalysis}. fejezetben említésre került, hogy távérzékelt felvételek
+elosztott feldolgozásánál az input adatokat valamilyen tulajdonság alapján feldarabolunk
+és az egyes darabokat külön számítási egységekkel dolgozunk fel. Az Orleans rendszer
+esetén is ez történt, azonban a particionálás mûvelete kiegészült egy 
+\textit{partíció leíró} fájl generálásával, amely tartalmazza az eredeti kép dimenzióit,
+az egyes darabok elhelyezkedését és kiterjedését az eredeti képhez képest, a fájlok fizikai elérési útvonalát,
+valamint további metainformációkat (pl: a particionáláshoz használt algoritmus). 
+Ezen felül a leíró fájl tartalmazza az 
+eredeti kép \textit{hisztogram-értékei}t, ez az információ késõbb felhasználható az egyes mûveletekben.
+
+
+%TODO Illustration about partition descriptor?
+
+Mivel a Hadoop \textit{HDFS} rendszerrel ellentétben az Orleans keretrendszer nem definiál saját elosztott
+fájlrendszert, így a feldarabolt kép darabjainak szétosztása manuálisan történik a klaszterben. Az egyes darabokat
+fel kell töltenünk a feldolgozó egységekre, és az elérési útvonalukat 
+rögzítenünk kell a partíció-leíróba.
+
+\subsection{Adatok feltérképezése, azonosítása és beolvasása}
+%Hogyan kell létrehozni a master graineket, hogyan lehet az adatok pozícióját feltérképezni
+%Osztálydiagram a client, Manager és a transformation grain kapcsolatáról
+%Aktivitás diagram a feltérképezésrõl és a partition descriptor frissítésének és propagálásának menetérõl
+
+
+
+
 
 
 \section{Vizsgált algoritmusok}
@@ -702,21 +783,22 @@ Az elemzett algoritmusok megválasztásánál fontos szempont volt a sokszínûség - a
 feldolgozásának mindkét fázisából, mindegyik munkaterület-csoportból kerültek kiválasztásra
 mûveletek, ezáltal átfogó képet kaphatunk, a képfeldolgozás mely részein alkalmazható hatékonyan a rendszer. 
 
-\subsection{Lokális mûveletek}
-\subsubsection{Spektrális Invertálás}
-\subsubsection{ToA-Reflektancia}
-
-\subsection{Fokális mûveletek}
-\subsubsection{Konstans küszöbölés}
-\subsubsection{Otsu küszöbölés}
-
-\subsection{Regionális mûveletek}
-\subsubsection{Negyedelõ fa alapú szegmentálás}
-\subsubsection{Szekvenciális csatolás alapú szegmentálás}
-\subsubsection{Legjobb összevonáson alapuló szegmentálás}
-
-\subsection{Globális mûveletek}
-\subsubsection{Kiegyensúlyozott hisztogram-küszöbölés}
+%\subsection{Lokális mûveletek}
+%\subsubsection{Spektrális Invertálás}
+%\subsubsection{ToA-Reflektancia}
+%
+%\subsection{Fokális mûveletek}
+%\subsubsection{Konstans küszöbölés}
+%\subsubsection{Otsu küszöbölés}
+%
+%\subsection{Regionális mûveletek}
+%\subsubsection{Negyedelõ fa alapú szegmentálás}
+%\subsubsection{Szekvenciális csatolás alapú szegmentálás}
+%\subsubsection{Legjobb összevonáson alapuló szegmentálás}
+%
+%\subsection{Globális mûveletek}
+%\subsubsection{Kiegyensúlyozott hisztogram-küszöbölés}
+%\subsubsection{Klaszterezés}
 
 % ------------------------------------------------------------------------------
 
