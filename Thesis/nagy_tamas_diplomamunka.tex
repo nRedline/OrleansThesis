@@ -206,6 +206,8 @@ A szegmentálás eredményeként egy tematikus térképet kapunk, mely minden képpontr
 tartalmazó szegmens sorszámát. Szegmentálás használata esetén elmondható, hogy homogén területen a kategóriák
 kevésbé keverednek.
 
+%TODO Extend with clustering
+
 %TODO Replace with better figure
 \begin{figure}[ht!]
 	\centering
@@ -739,7 +741,7 @@ mûveletek módosítás nélkül alkalmazhatók Map-, illetve Reduce függvényekként).
 
 % ------------------------------------------------------------------------------
 
-\chapter{Megvalósítás}
+\chapter{Megvalósítás} %TODO Split into two chapters?
 A fejezet célja az Orleans rendszer távérzékelt felvételek feldolgozására való kiterjesztésének 
 a gyakorlatban való bemutatása. Ehhez szükséges volt egy olyan prototípus alkalmazás megvalósítása, 
 melynek segítségével tesztelhetõek az Orleans rendszer képességei távérzékelt felvételek feldolgozásában. 
@@ -853,24 +855,83 @@ adhatjuk meg.
 
 \section{Vizsgált algoritmusok}
 Az elemzett algoritmusok megválasztásánál fontos szempont volt a sokszínûség - a távérzékelt felvételek 
-feldolgozásának mindkét fázisából, mindegyik munkaterület-csoportból kerültek kiválasztásra
+feldolgozásának mindkét fázisából (tehát az elõfeldolgozás és a tematikus osztályozás részébõl is), 
+mindegyik munkaterület-csoportból kerültek kiválasztásra
 mûveletek, ezáltal átfogó képet kaphatunk, a képfeldolgozás mely részein alkalmazható hatékonyan a rendszer. 
 
-%\subsection{Lokális mûveletek}
-%\subsubsection{Spektrális Invertálás}
-%\subsubsection{ToA-Reflektancia}
-%
-%\subsection{Fokális mûveletek}
-%\subsubsection{Konstans küszöbölés}
-%\subsubsection{Otsu küszöbölés}
-%
+Mivel az egyes munkaterületekhez tartozó mûveletek eltérõ megközelítést igényelnek, ezáltal
+a bemutatás ezeken végighaladva történik.
+
+\subsection{Lokális mûveletek}
+Elosztott feldolgozás szempontjából a legegyszerûbb munkaterület-csoport a lokális mûveletek csoportja.
+Ebben az esetben az input kép tetszõleges módon particionálható, és elosztottan feldolgozható, nem szükségesek
+további lépések. A lokális mûveletek egyszerûségük miatt megfelelõ alapot nyújtottak a vizsgált rendszer alapvetõ
+lehetõségeinek megismerésére, melyre a késõbbiekben építkezni lehetett.
+
+\subsubsection{Spektrális Invertálás}
+Az \textit{invertálás} talán a legegyszerûbb spektrális mûvelet, melynek során az egyes 
+intenzitásértékeket "fordítjuk meg" a felvétel minden pixelére. Ezt úgy érhetjük el, hogy a
+radiometriai felbontás maximálisan felvehetõ értékébõl vonjuk ki az intenzitásértékeket.
+
+%TODO Recompose and add math figure
+
+\subsubsection{ToA-Reflektancia}
+%TODO Compose
+
+\subsubsection{Konstans küszöbölés}
+%TODO Compose
+
+
+
+\subsubsection{Lokális mûveletek MapReduce alapú feldolgozása}
+A fent felsorolt mûveletek MapReduce módon történõ feldolgozása hasonlóan egyszerû feladat 
+- az input tetszõleges módon particionálható, és a mûveletek elvégezhetõek 
+egy szimpla \textit{Map} fázisban. 
+
+%TODO Consider writing here something about Orleans as well
+
+\subsection{Fokális mûveletek}
+\textit{Fokális mûveletek} végrehajtása esetén egy pixel kiszámításához szükség van a pixel egy
+meghatározott sugarú környezetének értékeire. A szükséges terület méretét a mûvelet elindításának
+pillanatában ismerjük, és a futás során ez az információ nem változik.
+
+Fokális mûveletek esetén két lehetõségünk van: vagy már a particionálás során figyelembe vesszük,
+hogy várhatóan mekkora területre lesz szüksége az egyes mûveleteknek és ez alapján a partíciókat
+\textit{átfedések}kel hozzuk létre - ekkor a mûvelet indításakor biztosítanunk kell, hogy a 
+mûvelet által igényelt terület méreténél nagyobb, vagy egyenlõ a felhasznált partícióra definiált átfedés.
+
+Egy másik lehetõség ha a partíciók nem rendelkeznek átfedésekkel,
+hogy a feldolgozás során a szükséges intenzitásértékeket a feldolgozó egységek egymás
+számára elérhetõvé teszik. Ekkor ha egy egységnek egy olyan értékre van szüksége,
+amelyet egy másik feldolgozó egység birtokol, akkor ezt az értéket futás során "elkérheti"
+a birtokló folyamattól.
+Ezzel a megoldással valószínûleg nem érhetõ el olyan teljesítmény, mint
+ha az összes adat lokálisan rendelkezésre állna, cserébe viszont a partíciók mérete nem nõ.
+További finomítási mód lehet például, ha a folyamatok egyszerre nem csak egy-egy koordináta 
+intenzitás-értékeit kérik el, hanem meghatározott méretû blokkokat. Ebben az esetben csökken a
+hálózati kommunikációk száma, azonban növekszik a hálózaton átküldött adatok mérete.
+
+
+\subsubsection{Otsu küszöbölés} %TODO Is This Focal or Global method?
+
+
+%TODO Write about filterezés \subsubsection{Filterezés}
+
+
+\subsubsection{Fokális mûveletek MapReduce alapú feldolgozása}
+\subsubsection{Fokális mûveletek Orleans alapú feldolgozása}
+%TODO Write here about VirtualRaster - RasterService
+
 %\subsection{Regionális mûveletek}
 %\subsubsection{Negyedelõ fa alapú szegmentálás}
 %\subsubsection{Szekvenciális csatolás alapú szegmentálás}
 %\subsubsection{Legjobb összevonáson alapuló szegmentálás}
+%\subsubsection{Regionális mûveletek MapReduce alapú feldolgozása}
 %
 %\subsection{Globális mûveletek}
 %\subsubsection{Kiegyensúlyozott hisztogram-küszöbölés}
+%https://en.wikipedia.org/wiki/Balanced_histogram_thresholding
+
 %\subsubsection{Klaszterezés}
 
 % ------------------------------------------------------------------------------
