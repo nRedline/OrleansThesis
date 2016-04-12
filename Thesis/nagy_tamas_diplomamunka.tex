@@ -33,10 +33,11 @@
 
 %\usepackage[nottoc,numbib]{tocbibind}
 
-\counterwithout{figure}{chapter}
+%\counterwithout{figure}{chapter}
 
 \graphicspath {{figures/}}
 
+\addto\captionsmagyar{ \renewcommand{\listfigurename}{Ábrajegyzék} }
 
 
 
@@ -60,7 +61,6 @@
 % ------------------------------------------------------------------------------
 % Tartalomjegyzék
 
-%TODO Fix Bibliography
 \tableofcontents
 
 % ------------------------------------------------------------------------------
@@ -93,10 +93,10 @@ A \textit{passzív} szenzorok valamilyen természetes energia sugárzását érzékelik
 visszavert energia. \textit{Passzív} szenzorok által leggyakrabban használt energiaforrás a Napból érkezõ visszavert energia.
 Az \textit{aktív} szenzorok abban különböznek passzív társaiktól, hogy õk maguk sugározzák a földfelszínre az érzékelni kívánt energiát.
 
-\begin{figure}[ht!]
+\begin{figure}[h!]
 	\centering
 	\includegraphics[width=90mm]{figures/remote_sensing_components.jpg}
-	\caption{A távérzékelési rendszer összetevõi \label{remote_sensing_components}}
+	\caption{A távérzékelési rendszer összetevõi \label{fig:remote_sensing_components}}
 \end{figure}
 
 A távérzékelt felvételek \textit{spektrális felbontás}a meghatározza, hogy az elektromágneses spektrumon belül mely
@@ -237,17 +237,17 @@ elérni kívánt célosztályoknak, számuk jellemzõen nagyságrendekkel nagyobb.
 Az összetartozó szegmensek összevonása és ezáltal célosztályokká redukálása a \textit{klaszterezõ} eljárások feladata.
 
 %TODO Change Font type
-\begin{figure}[ht!]
+\begin{figure}[h!]
 	\centering
-	\captionsetup{width=0.6\textwidth, justification=centering}
+	\captionsetup{width=1\textwidth, justification=centering}
 	\includegraphics[width=110mm]{figures/coordinateSystem.jpg}
-	\caption{Az egyes felszíndarabok sugárzási értékei  $x_1 = 0.5\si{\micro\metre}$ 
-		és $x_2 = 0.9\si{\micro\metre}$ hullámhosszon \label{intensitySpaces}}
+	\caption{Felszíndarabok sugárzása  $x_1=0.5\si{\micro\metre}$ 
+		és $x_2=0.9\si{\micro\metre}$ hullámhosszon \label{fig:intensitySpaces}}
 \end{figure}
 
 A klaszterezõ mûveletek a szegmensek \textit{intenzitástér}ben való elhelyezkedése alapján 
 határolják be az egyes elemeket a megfelelõ osztályokba. Az intenzitástérben a kép egy pixelének sávonkénti
-intenzitásértékei adják a pont koordinátáit. A \ref{intensitySpaces}. ábrán látható, hogy az egyes intenzitásértékek
+intenzitásértékei adják a pont koordinátáit. A \ref{fig:intensitySpaces}. ábrán látható, hogy az egyes intenzitásértékek
 jellemzõen nem pontokba tömörülnek, hanem rendelkeznek bizonyos mértékû szórással. A klaszterezés során
 ezen térben keressük az összetartozó elemeket, és ez alapján alakítjuk ki a végsõ osztályhalmazokat.\cite{remoteSensingLecture}
 
@@ -331,6 +331,13 @@ rendszer teljesítménynövelésének ezen módja költséges, és a fejlesztéssel nyert 
 A teljesítménynövelés másik lehetséges módja az évek óta kutatott\cite{distributedImageProcessing}, és a számítási
 felhõk elterjedésével az utóbbi idõben leginkább teret nyert \textit{elosztott feldolgozás}.
 
+\begin{figure}[h!]
+	\centering
+	\captionsetup{width=0.8\textwidth, justification=centering}
+	\includegraphics[width=80mm]{figures/imagePartitioning_withOverlap.png}
+	\caption{Input kép feldarabolása \textit{átfedés}ek alkalmazásával \label{fig:imagePartitioning}}
+\end{figure}
+
 Távérzékelt felvételek elosztott feldolgozása úgy történik, hogy a feldolgozandó kép alkotó elemeit valamilyen tulajdonság alapján 
 (pixel értékek, spektrális intenzitásértékek) \textit{feldarabolunk} (\textit{particionálás}), az egyes feldolgozó egységek pedig ezen darabokat dolgozzák fel.
 Ekkor - a mûvelet korábban ismertetett munkaterületének megfelelõen - a feldolgozó egységeknek szükségük lehet olyan információkra, melyek
@@ -340,13 +347,6 @@ hogy az eredetileg neki szánt területnél valamennyivel nagyobb területet tartalm
 Ez fõként fokális mûveleteknél hasznos, ahol a pixelek kiszámítása egy meghatározott sugarú környezet
 pixelértékeinek felhasználásával történik. Ekkor az átfedések segítségével akár más partíció felhasználása 
 nélkül is kiszámítható az eredmény.
-
-\begin{figure}[ht!]
-	\centering
-	\captionsetup{width=0.6\textwidth, justification=centering}
-	\includegraphics[width=80mm]{figures/imagePartitioning_withOverlap.png}
-	\caption{Input kép feldarabolása \textit{átfedés}ek alkalmazásával \label{fig:imagePartitioning}}
-\end{figure}
 
 Regionális esetben is felhasználhatóak az átfedett területek, azonban az egyes régiók méretének
 dinamikus változása miatt kisebb valószínûséggel lesz elég az átfedések által tartalmazott adat.
@@ -388,11 +388,11 @@ A futtatókörnyezet végzi az adatok \textit{particionálás}át, vezérli a végrehajt
 Ezzel lehetõséget nyújt elosztott környezetek erõforrásainak kihasználására anélkül, hogy a fejlesztõktõl 
 komoly szaktudást követelne a párhuzamos és elosztott alkalmazásfejlesztés területén.
 
-\begin{figure}[ht!]
+\begin{figure}[h!]
 	\centering
 	\captionsetup{width=0.8\textwidth, justification=centering}
 	\includegraphics[width=120mm]{figures/mapReduce.jpg}
-	\caption{A \textit{MapReduce} folyamat \label{mapReduceProcess}}
+	\caption{A \textit{MapReduce} folyamat \label{fig:mapReduceProcess}}
 \end{figure}
 
 \subsection{Hadoop}
@@ -447,9 +447,7 @@ Az üzenetek sorrendje nem garantált, de követelmény, hogy minden üzenet beérkezz
 	\centering
 	\captionsetup{width=0.8\textwidth, justification=centering}
 	\includegraphics[width=120mm]{figures/actorModel.png}
-	\caption{Az \textit{aktor modell}. Mindegyik aktor rendelkezik egy saját postaládával,
-		 és izoláltan eltárolja az állapotát
-		\label{fig:actorModel}}
+	\caption{Az \textit{aktor modell}.\label{fig:actorModel}}
 \end{figure}
 
 Az aktorok jellemzõen egy számítási szállal rendelkeznek, és nem osztanak meg memóriát egymás között. 
@@ -722,8 +720,7 @@ az implementáció során a szabvány kiterjesztésre került raszteres adatok támogat
 	\centering
 	\captionsetup{width=0.9\textwidth, justification=centering}
 	\includegraphics[width=120mm]{figures/aegis_data_model_extensions.png}
-	\caption{Az \textit{AEGIS} adatmodellje az SFA szabvány alapján, 
-		valamint raszteres adatok támogatásával való kiterjesztése
+	\caption{Az \textit{AEGIS} adatmodellje és kiterjesztése raszteres támogatással
 		\label{fig:aegis_data_model}}
 \end{figure}
  
@@ -738,7 +735,6 @@ futása során rendre három alfüggvényt hív meg, ezek: \textit{PrepareResult(), Co
 A \textit{PrepareResult()} a számításokhoz elõállítja a kiinduló adathalmazt, a \textit{ComputeResult()} a tényleges 
 számításokat hajtja végre, a \textit{FinalizeResult()} metódus pedig összegzi és véglegesíti az eredményt.
 A leszármazott osztályok ezen metódusok felüldefiniálásával határozhatják meg a mûvelet mûködését.
-
 
 %TODO Replace model
 \begin{figure}[h!]
@@ -757,7 +753,6 @@ helyezkednek el. A dolgozat során az itt implementált mûveletek kerültek felhasz
 
 %TODO Can we place a package diagram here?
 
-
 \section{Feldolgozás Hadoop architektúrán}
 Az AEGIS támogatja a \textit{Hadoop} architektúrával történõ adatkezelést, illetve feldolgozást.
 A rendszer megfelelõen kezeli nagyméretû bináris adatok \textit{HDFS}-be történõ beolvasását (pl.: \textit{GeoTIFF} formában).
@@ -771,19 +766,13 @@ differenciák sem jelennek meg az eredményekben.
 
 % ------------------------------------------------------------------------------
 
-\chapter{Megvalósítás} %TODO Split into two chapters?
-A fejezet célja az Orleans rendszer távérzékelt felvételek feldolgozására való kiterjesztésének 
-a gyakorlatban való bemutatása. Ehhez szükséges volt egy olyan prototípus alkalmazás megvalósítása, 
+\chapter{Megvalósítás}
+A dolgozat célja az Orleans rendszer távérzékelt felvételek feldolgozására való kiterjesztése és
+a gyakorlatban való alkalmazhatóságának vizsgálata. 
+Ehhez szükséges volt egy olyan prototípus alkalmazás megvalósítása, 
 melynek segítségével tesztelhetõek az Orleans rendszer képességei távérzékelt felvételek feldolgozásában. 
-Az alkalmazás felépítésének és mûködésének részletes bemutatása után a vizsgált mûveletek kerülnek taglalásra.
+Ezen fejezet célja az alkalmazás felépítésének és komponenseinek bemutatása.
 
-Az egyes munkaterület-csoportokba
-tartozó mûveletek csoportonként eltérõ megközelítést igényeltek az elosztott feldolgozás során,
-így ezen csoportokon végighaladva tárgyaljuk az alkalmazott ötleteket és megvalósításukat.
-
-\section{Az Orleans térinformatikai kiterjesztése} 
-%TODO Write something here
-\subsection{Projektfelépítés}
 A dolgozat során elkészített prototípus alkalmazás (\textit{OrleansSpectral}) felépítése hasonló a 
 tradicionális Orleans alkalmazásokhoz, rendelkezik a \ref{subs:orleansProjects}. szakaszban említett
 3 komponenssel (\textit{Grains}, \textit{Grain interfaces}, \textit{Client}), valamint ezeken túl 
@@ -797,7 +786,7 @@ egy \textit{Common} projekttel, amely az egyes komponensek mindegyike
 	\caption{Az alkalmazás komponensdiagramja \label{fig:orleansSpectralComponents}}
 \end{figure}
 
-\subsubsection{Az AEGIS keretrendszer integrációja}
+\section{Az AEGIS keretrendszer integrációja}
 Távérzékelt felvételek feldolgozásához szükség volt egy egységes téradatmodellre,
 a felvételek beolvasására, a végrehajtandó mûveletekre, illetve az eredmények lemezre történõ kiírására.
 Ennek megfelelõen az \textit{AEGIS} keretrendszer \textit{Core, IO}, valamint \textit{Operations} komponenseire volt
@@ -805,7 +794,7 @@ szükség, ezek kerültek integrálásra. Mivel mindkét rendszer a \textit{.NET} kere
 így az integráció is egyszerû volt, csupán az AEGIS által nyújtott \textit{.NET szerelvények} 
 (\textit{assembly}) referálására volt szükség a fent felsorolt projektekben.
 
-\subsection{Input adatok particionálása és feltöltése} %TODO Not the best section title
+\section{Input adatok particionálása és feltöltése} %TODO Not the best section title
 A \ref{ch:remoteSensingAnalysis}. fejezetben említésre került, hogy távérzékelt felvételek
 elosztott feldolgozásánál az input adatokat valamilyen tulajdonság alapján feldarabolunk
 és az egyes darabokat külön számítási egységekkel dolgozunk fel. Az Orleans rendszer
@@ -815,6 +804,15 @@ az egyes darabok elhelyezkedését és kiterjedését az eredeti képhez képest, a fáj
 valamint további metainformációkat (pl: a particionáláshoz használt algoritmus). 
 Ezen felül a leíró fájl tartalmazza az 
 eredeti kép \textit{hisztogram-értékei}t, ez az információ késõbb felhasználható az egyes mûveletekben.
+A leíró fájl segítségével könnyedén meghatározható, hogy a kép egy darabja hol foglal helyet az eredeti képen.
+
+\begin{figure}[h!]
+	\centering
+	\captionsetup{width=0.8\textwidth, justification=centering}
+	\includegraphics[width=150mm]{figures/partitionDescriptor.png}
+	\caption{Az input adat egy lehetséges particionálása, és a partíció leíró fájl \label{fig:partitionDescriptor}}
+\end{figure}
+
 
 Mivel a Hadoop \textit{HDFS} rendszerrel ellentétben az Orleans keretrendszer nem definiál saját elosztott
 fájlrendszert, így a feldarabolt kép darabjainak szétosztása manuálisan történik a klaszterben. Az egyes darabokat
@@ -857,9 +855,8 @@ A létrehozott aktorok közül minden szerverrõl egyet választunk, ez lesz a szerve
 	\centering
 	\captionsetup{width=0.8\textwidth, justification=centering}
 	\includegraphics[width=135mm]{figures/grainsClassDiagram.png}
-	\caption{Az aktorok osztálydiagramja \label{fig:grainClassDiagram}}
+	\caption{\textit{Grain}ek osztálydiagramja \label{fig:grainClassDiagram}}
 \end{figure}
-
 
 A menedzser entitás nem végez spektrális mûveleteket, hanem a mûveleteket feldolgozó aktorok 
 példányosításáért és a kliensnek való továbbításáért felel. Egy elõkészítési fázisban
@@ -885,23 +882,27 @@ Az mûveleteket végzõ aktorok létrehozása és megfelelõ információval való ellátás
 kívánt mûvelet végrehajtása. A mûveletet valamint paramétereit az alkalmazás indításánál paraméterekként 
 adhatjuk meg.
 
-\section{Vizsgált algoritmusok}
+\section{Mûveletek futtatása}
+%TODO: Compose
+
+
+
+\chapter{Vizsgált algoritmusok}
+%TODO Recompose
 Az elemzett algoritmusok megválasztásánál fontos szempont volt a sokszínûség - a távérzékelt felvételek 
 feldolgozásának mindkét fázisából (tehát az elõfeldolgozás és a tematikus osztályozás részébõl is), 
 mindegyik munkaterület-csoportból kerültek kiválasztásra
 mûveletek, ezáltal átfogó képet kaphatunk, a képfeldolgozás mely részein alkalmazható hatékonyan a rendszer. 
-
 Mivel az egyes munkaterületekhez tartozó mûveletek eltérõ megközelítést igényelnek, ezáltal
 a bemutatás ezeken végighaladva történik.
 
-\subsection{Lokális mûveletek}
+\section{Lokális mûveletek}
 Elosztott feldolgozás szempontjából a legegyszerûbb munkaterület-csoport a lokális mûveletek csoportja.
 Ebben az esetben az input kép tetszõleges módon particionálható, és elosztottan feldolgozható, nem szükségesek
 további lépések. A lokális mûveletek egyszerûségük miatt megfelelõ alapot nyújtottak a vizsgált rendszer alapvetõ
 lehetõségeinek megismerésére, melyre a késõbbiekben építkezni lehetett. Ezen felül a lokális mûveletek segítségével
 a rendszer egyes számítási egységeinek teljesítménye is mérhetõ volt, így tesztelésre kerültek kevésbé számításigényes
 (pl.: \textit{Spektrális invertálás}), valamint bonyolultabb mûveletek (pl.: \textit{ToA-Reflektancia}).
-
 
 \subsubsection{Spektrális Invertálás}
 Az \textit{invertálás} talán a legegyszerûbb spektrális mûvelet, melynek során az egyes 
@@ -922,7 +923,7 @@ mindaddig, amíg az összes feldolgozó egység ugyanazzal a küszöbértékkel dolgozik
 %A fent felsorolt mûveletek MapReduce módon történõ feldolgozása hasonlóan egyszerû feladat 
 %- az input tetszõleges módon particionálható, és a mûveletek elvégezhetõek egy szimpla \textit{Map} fázisban. 
 
-\subsection{Fokális mûveletek}
+\section{Fokális mûveletek}
 \textit{Fokális mûveletek} végrehajtása esetén egy pixel kiszámításához szükség van a pixel egy
 meghatározott sugarú környezetének értékeire. A szükséges terület méretét a mûvelet elindításának
 pillanatában ismerjük, és a futás során ez az információ nem változik.
@@ -960,7 +961,7 @@ In the spatial domain, a 2D Gabor filter is a Gaussian kernel function modulated
  To be continued...
 %TODO Finish, cite?
 
-\subsubsection{Fokális mûveletek feldolgozása az Orleans rendszerben}
+\subsection{Fokális mûveletek feldolgozása az Orleans rendszerben}
 A fokális mûveletek elosztott feldolgozás során legtöbbször meghatározott mennyiségû plusz adatot igényelnek
 a szomszédos partícióktól. Ez a legtöbbször megoldható a korábban ismertetett átfedések definiálásával, mivel
 a mûveletek futtatásánál ellenõrizni tudjuk, hogy elegendõ plusz terület áll-e rendelkezésre a végrehajtáshoz.
@@ -971,6 +972,7 @@ alapuló feldolgozás.
 %TODO Consider recompose
 %TODO Add Filtering class diagram?
 
+\subsubsection{Virtuális Raszter}
 
 Az AEGIS rendszerben megvalósított metódusok jelenleg egy konkrét raszter kép minden pixelét feldolgozzák, nincs lehetõség
 annak meghatározására, hogy mûvelet a kép csak egy részterületén dolgozzon. Emiatt ha a képet átfedés nélkül 
@@ -1019,6 +1021,7 @@ több távoli adatra is szükség lehet és nagy valószínûséggel a távoli adattal ren
 fázisban áll. Ezért a feldolgozó \textit{SpectralOperationGrain} osztályt megjelöltük a [Reentrant] attribútummal, így a
 beérkezõ kérések a mûvelet végrehajtása közben is kiszolgálásra kerülnek a Grain által.
 
+\subsubsection{Végrehajtási terület}
 Az abszolút koordináták használata miatt a mûveletek módosítás nélkül az input kép egészére futnának, nem csak a 
 lokálisan elérhetõ tartalomra, ez pedig jelentõs teljesítményromláshoz vezetne. 
 A probléma megoldásához az AEGIS keretrendszer minimális módosítása volt szükséges. A transzformációs mûveletek õsét, a 
@@ -1034,13 +1037,12 @@ csak egy olyan input partíciók állnak rendelkezésre, melyek nem rendelkeznek átf
 a megoldás hatékonysága részletesen is tárgyalásra kerül, annyi azonban elmondható, hogy a Grain-ek hálózati kommunikációja
 költséges, így a megfelelõ teljesítmény érdekében törekedni kell a kommunikációk számának minimalizálására.
 
-\subsection{Regionális mûveletek}
-\subsubsection{Negyedelõ fa alapú szegmentálás}
-\subsubsection{Szekvenciális csatolás alapú szegmentálás}
-\subsubsection{Legjobb összevonáson alapuló szegmentálás}
-\subsubsection{Regionális mûveletek MapReduce alapú feldolgozása}
-\subsubsection{Regionális mûveletek feldolgozása az Orleans rendszerben}
-
+%\section{Regionális mûveletek}
+%\subsubsection{Negyedelõ fa alapú szegmentálás}
+%\subsubsection{Szekvenciális csatolás alapú szegmentálás}
+%\subsubsection{Legjobb összevonáson alapuló szegmentálás}
+%\subsection{Regionális mûveletek MapReduce alapú feldolgozása}
+%\subsection{Regionális mûveletek feldolgozása az Orleans rendszerben}
 
 %\subsection{Globális mûveletek}
 %\subsubsection{Kiegyensúlyozott hisztogram-küszöbölés}
@@ -1051,12 +1053,12 @@ költséges, így a megfelelõ teljesítmény érdekében törekedni kell a kommunikációk
 
 % ------------------------------------------------------------------------------
 
-\chapter{Eredmények}
+%\chapter{Eredmények}
 
 
 % ------------------------------------------------------------------------------
 
-\chapter{Összegzés}
+%\chapter{Összegzés}
 
 % ------------------------------------------------------------------------------
 
@@ -1064,8 +1066,7 @@ költséges, így a megfelelõ teljesítmény érdekében törekedni kell a kommunikációk
 \cleardoublepage
 
 \phantomsection
-
-\addcontentsline{toc}{chapter}{Bibliography}
+\addcontentsline{toc}{chapter}{Irodalomjegyzék}
 
 \begin{thebibliography}{9}
 \bibitem{richards} Richards, J. A., Jia, X.: \textit{Remote Sensing Digital Image Analysis, An Introduction, fifth edition}, Springer, 2013, 978-3-642-30061-5.
@@ -1106,5 +1107,7 @@ költséges, így a megfelelõ teljesítmény érdekében törekedni kell a kommunikációk
 \bibitem{sfa} Herring, J. \textit{OpenGIS Implementation Standard for Geographic information-Simple feature access-Part 1: Common architecture.} OGC Document 4.21 (2011): 122-127.
 
 \end{thebibliography}
+
+\listoffigures
 
 \end{document}
