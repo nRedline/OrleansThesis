@@ -164,7 +164,6 @@ A felvételezés során a szenzorra beérkezõ intenzitásértékek nem tükrözik hûen a 
 Ezután a felvételek tematikus kiértékelése következik, mely történhet 
 manuálisan vagy automatizáltan, esetleg a kettõ keverékeként. A tematikus kiértékelés módja befolyással lehet arra,
 mely elõfeldolgozó mûveletek végrehajtása szükséges.
-%TODO I don't like this section
 
 \subsection{Elõfeldolgozás} \label{ssn:preProcessing}
 A mûholdak által szolgáltatott nyers digitális értékek számos hibaforrással lehetnek terheltek, melyek korrigáció nélküli
@@ -275,7 +274,7 @@ van szükség. Ez alapján négy csoportot különböztetünk meg
 \end{figure}
 
 \begin{itemize}
-	\item \textit{Regionális (zonális) mûvelet:} %TODO Recompose 
+	\item \textit{Regionális (zonális) mûvelet:} %TODO Recompose
 	A regionális mûveletek hasonlóak a fokális mûveletekhez, leszámítva hogy míg a fokális mûveletnél 
 	a képpont kiszámításához szükséges környezet egy elõre definiált
 	méretû terület, addig a zonális mûveletnél a szükséges környezet az õt tartalmazó régió (zóna), 
@@ -289,7 +288,7 @@ van szükség. Ez alapján négy csoportot különböztetünk meg
 	kialakítása	során a képpont fizikai elhelyezkedését már nem vesszük figyelembe, csupán a multispektrális térben lévõ pozícióját.
 \end{itemize}
 
-\begin{figure}[h!] %TODO Mark with citation
+\begin{figure}[h!]
 	\minipage{0.5\textwidth}
 	\includegraphics[width=\linewidth]{figures/zonalOperation.png}
 	{\caption{Regionális mûvelet\cite{mapAlgebra}}}\label{fig:zonalOperation}
@@ -435,7 +434,7 @@ utasítás alkalmazza a hisztogramkiegyenlítést a kiszámított teljes hisztogramért
 azonban néhány alkalommal komplex módosításokra van szükség, és a portolt algoritmus helyfoglalási idénye sokkal nagyobb
 lehet, mint az eredeti mûveleté. Ezen tényezõk indokolták további alternatív feldolgozó mechanizmusok kutatásának szükségét.
 
-\section{Aktor modell} %TODO Extend
+\section{Aktor modell} %TODO Extend if possible
 Az \textit{Aktor modell} egy olyan konkurens matematikai modell, melynek alapegységei az "\textit{aktorok}" \cite{actorOrig}.
 Az aktorok egymástól izolált egységek, melyek direkt módon, aszinkron \textit{immutable} üzeneteken keresztül kommunikálnak egymással.
 Minden aktor rendelkezik egy "postaládával", ahová az üzenetek érkeznek, ezeket az üzeneteket dolgozza fel sorban 
@@ -443,7 +442,7 @@ Minden aktor rendelkezik egy "postaládával", ahová az üzenetek érkeznek, ezeket 
 további üzeneteket küldhet, valamint beállíthatja, hogyan fog reagálni a következõ üzenetre.
 Az üzenetek sorrendje nem garantált, de követelmény, hogy minden üzenet beérkezzen.
 
-\begin{figure}[H] %TODO Change colors!
+\begin{figure}[H]
 	\centering
 	\captionsetup{width=0.8\textwidth, justification=centering}
 	\includegraphics[width=120mm]{figures/actorModel.png}
@@ -472,7 +471,7 @@ történõ elhelyezését, valamint versenyhelyzetek kezelését. Ezek a limitációk, és
 kiküszöbölésükre való törekvés hívta életre a \textit{Microsoft Orleans} keretrendszert.
 
 
-\section{A Microsoft Orleans platform} %TODO Mention Azure
+\section{A Microsoft Orleans platform}
 Az \textit{Orleans} egy - a \textit{Microsoft Research} által fejlesztett - keretrendszer, 
 mely lehetõséget ad megbízható és skálázható felhõalapú alkalmazások fejlesztésére.
 
@@ -666,7 +665,6 @@ Mivel az aktorok virtuálisak, így a futtatókörnyezet az skálázást a terhelésnek 
 erõforrásoknak megfelelõen alakíthatja.
 
 \subsubsection{Térinformatikai alkalmazás}
-
 A dolgozat által vizsgált feladat számos ponton különbözik a fent felsorolt szempontoktól - távérzékelt adatok
 feldolgozásához gyakran hatalmas méretû adatokkal kell dolgoznunk, a mûveletek költségesek, és akár több 
 órát is igénybe vehetnek, valamint a mûveletek legtöbbjének párhuzamosítása esetén az egyes folyamatoknak más
@@ -674,7 +672,6 @@ folyamatok adataihoz is hozzá kell férniük. A dolgozat része volt ezen szempontb
 a megfelelõ eredmény érdekében - a késõbbi fejezetekben az alkalmazott megoldások és az eredmények
 részletesen is tárgyalásra kerülnek.
 
-%TODO Extend, Recompose?
 Az Orleans térinformatikai kiegészítéséhez szükséges volt egy olyan keretrendszer integrációja és felhasználása,
 amelynek segítségével egységesen kezelhetünk és dolgozhatunk fel téradatokat. Így esett a választás az \textit{AEGIS}
 keretrendszerre, mely a következõ fejezetben kerül tárgyalásra.
@@ -715,7 +712,6 @@ adatok tárolására koncentrál, idõbeliség nélkül. Az egyes mûveletek egységes alk
 az implementáció során a szabvány kiterjesztésre került raszteres adatok támogatásával is, így a 
 \textit{Raster} osztály a \textit{Geometry} leszármazottja.
 
-%TODO Replace model
 \begin{figure}[h!]
 	\centering
 	\captionsetup{width=0.9\textwidth, justification=centering}
@@ -736,7 +732,6 @@ A \textit{PrepareResult()} a számításokhoz elõállítja a kiinduló adathalmazt, a 
 számításokat hajtja végre, a \textit{FinalizeResult()} metódus pedig összegzi és véglegesíti az eredményt.
 A leszármazott osztályok ezen metódusok felüldefiniálásával határozhatják meg a mûvelet mûködését.
 
-%TODO Replace model
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=150mm]{figures/aegis_processing.png}
@@ -823,7 +818,7 @@ rögzítenünk kell a partíció-leíróba.
 Az adatok elhelyezése után az õket feldolgozó aktorok létrehozása következik.
 A megfelelõ teljesítmény érdekében minden partíciót külön aktor fog feldolgozni,
 ehhez szükséges tudnunk mely szerveren hány fájlpartíció helyezkedik el, és ezek mindegyikére
-létrehozni egy aktor entitást.
+létrehozni egy aktor entitást. 
 
 Mint korábban említésre került, direkt módon nem határozhatjuk meg az aktorok elhelyezését a
 klaszterben, azonban az elhelyezési stratégiát befolyásolhatjuk a \textit{Placement} attribútumokkal.
@@ -850,14 +845,6 @@ Mivel a véletlenszerû elhelyezés közel normális eloszlású, és mivel az aktorok l
 mûvelet, így ez a fázis nem okoz teljesítményromlást a feldolgozásban. 
 A létrehozott aktorok közül minden szerverrõl egyet választunk, ez lesz a szerver "menedzsere". 
 
-
-\begin{figure}[H] %TODO Placement, size
-	\centering
-	\captionsetup{width=0.8\textwidth, justification=centering}
-	\includegraphics[width=135mm]{figures/grainsClassDiagram.png}
-	\caption{\textit{Grain}ek osztálydiagramja \label{fig:grainClassDiagram}}
-\end{figure}
-
 A menedzser entitás nem végez spektrális mûveleteket, hanem a mûveleteket feldolgozó aktorok 
 példányosításáért és a kliensnek való továbbításáért felel. Egy elõkészítési fázisban
 minden menedzser \textit{Grain} feltérképezi a szerverén lévõ feldolgozandó fájldarabokat
@@ -866,6 +853,13 @@ minden menedzser \textit{Grain} feltérképezi a szerverén lévõ feldolgozandó fájl
 attribútummal látjuk el, így minden új aktiváció az õt példányosító menedzser alkalmazás szerverén
 fog létrejönni. A létrehozott \textit{Grain}-eket ezután hozzárendeljük a feltérképezett fájldarabokhoz.
 Így szerver szinten minden entitásról tudjuk hogy melyik fájldarabot dolgozza fel. 
+
+\begin{figure}[H] %TODO Placement, size, color
+	\centering
+	\captionsetup{width=0.8\textwidth, justification=centering}
+	\includegraphics[width=170mm]{figures/grainsClassDiagram.png}
+	\caption{\textit{Grain}ek osztálydiagramja \label{fig:grainClassDiagram}}
+\end{figure}
 
 Azonban a megfelelõ
 kommunikáció érdekében minden szerveren minden Grain-nek tudnia kell az összes fájldarabról, és annak
@@ -878,13 +872,17 @@ Ezután elküldi a kiegészített leíró fájlt ezeknek az aktoroknak.
 
 %TODO Activity Diagram about merging association into one and propagating back to the worker actors
 
-Az mûveleteket végzõ aktorok létrehozása és megfelelõ információval való ellátása után következik a 
-kívánt mûvelet végrehajtása. A mûveletet valamint paramétereit az alkalmazás indításánál paraméterekként 
-adhatjuk meg.
-
 \section{Mûveletek futtatása}
-%TODO: Compose
-
+A mûveleteket végzõ aktorok létrehozása és megfelelõ információval való ellátása után következik a 
+kívánt mûvelet végrehajtása. A mûveletek indítása már nem a menedzser \textit{Grain}-en keresztül történik, a kliens
+direkt módon a feldolgozó \textit{Grain}-ekkel kommunikál. A mûveletet valamint paramétereit az alkalmazás indításánál
+paraméterekként adhatjuk meg, ezeket az információkat kapja meg a \textit{ComputeOperation} mûvelet.
+A \textit{FinalizeOperation} mûvelet felel az eredmények lemezre történõ kiírásáért, és csak akkor hajtódik végre,
+ha mindegyik \textit{Grain}-en befejezõdött a ComputeOperation. Ez azért szükséges, mert egy \textit{Grain} hamarabb
+végezhet mint a többi, azonban az általa tárolt adatokra szüksége lehet a többi \textit{Grain}-nek. A mûvelet futtatásának
+eredményét a \textit{GetOperationResult} metódussal kérdezhetjük le az egyes \textit{Grain}-ektõl. A visszaadott
+információ tartalmazza a mûvelet \textit{eredmény}ét (\textit{Futtatásra kész, Fut, Sikeres, Hibás}), 
+a futás alatt \textit{eltelt idõ}t, valamint - ha a futás során hiba történt - a fellépõ \textit{kivétel}t.
 
 
 \chapter{Vizsgált algoritmusok}
@@ -912,6 +910,7 @@ radiometriai felbontás maximálisan felvehetõ értékébõl kivonjuk az intenzitásért
 \subsubsection{ToA-Reflektancia}
 A \ref{ssn:preProcessing}. szakaszban ismertetett \textit{ToA-Reflektancia} a radiometriai korrekciók közé tartozó lokális
 mûvelet, melynek célja a földfelszín tényleges sugárzásának megállapítása a légköri zavaró hatások figyelembe vétele nélkül.
+%TODO Mention metadata
 
 \subsubsection{Konstans küszöbölés}
 A \textit{konstans küszöbölés} a küszöbölõ algoritmusok legegyszerûbb formája, ebben az esetben a küszöbértéket egy elõre
@@ -970,7 +969,6 @@ adatok feldolgozásához, azonban egyrészt késõbbi mûvelettípusokra való felkészül
 másrészt tesztelési szempontok miatt, implementálásra került a \textit{Grain}-ek egymás közti direkt kommunikációján
 alapuló feldolgozás. 
 %TODO Consider recompose
-%TODO Add Filtering class diagram?
 
 \subsubsection{Virtuális Raszter}
 
@@ -1108,6 +1106,7 @@ költséges, így a megfelelõ teljesítmény érdekében törekedni kell a kommunikációk
 
 \end{thebibliography}
 
+\addcontentsline{toc}{chapter}{Ábrajegyzék}
 \listoffigures
 
 \end{document}
