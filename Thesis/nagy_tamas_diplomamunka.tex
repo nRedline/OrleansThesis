@@ -805,7 +805,7 @@ A leíró fájl segítségével könnyedén meghatározható, hogy a kép egy darabja hol f
 	\centering
 	\captionsetup{width=0.8\textwidth, justification=centering}
 	\includegraphics[width=150mm]{figures/partitionDescriptor.png}
-	\caption{Az input adat egy lehetséges particionálása, és a partíció leíró fájl \label{fig:partitionDescriptor}}
+	\caption{Az input egy lehetséges particionálása és a partíció leíró fájl \label{fig:partitionDescriptor}}
 \end{figure}
 
 
@@ -854,10 +854,10 @@ attribútummal látjuk el, így minden új aktiváció az õt példányosító menedzser al
 fog létrejönni. A létrehozott \textit{Grain}-eket ezután hozzárendeljük a feltérképezett fájldarabokhoz.
 Így szerver szinten minden entitásról tudjuk hogy melyik fájldarabot dolgozza fel. 
 
-\begin{figure}[H] %TODO Placement, size, color
+\begin{figure}[H] 
 	\centering
 	\captionsetup{width=0.8\textwidth, justification=centering}
-	\includegraphics[width=170mm]{figures/grainsClassDiagram.png}
+	\includegraphics[width=155mm]{figures/grainsClassDiagram.png}
 	\caption{\textit{Grain}ek osztálydiagramja \label{fig:grainClassDiagram}}
 \end{figure}
 
@@ -870,7 +870,15 @@ továbbítani az identitásukat a kliensnek). A kliens a korábban említett partíció
 az összes fájldarabra vonatkozó információt a feldolgozó \textit{Grain}-ek identitásával. 
 Ezután elküldi a kiegészített leíró fájlt ezeknek az aktoroknak.
 
-%TODO Activity Diagram about merging association into one and propagating back to the worker actors
+
+\begin{figure}[H] 
+	\centering
+	\captionsetup{width=0.8\textwidth, justification=centering}
+	\includegraphics[width=155mm]{figures/discoverParts.png}
+	\caption{Input darabok feltérképezése, és a \textit{Grain}-ek informálása \label{fig:discoverParts}}
+\end{figure}
+
+
 
 \section{Mûveletek futtatása}
 A mûveleteket végzõ aktorok létrehozása és megfelelõ információval való ellátása után következik a 
