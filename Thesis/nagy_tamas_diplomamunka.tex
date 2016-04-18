@@ -1157,15 +1157,87 @@ csak olyan input partíciók állnak rendelkezésre, melyek nem rendelkeznek átfedés
 a megoldás hatékonysága részletesen is tárgyalásra kerül, annyi azonban elmondható, hogy a Grain-ek hálózati kommunikációja
 költséges, így a megfelelõ teljesítmény érdekében törekedni kell a kommunikációk számának minimalizálására.
 
-%\section{Regionális mûveletek}
-%\subsubsection{Negyedelõ fa alapú szegmentálás}
-%\subsubsection{Szekvenciális csatolás alapú szegmentálás}
+\section{Regionális mûveletek}
+Regionális mûveletek feldolgozása során az eredménykép minden pixelének kiszámításához az adott pixelt
+körülvevõ, vele homogén pixelek régiójára van szükség. Ezeket a régiókat az egyes pixelek tulajdonsága alapján építik
+fel az algoritmusok, tehát a régiók a végrehajtás során dinamikusan változnak, - a kiindulási állapottól
+függõen - növekedhetnek, illetve csökkenhetnek. 
+
+Mivel a régiók kiterjedése nagyban függ az adott mûvelettõl 
+és paraméterezésétõl, valamint a pixelek intenzitásától, így az input particionálása komplex feladat. 
+Még jelentõs méretû átfedés definiálásával is fennáll a lehetõség, hogy a mûveletnek további adatokra van szüksége - 
+helytelen paraméterezés vagy homogén kép esetén akár az input kép egészére is. Az Orleans rendszer segítségével
+azonban elérhetõvé tehetjük ezeket az adatokat a partíciókat feldolgozó egységeknek - az egyes ötletek és megvalósításuk
+ismertetésre kerülnek a vizsgált mûveletek bemutatása után.
+
+\subsection{Szegmentálás}
+A regionális mûveletek szemléltetésére leginkább
+a régió alapú \textit{szegmentáló algoritmusok} a legalkalmasabbak. Ezen mûveletek széles körben
+használatosak a távérzékelt felvételek feldolgozásában, a tematikus osztályozás kulcsfontosságú mûveletei.
+
+A szegmentáló algoritmusok célja homogén területek összekapcsolása, \textit{szegmens}ekbe foglalása és
+egységes kezelése. Egy szegmens spektrálisan hasonló, szomszédos képpontok egybefüggõ halmaza. A tematikus osztályozás
+során a szegmentálás segítségével elérhetjük, hogy az eredményképen az egyes felszínborításokhoz tartozó
+kategóriák kevésbé keveredjenek.
+
+A régió alapú szegmentáló algoritmusok két fõ csoportra oszthatók. Az \textit{összevonás alapú} mûveletek 
+kezdetben minden képpontot önálló szegmensnek tekintenek, és egy meghatározott számú iterációs lépésben a megadott
+feltételeknek eleget tevõ szomszédos elemeket összevonják. A \textit{vágás alapú} mûveletek esetén kezdetben a teljes
+felvételt egy darab szegmensnek tekintjük, melyet minden iterációs lépésben a kritériumoknak megfelelõen 
+több részre bontunk. 
+
+\subsubsection{Negyedelõ fa alapú szegmentálás} %TODO Cite
+A \textit{negyedelõ fa} (\textit{Quadtree}) egy hierarchikus fa adatszerkezet, 
+mely a sík egyenlõ régiókra történõ rekurzív felbontásán alapul. Fõként a képfeldolgozás és a számítógépes
+grafika területén terjedt el, valamint térbeli adatok indexelésére és raszteres adatok tömörítésére 
+is használatos .
+
+Távérzékelt felvételek feldolgozásának területén leginkább a \textit{régió alapú} verziója használatos\cite{quadTree}, melynek
+segítségével a felvételt egy megadott \textit{homogenitási kritérium} alapján régiókra bonthatunk. 
+A homogenitási kritérium a fa minden csúcsára meghatározza, hogy az adott csúcsban további dekompozícióra van-e szükség, 
+vagy az egyes értékek közti különbség kisebb a megadott küszöbnél, ekkor a csúcs nem kerül további felosztásra. 
+A felosztást addig folytatjuk, amíg minden csúcs homogén nem lesz, tehát nem lesz szükség további vágásra.
+
+A \textit{negyedelõ fa alapú szegmentálás} is a régió alapú negyedelõ fán alapul, itt az értékek homogenitását
+az intenzitásuk közti különbségek határozzák meg. Ennek megfelelõen kétféle negyedelõ fa alapú szegmentálást 
+különböztetünk meg. A \textit{felülrõl lefelé} haladó szegmentálás esetén kezdetben az egész képet egy szegmensnek
+tekintünk, és erre alkalmazzuk a vágási feltételt addig, amíg minden érték homogén nem lesz. A \textit{lentrõl felfelé}
+építkezõ szegmentálás esetén a kép minden pixele külön szegmensként jelenik meg, ebben az esetben vágási feltétel
+helyett összevonási feltételt kell alkalmaznunk, és a szegmentáló mûvelet addig fut, amíg már egyetlen
+csúcsot sem tudunk összevonni. 
+
+\subsubsection{Szekvenciális csatolás alapú szegmentálás}
+A \textit{szekvenciális csatolás alapú szegmentálás} \cite{sequentialCoupling,sequentialCoupling2} 
+(\textit{Sequential Coupling Segmentation}) egy összevonás-alapú 
+szegmentáló mûvelet, mely elsõ lépésként $2 \times 2$-es méretû kiinduló cellákra osztja fel az input
+felvételt, majd eldönti hogy homogénnek tekinthetõk-e ezek a cellák. Egy cella homogénnek tekinthetõ, ha
+a cella által tartalmazott $n$ darab pixel minden sávjának értékeire teljesül a következõ egyenlõtlenség:
+\begin{center}
+$$
+{\sum_{i=1}^n(x_i - \bar{x})^2 \over {(n-1)\bar{x}^2}} \leq C_H
+$$
+\end{center}
+
+A fenti képlet azt fejezi ki, hogy a cella pixeleinek szórása minden sávban egy megadott határon belül marad 
+az intenzitások átlagához képest. Az inhomogén cellák pixeleit nem soroljuk szegmensekbe, a homogén cellákat pedig
+felülrõl lefelé - balról jobbra haladva megpróbáljuk valamelyik szomszédos szegmenshez csatolni. Ha az összevonás
+nem lehetséges, a cella egy új szegmens kezdete lesz. 
+Az összevonás akkor lehetséges, ha a szegmensekhez tartozó intenzitások szórása és átlaga 
+által meghatározott \textit{ANOVA} 
+(\textit{ANalysis Of VAriance - Varianciaanalízis}) kritériumok teljesülnek.\cite{sequentialCoupling2}
+
+%TODO Elaborate ANOVA Criteria?
+
 %\subsubsection{Legjobb összevonáson alapuló szegmentálás}
+
 %\subsection{Regionális mûveletek MapReduce alapú feldolgozása}
 %\subsection{Regionális mûveletek feldolgozása az Orleans rendszerben}
+%TODO Write about processing Quadtree based segmentation
 
 %\subsection{Globális mûveletek}
-%\subsubsection{Kiegyensúlyozott hisztogram-küszöbölés}
+%A Globális mûveletek feldolgozásuk során az eredményt az input kép valamilyen globális tulajdonsága alapján
+%képesek kiszámítani. 
+%\subsubsection{Kiegyensúlyozott hisztogram-küszöbölés} %TODO Write about thematic classification?
 %\subsubsection{Otsu küszöbölés} %TODO Is This Focal or Global method?
 %https://en.wikipedia.org/wiki/Balanced_histogram_thresholding
 
@@ -1230,6 +1302,15 @@ költséges, így a megfelelõ teljesítmény érdekében törekedni kell a kommunikációk
 \bibitem{gaborFilter} Gabor, Dennis "\textit{Theory of communication. Part 1: The analysis of information.}" Electrical Engineers-Part III: Radio and Communication Engineering, Journal of the Institution of 93.26 (1946): 429-441.
 
 \bibitem{gaborFilter2} FOGEL, Itzhak; SAGI, Dov. \textit{Gabor filters as texture discriminator}. Biological cybernetics, 1989, 61.2: 103-113.
+
+\bibitem{quadTree} Samet, Hanan. "\textit{The quadtree and related hierarchical data structures.}" ACM Computing Surveys (CSUR) 16.2 (1984): 187-260.
+
+\bibitem{sequentialCoupling} Kettig, R. L., Landgrebe, D.A. \textit{Classification of multispectral image data by extraction and classification of homogeneous objects}, Geoscience Electronics, IEEE Transactions on 14.1, pp. 19-26, 1976.
+
+\bibitem{sequentialCoupling2} László, I., Dezsõ, B., Fekete, I., Pröhle, T. \textit{A fully segment-based method for the classification of satellite images}, Annales Univ. Sci. Budapest, Sectio Computatorica. Vol. 30. No. 2009, 2009.
+
+\bibitem{bestMerge} Schoenmakers, Ronald Peter Helena Maria. \textit{Integrated methodology for segmentation of large optical satellite images in land applications of remote sensing}. Office for Official Publications of the European Communities, 1995.
+
 \end{thebibliography}
 
 \addcontentsline{toc}{chapter}{Ábrajegyzék}
