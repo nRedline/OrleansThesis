@@ -27,6 +27,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{caption}
+\usepackage{subcaption}
 
 \usepackage{chngcntr}
 \usepackage{siunitx}
@@ -824,7 +825,7 @@ fájlrendszert, így a feldarabolt kép darabjainak szétosztása manuálisan történik
 fel kell töltenünk a feldolgozó egységekre, és az elérési útvonalukat 
 rögzítenünk kell a partíció-leíróba.
 
-\subsection{Adatok feltérképezése, azonosítása és beolvasása}
+\section{Adatok feltérképezése, azonosítása és beolvasása}
 Az adatok elhelyezése után az õket feldolgozó aktorok létrehozása következik.
 A megfelelõ teljesítmény érdekében minden partíciót külön aktor fog feldolgozni,
 ehhez szükséges tudnunk mely szerveren hány fájlpartíció helyezkedik el, és ezek mindegyikére
@@ -1102,10 +1103,55 @@ A kernelmátrixot a fenti Gauss-eloszlás segítségével állíthatjuk elõ, ekkor az $
 középpontjától számított távolságok a horizontális-, illetve a vertikális tengely mentén. 
 
 \subsubsection{Gabor szûrõ}
-A \textit{Gábor Dénes} után elnevezett \textit{Gabor szûrõ (Gabor filter)} egy lineáris szûrõ, 
-mely a korábban bevezetett Gauss függvény modulálása egy síkbeli szinuszhullámmal. A képfeldolgozásban legtöbbször
-írott és nyomtatott szöveg felismerésére, arcfelismerésre, valamint éldetektálásra használatos.\cite{gaborFilter2}
-%TODO Recompose as fck
+A \textit{Gábor Dénes} után elnevezett \textit{Gabor szûrõ (Gabor filter)}\cite{gaborFilter}
+egy fõleg éldetektálásra használt lineáris szûrõ. 
+A szûrõ mûködési elve közel áll az emlõsök látórendszeréhez, ezért különösen 
+hatékony a vizuális képfeldolgozás területén\cite{gaborFilter2,gaborFilterApplications} (\textit{éldetektálás}, \textit{írott és nyomtatott szöveg felismerése}, 
+\textit{arcfelismerés}).
+
+A Gabor szûrõ tulajdonképpen egy Gauss függvény modulálása egy szinusz síkhullámmal (\ref{fig:gaborFilterModulation}. ábra), mely a következõképpen írható fel matematikai formában:
+
+\begin{center}
+	$
+	G_{\lambda,\theta,\varphi,\sigma,\gamma}(x, y) = e^{-\frac{{x'}^2+\gamma^2{y'}^2}{2\sigma^2}} * cos(2\pi\frac{x'}{\lambda} + \varphi)
+	$
+\end{center}
+\begin{center}
+	ahol
+\end{center}
+\begin{center}
+	$
+	x' = x*\cos\theta + y*\sin\theta \quad \text{és} \quad y' = -x*\sin\theta + y*\cos\theta 
+	$
+\end{center}
+A függvény paraméterei a következõk: $\lambda$ a szinuszhullám hullámhossza, $\theta$ az orientációja $\varphi$ az eltolása, $\sigma$ a Gauss függvény szórása $\gamma$ pedig a nagysága, kiterjedése.
+\begin{figure}[H]
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.95\linewidth]{figures/gaussian.png}
+		\caption{}
+		\label{fig:gaussian}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.95\linewidth]{figures/sinusoid.png}
+		\caption{}
+		\label{fig:sinusoid}
+	\end{subfigure}
+	\begin{subfigure}{1\textwidth}
+		\centering
+		\includegraphics[width=.5\linewidth]{figures/gaborFilter.png}
+		\caption{}
+		\label{fig:gabor}
+	\end{subfigure}
+	\captionsetup{justification = centering}
+	\caption{A (\subref{fig:gabor}) Gabor függvény  elõállítása az (\subref{fig:gaussian}) Gauss függvénybõl és a (\subref{fig:sinusoid}) szinusz hullámból}
+	\label{fig:gaborFilterModulation}
+\end{figure}
+
+A Gabor szûrõ kernelmátrixát a Gauss szûrõhöz hasonlóan számíthatjuk, $x$ és $y$
+a kernelmátrix középpontjától számított távolságok a horizontális- illetve a vertikális
+tengely mentén.
 
 \subsection{Fokális mûveletek feldolgozása az Orleans rendszerben}
 A fokális mûveletek elosztott feldolgozása során az egyes partíciók legtöbbször meghatározott mennyiségû plusz 
@@ -1188,18 +1234,12 @@ körülvevõ, vele homogén pixelek régiójára van szükség. Ezeket a régiókat az egye
 fel az algoritmusok, tehát a régiók a végrehajtás során dinamikusan változnak, - a kiindulási állapottól
 függõen - növekedhetnek, illetve csökkenhetnek. 
 
-Mivel a régiók kiterjedése nagyban függ az adott mûvelettõl 
-és paraméterezésétõl, valamint a pixelek intenzitásától, így az input particionálása komplex feladat. 
-Még jelentõs méretû átfedés definiálásával is fennáll a lehetõség, hogy a mûveletnek további adatokra van szüksége - 
-helytelen paraméterezés vagy homogén kép esetén akár az input kép egészére is. Az Orleans rendszer segítségével
-azonban elérhetõvé tehetjük ezeket az adatokat a partíciókat feldolgozó egységeknek - az egyes ötletek és megvalósításuk
-ismertetésre kerülnek a vizsgált mûveletek bemutatása után.
+A regionális mûveletek szemléltetésére leginkább
+a \textit{régió alapú szegmentáló algoritmusok} a legalkalmasabbak. 
+Ezen mûveletek széles körben használatosak a távérzékelt felvételek feldolgozásában, 
+a tematikus osztályozás kulcsfontosságú mûveletei.
 
 \subsection{Szegmentálás}
-A regionális mûveletek szemléltetésére leginkább
-a régió alapú \textit{szegmentáló algoritmusok} a legalkalmasabbak. Ezen mûveletek széles körben
-használatosak a távérzékelt felvételek feldolgozásában, a tematikus osztályozás kulcsfontosságú mûveletei.
-
 A szegmentáló algoritmusok célja homogén területek összekapcsolása, \textit{szegmens}ekbe foglalása és
 egységes kezelése. Egy szegmens spektrálisan hasonló, szomszédos képpontok egybefüggõ halmaza. A tematikus osztályozás
 során a szegmentálás segítségével elérhetjük, hogy az eredményképen az egyes felszínborításokhoz tartozó
@@ -1277,9 +1317,65 @@ Mivel az inhomogén cellákat nem soroltuk szegmensekbe, ezért ezeket a pixeleket 
 \textit{klaszterezés} során kell a nekik megfelelõ tematikus osztályokba sorolni. 
 
 \subsubsection{Legjobb összevonáson alapuló szegmentálás}
+A legjobb összevonáson alapuló szegmentálás (\textit{best merge based segmentation})
+- mint a neve is utal rá - egy összevonás alapú, iteratív szegmentálási módszer
+\cite{bestMerge,bestMerge2}. Az algoritmus kezdõállapotában minden pixelértéket 
+külön szegmensnek tekint, és minden iterációs lépésében egy megadott 
+\textit{homogenitási kritérium} szerint egymáshoz legközelebb álló szomszédos szegmenseket
+vonja össze. A mûvelet addig fut, amíg el nem ér egy megadott szegmens-számot,
+vagy a homogenitási kritérium alapján már nem tudna több szegmenst összevonni.
 
-%\subsection{Regionális mûveletek MapReduce alapú feldolgozása}
-%\subsection{Regionális mûveletek feldolgozása az Orleans rendszerben}
+A homogenitási kritériumok általában olyan \textit{távolságfüggvény}eken alapulnak,
+amelyek a szegmensek által tartalmazott intenzitásértékeket használják fel. Ilyen távolságfüggvények
+például a \textit{divergencia}, a \textit{Bhattacharyya távolság}\cite{bhattacharyya}, vagy az
+\textit{euklideszi távolság}).
+
+A szegmentáló algoritmus reprezentálható egy olyan gráfalapú megközelítéssel, ahol az egyes 
+pixelek rácsgráfjából indulunk ki és a távolságfüggvények alapján \textit{csúcsokat} vonunk 
+össze. Az egyes csúcsok közötti távolságok \textit{élek} formájában jelennek meg a gráfban.
+Ezzel a megközelítéssel és modern adatstruktúrák felhasználásával az algoritmus teljesítménye
+nagymértékben növelhetõ.
+
+\subsection{Regionális mûveletek MapReduce alapú feldolgozása}
+Mivel a régiók kiterjedése nagyban függ az adott mûvelettõl 
+és paraméterezésétõl, valamint a pixelek intenzitásától,
+így az input particionálása a MapReduce feldolgozáshoz meglehetõsen komplex feladat.
+Az egyes partíciókhoz úgy kell megválasztani az átfedõ területeket, hogy általánosságban
+mindegyik régió kialakításához elegendõ adatra legyen szükség.
+
+\subsubsection{Szegmentáló mûveletek futtatása}
+A szegmentálás során az alapmûveletek legtöbbször módosítás nélkül alkalmazhatók
+Map-, illetve Reduce függvényekként, azonban a feldolgozási folyamatot szükséges 
+kiegészíteni egy utófeldolgozó lépéssel: azok a feldolgozó egységek, amelyek egymással
+szomszédos, átfedõ partíciókat dolgoznak fel, az átfedett területen duplikált szegmenseket 
+hozhatnak létre. A megfelelõ eredmény érdekében ezeket a szegmenseket eliminálni kell a 
+végsõ szegmenshalmazból. Erre az alábbi heurisztikák használhatóak\cite{aegisHadoop}:
+
+\begin{itemize}
+	\item Ugyanazzal a pixelhalmazzal rendelkezõ szegmensek esetén az egyiket kitöröljük
+	\item Ha egy szegmens egy másik szegmens részhalmaza, akkor két lehetõség van. 
+	Ha a szegmens az átfedés határán helyezkedik el, akkor kitöröljük. %TODO What does it mean?
+	Ha a szegmens az átfedésen belül helyezkedik el, akkor 	megtartjuk, és a tartalmazó
+	szegmensbõl kitöröljük a pixelértékeit.
+	\item Ha két szegmens közös pixeleket tartalmaz, akkor a ezek a pixelek mindkét 
+	szegmensbõl törlésre kerülnek és egy új szegmenst hozunk létre belõlük.
+\end{itemize}
+
+A szegmentáló mûveletek ilyen módon történõ feldolgozása komplex feladat. Egyrészt
+ugyan magukat az algoritmusokat nem szükséges módosítani, de a feldolgozást ki kell terjeszteni
+egy plusz lépéssel, amely növeli a komplexitást. Másrészt az egyes partíciókat jelentõs
+méretû átfedéssel kell létrehozni, amely növeli a tárterületet. Azonban még ekkor is fennáll
+a lehetõség, hogy a mûveletnek további adatokra van szüksége - 
+helytelen paraméterezés vagy homogén kép esetén akár az input kép egészére is. 
+
+Az Orleans rendszer másfajta megközelítést alkalmaz az elosztott feldolgozásra 
+amellyel - elméletben - 
+kiküszöbölhetõek a fent említett nehézségek. Az egyes ötletek és megvalósításuk a
+következõ szakaszban kerülnek ismertetésre.
+
+\subsection{Regionális mûveletek feldolgozása az Orleans rendszerben}
+
+
 %TODO Write about processing Quadtree based segmentation
 
 %\subsection{Globális mûveletek}
@@ -1347,11 +1443,15 @@ Mivel az inhomogén cellákat nem soroltuk szegmensekbe, ezért ezeket a pixeleket 
 
 \bibitem{gaussianBlur} Nixon, Mark. \textit{Feature Extraction and Image Processing.} Academic Press, 2008.
 
-\bibitem{gaborFilter} Gabor, Dennis "\textit{Theory of communication. Part 1: The analysis of information.}" Electrical Engineers-Part III: Radio and Communication Engineering, Journal of the Institution of 93.26 (1946): 429-441.
+\bibitem{gaborFilter} Gabor, Dennis. \textit{Theory of communication. Part 1: The analysis of information.} Electrical Engineers-Part III: Radio and Communication Engineering, Journal of the Institution of 93.26 (1946): 429-441.
 
 \bibitem{gaborFilter2} FOGEL, Itzhak; SAGI, Dov. \textit{Gabor filters as texture discriminator}. Biological cybernetics, 1989, 61.2: 103-113.
 
-\bibitem{quadTree} Samet, Hanan. "\textit{The quadtree and related hierarchical data structures.}" ACM Computing Surveys (CSUR) 16.2 (1984): 187-260.
+\bibitem{gaborFilterApplications} T. P. Weldon, W. E. Higgins, and D. F. Dunn. \textit{Gabor filter design for multiple texture segmentation} Optical Engineering, vol. 35, no. 10, pp. 2852-2863, Oct. 1996.
+
+\bibitem{gaborFilterVisualisation} Prasad, V. Shiv Naga, and Justin Domke. \textit{Gabor filter visualization.} J. Atmos. Sci 13 (2005).
+
+\bibitem{quadTree} Samet, Hanan. \textit{The quadtree and related hierarchical data structures.} ACM Computing Surveys (CSUR) 16.2 (1984): 187-260.
 
 \bibitem{sequentialCoupling} Kettig, R. L., Landgrebe, D.A. \textit{Classification of multispectral image data by extraction and classification of homogeneous objects}, Geoscience Electronics, IEEE Transactions on 14.1, pp. 19-26, 1976.
 
@@ -1359,7 +1459,13 @@ Mivel az inhomogén cellákat nem soroltuk szegmensekbe, ezért ezeket a pixeleket 
 
 \bibitem{bestMerge} Schoenmakers, Ronald Peter Helena Maria. \textit{Integrated methodology for segmentation of large optical satellite images in land applications of remote sensing}. Office for Official Publications of the European Communities, 1995.
 
+\bibitem{bestMerge2} Fekete I., Dezsõ B, László I., Ócsai K. \textit{A szegmentálás szerepe az ûrfelvételek tematikus osztályozásában}. Informatika a felsõoktatásban 2008 konferencia Debrecen, 2008. augusztus 27-29.
+
 \bibitem{toarefCompute} \textit{Converting Digital Numbers to Top of Atmosphere (ToA) Reflectance} http://www.yale.edu/ceo/Documentation/Landsat\_DN\_to\_Reflectance.pdf
+
+\bibitem{bhattacharyya} Bhattacharyya, Anil. \textit{On a measure of divergence between two multinomial populations} Sankhya: The Indian Journal of Statistics (1946): 401-406.
+
+
 
 \end{thebibliography}
 
