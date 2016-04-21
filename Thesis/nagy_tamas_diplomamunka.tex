@@ -959,11 +959,34 @@ ahol \textit{H} a \textit{V} vektor radiometriai felbontásának maximálisan ábráz
 \subsubsection{ToA-Reflektancia}
 A \ref{ssn:preProcessing}. szakaszban ismertetett \textit{ToA-Reflektancia} a \textit{radiometriai korrekció}k 
 közé tartozó lokális
-mûvelet, melynek célja a földfelszín tényleges sugárzásának megállapítása a légköri zavaró hatások figyelembe vétele nélkül.
-A ToA-Reflektancia kiszámítása függ a felvételt készítõ eszköztõl, az eszköz geometriai pozíciójától és a felvételezés
-idõpontjától. Ezeket az információkat általában a feldolgozni kívánt felvétel \textit{metaadatokként} tartalmazza.
-Az elosztott feldolgozás során az input adatok partícionálásánál kell arra ügyelni, 
-hogy a metaadatok az egyes partíciókba is bekerüljenek.
+mûvelet, melynek célja a földfelszín tényleges visszaverésének kiszámítása 
+a légköri zavaró hatások figyelembe vétele nélkül.
+A ToA-Reflektancia kiszámításának módja felvételtípusonként változik, és a szükséges
+paraméterek általában \textit{metaadat}ok formájában a felvételekkel együtt kerülnek publikálásra.
+
+Az egyik legnépszerûbb mai távérzékelt felvételeket szolgáltató mûholdcsalád, a 
+\textit{Landsat}\footnote{http://landsat.usgs.gov/} mûholdak reflektanciájának kiszámítási módja az alábbi:
+
+Elsõ lépésként a Spektrális radianciát kell kiszámolnunk, mely a digitális számokkal legtöbbször lineáris kapcsolatban
+áll. Kiszámításához két paraméter szükséges a 
+pixel digitális értékén(\textit{DN}) kívül: az \textit{emelkedés} (\textit{gain}) 
+valamint az \textit{eltolás} (\textit{offset}). A paraméterekbõl képezve az $L_\lambda$ spektrális 
+radiancia képlete a következõ:
+\begin{center}
+$L_\lambda = gain * DN + \textit{offset}$
+\end{center}
+
+A ToA-Reflektancia a radianciából számítható, figyelembe véve a \textit{Nap}, a \textit{felvételezett terület}
+és a \textit{szenzor} elhelyezkedését egymáshoz képest. Matematikai formában a következõképpen írható fel a $P_\lambda$-val
+jelölt reflektancia:
+
+\begin{center}
+	$P_\lambda	= \pi * L_\lambda * d^2 / E_\lambda * cos\theta_s$
+\end{center}
+
+Ahol $d$ a Nap és a Föld távolsága csillagászati egységben, $E_\lambda$ a 
+\textit{légkörön kívüli irradiancia (vagyis az adott hullámsávban beesõ napsugárzás intenzitása)} átlaga, 
+$\theta_s$ pedig a \textit{zenitszög (a földdarabra érkezõ napsugárzás beesési szöge)}\cite{toarefCompute}.
 
 \subsubsection{Konstans küszöbölés}
 A \textit{konstans küszöbölés} a küszöbölõ algoritmusok legegyszerûbb formája. Egy darab spektrális sávot tartalmazó
@@ -1006,8 +1029,9 @@ mátrix, melynek minden $v'_{ij}$ elemére $v'_{ij} \in \mathbb{L}$ és
 \textit{Fokális mûveletek} végrehajtása esetén egy pixel kiszámításához szükség van a pixel egy
 meghatározott sugarú környezetének értékeire. A szükséges terület méretét a mûvelet elindításának
 pillanatában ismerjük, és a futás során ez az információ nem változik.
-%TODO Consider moving this into new section
-Fokális mûveletek esetén két lehetõségünk van: vagy már a particionálás során figyelembe vesszük,
+
+\subsubsection{Input adatok particionálása fokális mûveletek esetén}
+A particionálás során két lehetõségünk van: vagy már elõzõleg figyelembe vesszük,
 hogy várhatóan mekkora területre lesz szüksége az egyes mûveleteknek és ez alapján a partíciókat
 \textit{átfedések}kel hozzuk létre - ekkor a mûvelet indításakor biztosítanunk kell, hogy a
 mûvelet által igényelt terület méreténél nagyobb, vagy egyenlõ a felhasznált partícióra definiált átfedés.
@@ -1069,8 +1093,8 @@ Egy $0$ várható értékû, $\sigma$ szórású Gauss-eloszlás a következõképpen írható
 
 \begin{center}
 $
-		G(x, y) = {1 \over \sqrt{2\pi\sigma^2}}
-		e^{-{x^2 + y^2 \over 2\sigma^2}}
+		G(x, y) = \frac{1}{\sqrt{2\pi\sigma^2}}
+		e^{-\frac{x^2 + y^2}{2\sigma^2}}
 $
 \end{center}
 
@@ -1081,6 +1105,7 @@ középpontjától számított távolságok a horizontális-, illetve a vertikális tengel
 A \textit{Gábor Dénes} után elnevezett \textit{Gabor szûrõ (Gabor filter)} egy lineáris szûrõ, 
 mely a korábban bevezetett Gauss függvény modulálása egy síkbeli szinuszhullámmal. A képfeldolgozásban legtöbbször
 írott és nyomtatott szöveg felismerésére, arcfelismerésre, valamint éldetektálásra használatos.\cite{gaborFilter2}
+%TODO Recompose as fck
 
 \subsection{Fokális mûveletek feldolgozása az Orleans rendszerben}
 A fokális mûveletek elosztott feldolgozása során az egyes partíciók legtöbbször meghatározott mennyiségû plusz 
@@ -1206,29 +1231,52 @@ tekintünk, és erre alkalmazzuk a vágási feltételt addig, amíg minden érték homog
 helyett összevonási feltételt kell alkalmaznunk, és a szegmentáló mûvelet addig fut, amíg már egyetlen
 csúcsot sem tudunk összevonni. 
 
+%TODO Figure?
+
 \subsubsection{Szekvenciális csatolás alapú szegmentálás}
 A \textit{szekvenciális csatolás alapú szegmentálás} \cite{sequentialCoupling,sequentialCoupling2} 
-(\textit{Sequential Coupling Segmentation}) egy összevonás-alapú 
-szegmentáló mûvelet, mely elsõ lépésként $2 \times 2$-es méretû kiinduló cellákra osztja fel az input
+(\textit{Sequential Coupling Segmentation}) egy \textit{összevonás-alapú} 
+szegmentáló mûvelet, mely elméletben képes tetszõleges formájú szegmensek elõállítására, és az
+inputot sorfolytonosan dolgozza fel.
+Elsõ lépésként $2 \times 2$-es méretû kiinduló cellákra osztja fel az input
 felvételt, majd eldönti hogy homogénnek tekinthetõk-e ezek a cellák. Egy cella homogénnek tekinthetõ, ha
 a cella által tartalmazott $n$ darab pixel minden sávjának értékeire teljesül a következõ egyenlõtlenség:
-\begin{center}
+%\begin{center}
 $$
-{\sum_{i=1}^n(x_i - \bar{x})^2 \over {(n-1)\bar{x}^2}} \leq C_H
+\frac{\sum_{i=1}^n (x_i - \bar{x})^2}{(n-1)\bar{x}^2} \leq C_H
 $$
-\end{center}
+%\end{center}
 
 A fenti képlet azt fejezi ki, hogy a cella pixeleinek szórása minden sávban egy megadott határon belül marad 
 az intenzitások átlagához képest. Az inhomogén cellák pixeleit nem soroljuk szegmensekbe, a homogén cellákat pedig
-felülrõl lefelé - balról jobbra haladva megpróbáljuk valamelyik szomszédos szegmenshez csatolni. Ha az összevonás
+felülrõl lefelé - balról jobbra haladva megpróbáljuk valamelyik szomszédos, már feldolgozott szegmenshez csatolni. Ha az összevonás
 nem lehetséges, a cella egy új szegmens kezdete lesz. 
 Az összevonás akkor lehetséges, ha a szegmensekhez tartozó intenzitások szórása és átlaga 
 által meghatározott \textit{ANOVA} 
-(\textit{ANalysis Of VAriance - Varianciaanalízis}) kritériumok teljesülnek.\cite{sequentialCoupling2}
+(\textit{ANalysis Of VAriance - Varianciaanalízis}) kritériumok teljesülnek: 
 
-%TODO Elaborate ANOVA Criteria?
 
-%\subsubsection{Legjobb összevonáson alapuló szegmentálás}
+%TODO Write down what is x_i and y_i
+Legyen $x$ egy $m$ elemû, $y$ egy $n$ elemû minta, $z$ pedig a kettõ összevonásával kapott eloszlás, és legyen:
+\begin{align}
+A_x = \sum_{i=1}^m (x_i - \bar{x})^2 && A_y = \sum_{i=1}^n (y_i - \bar{y})^2 && A = A_x + A_y
+\nonumber
+\end{align}
+\begin{align}
+B_x = \sum_{i=1}^m (x_i - \bar{z})^2 && B_y = \sum_{i=1}^n (y_i - \bar{z})^2 && B = B_x + B_y
+\nonumber
+\end{align}
+Két szegmens akkor vonható össze, ha az alábbi egyenlõtlenségek minden sávra teljesülnek 
+adott $C_1$ és $C_2$ konstans küszöbértékekre:
+\begin{align}
+(A/B)^{(m+n)/2} \geq C_1 && \bigg({(A_x / m)^{m-1}(A_y/n)^{n-1} \over {(A/(m+n))^{m+n-2}}}\bigg)^{1/2} \geq C_2
+\nonumber
+\end{align}
+
+Mivel az inhomogén cellákat nem soroltuk szegmensekbe, ezért ezeket a pixeleket késõbb a 
+\textit{klaszterezés} során kell a nekik megfelelõ tematikus osztályokba sorolni. 
+
+\subsubsection{Legjobb összevonáson alapuló szegmentálás}
 
 %\subsection{Regionális mûveletek MapReduce alapú feldolgozása}
 %\subsection{Regionális mûveletek feldolgozása az Orleans rendszerben}
@@ -1310,6 +1358,8 @@ Az összevonás akkor lehetséges, ha a szegmensekhez tartozó intenzitások szórása 
 \bibitem{sequentialCoupling2} László, I., Dezsõ, B., Fekete, I., Pröhle, T. \textit{A fully segment-based method for the classification of satellite images}, Annales Univ. Sci. Budapest, Sectio Computatorica. Vol. 30. No. 2009, 2009.
 
 \bibitem{bestMerge} Schoenmakers, Ronald Peter Helena Maria. \textit{Integrated methodology for segmentation of large optical satellite images in land applications of remote sensing}. Office for Official Publications of the European Communities, 1995.
+
+\bibitem{toarefCompute} \textit{Converting Digital Numbers to Top of Atmosphere (ToA) Reflectance} http://www.yale.edu/ceo/Documentation/Landsat\_DN\_to\_Reflectance.pdf
 
 \end{thebibliography}
 
