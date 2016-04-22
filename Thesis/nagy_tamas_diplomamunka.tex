@@ -41,7 +41,7 @@
 
 \addto\captionsmagyar{ \renewcommand{\listfigurename}{Ábrajegyzék} }
 
-
+%TODO Write about function shipping and data locality as opposite of data shipping.
 
 \begin{document}
 
@@ -1247,15 +1247,16 @@ kategóriák kevésbé keveredjenek.
 
 A régió alapú szegmentáló algoritmusok két fõ csoportra oszthatók. Az \textit{összevonás alapú} mûveletek 
 kezdetben minden képpontot önálló szegmensnek tekintenek, és egy meghatározott számú iterációs lépésben a megadott
-feltételeknek eleget tevõ szomszédos elemeket összevonják. A \textit{vágás alapú} mûveletek esetén kezdetben a teljes
-felvételt egy darab szegmensnek tekintjük, melyet minden iterációs lépésben a kritériumoknak megfelelõen 
-több részre bontunk. 
+feltételeknek eleget tevõ szomszédos elemeket összevonják (\textit{összevonási kritérium}). 
+A \textit{vágás alapú} mûveletek esetén kezdetben a teljes
+felvételt egy darab szegmensnek tekintjük, melyet minden iterációs lépésben a meghatározott 
+\textit{vágási kritérium}nak megfelelõen több részre bontunk. 
 
 \subsubsection{Negyedelõ fa alapú szegmentálás} %TODO Cite
 A \textit{negyedelõ fa} (\textit{Quadtree}) egy hierarchikus fa adatszerkezet, 
 mely a sík egyenlõ régiókra történõ rekurzív felbontásán alapul. Fõként a képfeldolgozás és a számítógépes
 grafika területén terjedt el, valamint térbeli adatok indexelésére és raszteres adatok tömörítésére 
-is használatos .
+is használatos.
 
 Távérzékelt felvételek feldolgozásának területén leginkább a \textit{régió alapú} verziója használatos\cite{quadTree}, melynek
 segítségével a felvételt egy megadott \textit{homogenitási kritérium} alapján régiókra bonthatunk. 
@@ -1374,9 +1375,66 @@ kiküszöbölhetõek a fent említett nehézségek. Az egyes ötletek és megvalósításuk 
 következõ szakaszban kerülnek ismertetésre.
 
 \subsection{Regionális mûveletek feldolgozása az Orleans rendszerben}
+%TODO Compose
 
+\subsubsection{Vágást alkalmazó szegmentáló mûveletek futtatása}
+A vágást alkalmazó szegmensek kezdetben az input kép egészét egy darab szegmensnek tekintik, és egy
+meghatározott vágási kritérium alapján több több szegmensre osztják fel - például a korábban ismertetett
+negyedelõ fa alapú szegmentálás esetén négy egyforma méretû részre. A vágást alkalmazó mûveletek ennek
+megfelelõen könnyedén felkészíthetõek az elosztott feldolgozásra. Tekinthetjük a particionálás mûveletét
+egy kiinduló vágó lépésnek, mivel megfelelõen inhomogén képek és megfelelõ paraméterezés esetén
+a mûvelet elsõ lépése nagy valószínûséggel egy vágás lenne. A particionálásnál így egyedül arra
+kell figyelni, hogy ugyanolyan méretû és formájú partíciókat hozzunk létre kezdetben, mint amilyeneket a
+vágások során hozna létre a szegmentáló algoritmus. Például a negyedelõ fa alapú szegmentálás 
+esetén egyforma méretû, $2^n$ darabszámú partíció létrehozása szükséges.
 
-%TODO Write about processing Quadtree based segmentation
+\subsubsection{Összekapcsolást alkalmazó szegmentáló mûveletek futtatása}
+Ahhoz, hogy a MapReduce esetben bevezetett utófeldolgozó lépést eliminálhassuk a feldolgozásból,
+tudjuk, szükséges hogy a szegmentáló mûvelet által létrehozott szegmensek minden lépésben 
+konzisztensek legyenek, tehát a mûvelet minden iterációjában ugyanazok a szegmensek jelenjenek meg,
+mint ha a mûveletet a kép egészére, particionálás nélkül futtatnánk. Az AEGIS rendszerben
+a szegmentáló mûveletek egy \textit{szegmensgyûjtemény}t (\textit{SegmentCollection}) használnak 
+a szegmensek nyilvántartására. A szegmensgyûjtemény osztály tulajdonképpen egy \textit{sok-egy} megfeleltetés
+a feldolgozandó kép pixelei és az egyes szegmensek között. Minden pixelre lekérdezhetjük az õt tartalmazó
+szegmenst (ha van ilyen), illetve minden szegmenshez eltároljuk, mely pixeleket tartalmaz.
+Elosztott feldolgozás során minden feldolgozó egység saját szegmensgyûjteménnyel rendelkezik, a pixelek
+koordinátái pedig az adott feldolgozandó input relatív koordináta-rendszerében helyezkednek el. 
+Ha az egységeknek biztosítani tudnánk egy olyan szegmensgyûjteményt, amely - elméletben - feldolgozandó
+teljes input képre tartalmazná az összes szegmenst, akkor a szegmentálás állapota minden
+idõpillanatban ugyanazt a konzisztens állapotot tükrözné vissza, mint ha egy gépen történne a feldolgozás.
+
+Az ötletet a korábban bemutatott virtuális raszter adta: Vezessünk be egy virtuális raszteren
+operáló, \textit{virtuális szegmensgyûjtemény}t (\textit{VirtualSegmentCollection}), 
+mely az eredeti kép dimenzióival rendelkezik, és az összes feldolgozó egységet összekapcsolja egy
+\textit{szegmens szerviz}-en (\textit{SegmentService}) keresztül. Az egyes feldolgozó egységek lokálisan
+nem tárolják el az input kép egészére a szegmensinformációt, csupán a saját területüket - valamilyen
+módon - érintõ szegmenseket.
+
+A szegmentáló mûveletek ezen virtuális szegmenseken operálnak a saját partíciójuk által meghatározott
+munkaterületen. A virtuális raszteren és a virtuális szegmensgyûjteményen keresztül 
+lényegében a teljes input kép bármelyik pixelét és adatát elérhetik. Ezzel lényegében az algoritmusok
+bármilyen módosítás nélkül elosztottan, tetszõleges számú partícióval futtathatók.
+
+A szegmens szerviznek alapvetõen két funkciója van: Egyrészt biztosítja a szegmensek elérését, ehhez
+a lokális partícióhoz tartozó szegmenseket a kiinduló szegmensgyûjteményhez hasonlóan tartja
+nyilván, más partíciók által tartalmazott szegmenseket pedig a távoli partíciót feldolgozó egységnek
+intézett üzenetküldéssel kéri el. 
+Másrészt, ha a feldolgozás során szükséges egy távoli szegmens módosítása 
+(például szegmensek összekapcsolása vagy vágása), a szegmens szerviz
+értesíti a távoli szegmenst tartalmazó szervizt a módosításról. Mivel a szerviz közvetlenül nem
+összekapcsolható más szervizekkel, csupán a feldolgozó Grain-ekkel, így ezek interfésze
+kiegészítésre került a megfelelõ lekérdezõ és módosító mûveletekkel, tehát lényegében \textit{proxy}
+objektumokként szolgálnak a szegmens szervizek kommunikációjában.
+
+Fontos megjegyezni, hogy a fent bevezetett virtuális szegmens használata esetén is létrejöhetnek olyan
+szegmensek a rendszerben, melyeket több feldolgozó egység is tartalmaz. Ha egy lokális szegmens 
+összekapcsolásra kerül egy távoli szegmenssel, akkor az összekapcsolt szegmenst mindkét feldolgozó
+egység tartalmazni fogja, mivel nem egyértelmûen eldönthetõ, hogy melyik partícióhoz tartozik.
+Azonban a szerviz alkalmazásával a duplikált szegmensek pontosan meg fognak egyezni
+a tartalmazott pixelek függvényében, így nem szükséges olyan elimináló logika végrehajtása, mint a
+MapReduce esetén, elegendõ az egyik szegmenst kitörölni a végsõ gyûjteménybõl.
+
+%TODO Add figure.
 
 %\subsection{Globális mûveletek}
 %A Globális mûveletek feldolgozásuk során az eredményt az input kép valamilyen globális tulajdonsága alapján
@@ -1385,7 +1443,8 @@ következõ szakaszban kerülnek ismertetésre.
 %\subsubsection{Otsu küszöbölés} %TODO Is This Focal or Global method?
 %https://en.wikipedia.org/wiki/Balanced_histogram_thresholding
 
-%\subsubsection{Klaszterezés}
+%TODO Write about this in a subsection instead of a subsubsection?
+%\subsubsection{Klaszterezés} 
 
 % ------------------------------------------------------------------------------
 
