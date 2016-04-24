@@ -95,11 +95,12 @@ A \textit{passzív} szenzorok valamilyen természetes energia sugárzását érzékelik
 visszavert energia. \textit{Passzív} szenzorok által leggyakrabban használt energiaforrás a Napból érkezõ visszavert energia.
 Az \textit{aktív} szenzorok abban különböznek passzív társaiktól, hogy õk maguk sugározzák a földfelszínre az érzékelni kívánt energiát.
 
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=90mm]{figures/remote_sensing_components.jpg}
-	\caption{A távérzékelési rendszer összetevõi \label{fig:remote_sensing_components}}
-\end{figure}
+%TODO Consider the replacement of the figure
+%\begin{figure}[h!]
+%	\centering
+%	\includegraphics[width=90mm]{figures/remote_sensing_components.jpg}
+%	\caption{A távérzékelési rendszer összetevõi \label{fig:remote_sensing_components}}
+%\end{figure}
 
 A távérzékelt felvételek \textit{spektrális felbontás}a meghatározza, hogy az elektromágneses spektrumon belül mely
 hullámsávokat milyen részletességgel vételezi a szenzor. Az úgynevezett \textit{pankromatikus} szenzorok egy spektrális
@@ -1145,7 +1146,7 @@ A függvény paraméterei a következõk: $\lambda$ a szinuszhullám hullámhossza, $\t
 		\label{fig:gabor}
 	\end{subfigure}
 	\captionsetup{justification = centering}
-	\caption{A (\subref{fig:gabor}) Gabor függvény  elõállítása az (\subref{fig:gaussian}) Gauss függvénybõl és a (\subref{fig:sinusoid}) szinusz hullámból}
+	\caption{A (\subref{fig:gabor}) Gabor függvény  elõállítása az (\subref{fig:gaussian}) Gauss függvénybõl és a (\subref{fig:sinusoid}) szinusz hullámból} %TODO CITE!!!!!!
 	\label{fig:gaborFilterModulation}
 \end{figure}
 
@@ -1421,7 +1422,12 @@ nyilván, más partíciók által tartalmazott szegmenseket pedig a távoli partíciót 
 intézett üzenetküldéssel kéri el. 
 Másrészt, ha a feldolgozás során szükséges egy távoli szegmens módosítása 
 (például szegmensek összekapcsolása vagy vágása), a szegmens szerviz
-értesíti a távoli szegmenst tartalmazó szervizt a módosításról. Mivel a szerviz közvetlenül nem
+értesíti a távoli szegmenst tartalmazó szervizt a módosításról. 
+
+%TODO Elaborate how does the segment get and update workflow work.
+%TODO Write about the problem of the reentrant grains
+
+Mivel a szerviz közvetlenül nem
 összekapcsolható más szervizekkel, csupán a feldolgozó Grain-ekkel, így ezek interfésze
 kiegészítésre került a megfelelõ lekérdezõ és módosító mûveletekkel, tehát lényegében \textit{proxy}
 objektumokként szolgálnak a szegmens szervizek kommunikációjában.
@@ -1436,15 +1442,90 @@ MapReduce esetén, elegendõ az egyik szegmenst kitörölni a végsõ gyûjteménybõl.
 
 %TODO Add figure.
 
-%\subsection{Globális mûveletek}
-%A Globális mûveletek feldolgozásuk során az eredményt az input kép valamilyen globális tulajdonsága alapján
-%képesek kiszámítani. 
-%\subsubsection{Kiegyensúlyozott hisztogram-küszöbölés} %TODO Write about thematic classification?
-%\subsubsection{Otsu küszöbölés} %TODO Is This Focal or Global method?
-%https://en.wikipedia.org/wiki/Balanced_histogram_thresholding
+\section{Globális mûveletek}
+A Globális mûveletek feldolgozásuk során az eredményt az input kép valamilyen globális tulajdonsága alapján
+- például hisztogram - képesek kiszámítani. A particionálás - ha egyáltalán lehetséges - meglehetõsen
+komplex feladat. A Globális mûveletek azonban kulcsfontosságú részét képezik a távérzékelt adatokból
+történõ tematikus információkinyerésnek. Mind a pont alapú osztályozó mûveletek (pl.: küszöbölés), mind
+pedig a regionális, a szegmentáláson és klaszterezésen alapuló tematikus osztályozás alapvetõ részei.
 
-%TODO Write about this in a subsection instead of a subsubsection?
-%\subsubsection{Klaszterezés} 
+A fenti tényezõk miatt az Orleans rendszer gyakorlati alkalmazhatósága nagyban függ a globális mûveletek
+területén nyújtott teljesítményétõl. Ha ezen a területen megfelelõ teljesítményt nyújt a rendszer, az
+nagy elõrelépést jelentene a távérzékelt felvételek elosztott feldolgozása területén.
+
+\subsection{Hisztogram alapú küszöbölés}
+A tematikus osztályozás legegyszerûbb algoritmusa, a \textit{konstans küszöbölés} a lokális mûveleteknél
+került bemutatásra. Ezen mûvelet legnagyobb hátránya, hogy a küszöbértéket manuálisan kell beállítani
+minden egyes mûveletre, és az optimális érték minden inputra különbözhet.
+
+A \textit{hisztogram alapú} küszöbölõ algoritmusok az input képre kiszámított hisztogram alapján
+próbálnak optimális küszöbértéket keresni. A legtöbb mûvelet úgy próbálja a küszöbértéket meghatározni, 
+hogy a tõle kisebb, illetve nagyobb intenzitásértékek között a legnagyobb legyen a különbség.
+
+Az algoritmusokat legtöbbször szürkeárnyalatos képek küszöbölésére használjuk, azonban távérzékelt
+felvételek bármelyik spektrális sávjának küszöbölésére is alkalmazható.
+
+\subsubsection{Kiegyensúlyozott hisztogram küszöbölés}
+A kiegyensúlyozott hisztogram alapú küszöbölés\cite{balancedHistogramThresholding} két különbözõ
+osztályt képes megkülönböztetni a képen: egy elõteret és egy hátteret. Az algoritmus
+\textit{súlyozza} az input hisztogramot, és azt a pontot keresi meg futása során, ahol a hisztogram érték
+"egyensúlyban" van. Ez azt jelenti, hogy a ponttól azonos mennyiségû alacsonyabb-, illetve magasabb
+intenzitású pontokat tartalmaz a hisztogram. 
+A kiinduló egyensúlypont a hisztogram közepe, és a mûvelet minden lépésében a "nehezebb" 
+oldalból vesz el \textit{hisztogram osztályokat} mindaddig, amíg ki nem egyensúlyozza a hisztogramot.
+
+Az algoritmus egyszerûsége miatt széles körben használt, túlzottan zajos képek esetén azonban nem 
+ad biztosan eredményt. Ez kiküszöbölhetõ, ha a hisztogram "kiugró" értékeit nem vesszük 
+figyelembe\cite{bhtOptimal}.
+
+\subsubsection{Otsu küszöbölés}
+A \textit{Nobuyuki Otsu} után elnevezett \textit{Otsu küszöbölés}\cite{otsu} egy bináris küszöbölõ
+algoritmus. A mûvelet a kiegyensúlyozott hisztogram küszöböléshez hasonlóan feltételezi, hogy az input
+kép két osztályból (egy elõtérbõl és egy háttérbõl) tartalmaz pixelértékeket, és azt a küszöbértéket
+keresi, ahol maximális a két osztály különbsége. 
+
+Az algoritmus következõ: Az input sáv $L$ különbözõ intenzitást tartalmaz, a normalizált hisztogram
+pedig minden $i$ intenzitáshoz megadja annak $P_i$ elõfordulási gyakoriságát. Azt a $T$ küszöbértéket
+keressük, amely az elõtér/háttér közötti \textit{varianciá}t maximalizálja.
+
+A háttér ($q_b$) illetve az elõtér ($q_o$) pixeleinek gyakorisága (valószínûsége):
+\begin{align}
+q_b(T) = \sum_{i=1}^{T}p_i && q_o(T) = \sum_{i=T+1}^{L}p_i && \text{és} && q_b(T) + q_o(T) = 1
+\nonumber
+\end{align}
+
+A $T$ küszöbérték két részre osztja a normalizált hisztogramot ezek átlaga ($\mu_b,\space\mu_o$)
+és varianciája ($\sigma^2_b,\space\sigma^2_o$) az alábbi:
+
+\begin{align}
+\mu_b = \frac{1}{q_b(T)}\sum_{i=0}^{T}i*P(i) && \mu_o = \frac{1}{q_o(T)}\sum_{i=T+1}^{L}i*P(i)
+\nonumber
+\end{align}
+\begin{align}
+\sigma^2_b = \frac{1}{q_b(T)}\sum_{i=0}^{T}(i - \mu_b)^2*P(i) && 
+\sigma^2_o = \frac{1}{q_o(T)}\sum_{i=T+1}^{L}(i - \mu_o)^2*P(i)
+\nonumber
+\end{align}
+
+A fentiek, valamint az input kép szórásnégyzete $(\sigma^2)$ 
+felhasználásával kaphatjuk a hisztogram osztályon belüli $(\sigma_w^2)$ 
+és az osztályok közötti $(\sigma_k^2)$ szórásnégyzeteket:
+
+\begin{center}
+	$\sigma_w^2(T) = q_b(T)*\sigma_b^2(T) + q_o(T)*\sigma_o^2(T)$
+\end{center}
+\begin{center}
+	$\sigma_k^2(T) = \sigma_w^2(T)$
+\end{center}
+
+A fenti $\sigma_w^2(T)$ és $\sigma_k^2(T)$ szórásnégyzetek összege minden $T$ küszöb
+esetén konstans, így az optimális küszöbérték az az érték, amelyre $\sigma_w^2(T)$ maximális
+(tehát az osztályon belüli szórás minimális), vagy $\sigma_k^2(T)$ maximális (vagyis 
+az egyes osztályok közötti szórás maximális).
+
+\subsection{Klaszterezés}
+
+
 
 % ------------------------------------------------------------------------------
 
@@ -1524,7 +1605,11 @@ MapReduce esetén, elegendõ az egyik szegmenst kitörölni a végsõ gyûjteménybõl.
 
 \bibitem{bhattacharyya} Bhattacharyya, Anil. \textit{On a measure of divergence between two multinomial populations} Sankhya: The Indian Journal of Statistics (1946): 401-406.
 
+\bibitem{balancedHistogramThresholding} A. Anjos and H. Shahbazkia. \textit{Bi-Level Image Thresholding - A Fast Method}. BIOSIGNALS 2008. Vol:2. P:70-76.
 
+\bibitem{bhtOptimal} A. Anjos, R. Leite, M. L. Cancela, H. Shahbazkia. \textit{MAQ - A Bioinformatics Tool for Automatic Macroarray Analysis}. International Journal of Computer Applications. 2010. Number 7 - Article 1.
+
+\bibitem{otsu}  Nobuyuki Otsu (1979). \textit{A threshold selection method from gray-level histograms}. IEEE Trans. Sys., Man., Cyber. 9 (1): 62-66
 
 \end{thebibliography}
 
