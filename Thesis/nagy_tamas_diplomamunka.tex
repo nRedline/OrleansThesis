@@ -406,7 +406,7 @@ komoly szaktudást követelne a párhuzamos és elosztott alkalmazásfejlesztés terül
 	\caption{A \textit{MapReduce} folyamat \label{fig:mapReduceProcess}}
 \end{figure}
 
-\subsection{Hadoop}
+\subsection{Hadoop} \label{subs:aegisHadoop}
 A MapReduce modell egy implementációja az \textit{Apache Software Foundation} által fejlesztett 
 \textit{Hadoop} keretrendszer. A rendszer komponenseinek tervezésénél a fõ szempont a hibatûrés volt - 
 bármilyen hardveres hiba elõfordulása természetes, és a keretrendszernek automatikusan kezelnie kell.
@@ -801,7 +801,7 @@ szükség, ezek kerültek integrálásra. Mivel mindkét rendszer a \textit{.NET} kere
 így az integráció is egyszerû volt, csupán az AEGIS által nyújtott \textit{.NET szerelvények} 
 (\textit{assembly}) referálására volt szükség a fent felsorolt projektekben.
 
-\section{Input adatok particionálása és feltöltése} %TODO Not the best section title
+\section{Input adatok particionálása és feltöltése} \label{sec:partitioning} %TODO Not the best section title
 A \ref{ch:remoteSensingAnalysis}. fejezetben említésre került, hogy távérzékelt felvételek
 elosztott feldolgozásánál az input adatokat valamilyen tulajdonság alapján feldarabolunk
 és az egyes darabokat külön számítási egységekkel dolgozunk fel. Az Orleans rendszer
@@ -918,13 +918,14 @@ Az egyes mûveletek Orleans kiterjesztése munkaterület-csoportonként különbözõ me
 
 
 \section{Lokális mûveletek}
-%TODO Recompose
 Elosztott feldolgozás szempontjából a legegyszerûbb munkaterület-csoport a lokális mûveletek csoportja.
 Ebben az esetben az input kép tetszõleges módon particionálható, és elosztottan feldolgozható, nem szükségesek
 további lépések. A lokális mûveletek egyszerûségük miatt megfelelõ alapot nyújtottak a vizsgált rendszer alapvetõ
-lehetõségeinek megismerésére, melyre a késõbbiekben építkezni lehetett. Ezen felül a lokális mûveletek segítségével
-a rendszer egyes számítási egységeinek teljesítménye is mérhetõ volt, így tesztelésre kerültek kevésbé számításigényes
-(pl.: \textit{Spektrális invertálás}), valamint bonyolultabb mûveletek (pl.: \textit{ToA-Reflektancia}).
+lehetõségeinek megismerésére, melyre a késõbbiekben építkezni lehetett. Ezen felül a lokális 
+mûveletek segítségével 
+a rendszer mûködtetésének a mûveletek futtatásán túli költsége (adatok feltérképezése és
+beolvasása Grain-ek létrehozása) is mérhetõ volt, így kevésbé számításigényes 
+algoritmusok kerültek tesztelésre.
 
 \subsubsection{Spektrális Invertálás}
 A \textit{spektrális invertálás} egy egyszerû lokális \textit{látványjavító mûvelet}, melynek során az egyes 
@@ -1386,8 +1387,7 @@ megfelelõen könnyedén felkészíthetõek az elosztott feldolgozásra. Tekinthetjük a
 egy kiinduló vágó lépésnek, mivel megfelelõen inhomogén képek és megfelelõ paraméterezés esetén
 a mûvelet elsõ lépése nagy valószínûséggel egy vágás lenne. A particionálásnál így egyedül arra
 kell figyelni, hogy ugyanolyan méretû és formájú partíciókat hozzunk létre kezdetben, mint amilyeneket a
-vágások során hozna létre a szegmentáló algoritmus. Például a negyedelõ fa alapú szegmentálás 
-esetén egyforma méretû, $2^n$ darabszámú partíció létrehozása szükséges.
+vágások során hozna létre a szegmentáló algoritmus.
 
 \subsubsection{Összekapcsolást alkalmazó szegmentáló mûveletek futtatása}
 Ahhoz, hogy a MapReduce esetben bevezetett utófeldolgozó lépést eliminálhassuk a feldolgozásból,
@@ -1408,13 +1408,13 @@ Az ötletet a korábban bemutatott virtuális raszter adta: Vezessünk be egy virtuá
 operáló, \textit{virtuális szegmensgyûjtemény}t (\textit{VirtualSegmentCollection}), 
 mely az eredeti kép dimenzióival rendelkezik, és az összes feldolgozó egységet összekapcsolja egy
 \textit{szegmens szerviz}-en (\textit{SegmentService}) keresztül. Az egyes feldolgozó egységek lokálisan
-nem tárolják el az input kép egészére a szegmensinformációt, csupán a saját területüket - valamilyen
-módon - érintõ szegmenseket.
+nem tárolják el az input kép egészére a szegmensinformációt, 
+csupán a saját területüket valamilyen módon érintõ szegmenseket.
 
 A szegmentáló mûveletek ezen virtuális szegmenseken operálnak a saját partíciójuk által meghatározott
 munkaterületen. A virtuális raszteren és a virtuális szegmensgyûjteményen keresztül 
-lényegében a teljes input kép bármelyik pixelét és adatát elérhetik. Ezzel lényegében az algoritmusok
-bármilyen módosítás nélkül elosztottan, tetszõleges számú partícióval futtathatók.
+lényegében a teljes input kép bármelyik pixelét és szegmensét elérhetik. Ezzel lényegében az algoritmusok
+bármilyen módosítás nélkül elosztottan, tetszõleges számú partíción futtathatók.
 
 A szegmens szerviznek alapvetõen két funkciója van: Egyrészt biztosítja a szegmensek elérését, ehhez
 a lokális partícióhoz tartozó szegmenseket a kiinduló szegmensgyûjteményhez hasonlóan tartja
@@ -1424,12 +1424,35 @@ Másrészt, ha a feldolgozás során szükséges egy távoli szegmens módosítása
 (például szegmensek összekapcsolása vagy vágása), a szegmens szerviz
 értesíti a távoli szegmenst tartalmazó szervizt a módosításról. 
 
-%TODO Elaborate how does the segment get and update workflow work.
-%TODO Write about the problem of the reentrant grains
+%TODO If you write this down, you have to implement it
+%Az Orleans rendszer ismertetésekor már említésre került, hogy alapértelmezés szerint
+%a Grain-ekhez intézett hívások nem "fedhetnek át", tehát egy Grain egyszerre egy hívást
+%szolgálhat ki. Mivel ez a jelenlegi helyzetben nem volt kielégítõ (a feldolgozás közben
+%egy másik grain-nek szüksége lehet egy megadott pixelértékre, vagy egy szegmensre),
+%a feldolgozó Grain-eket elláttuk a Reentrant attribútummal, mely engedélyezi a bejövõ
+%hívások kiszolgálásának átfedését. Ez a pixelértékek lekérdezésénél nem okoz problémát
+
+
+\begin{figure}[H] 
+	\centering
+	\captionsetup{width=0.8\textwidth, justification=centering}
+	\includegraphics[width=155mm]{figures/segmentUpdate.png}
+	\caption{Egy lokális szegmens távoli szegmenssel történõ összekapcsolása \label{fig:segmentUpdate}}
+\end{figure}
+
+A \ref{fig:segmentUpdate}. ábrán egy olyan eset látható, amikor egy lokális szegmenst
+egy távoli szegmenssel kapcsolunk össze. A Szegmens szerviz (\textit{Segment Service}) ekkor távoli szegmenst 
+tartalmazó Grain-hez intézett üzenetküldéssel (\textit{Get Remote Segment}) kéri el
+a szükséges szegmenst, a lokális szegmenst pedig a lokálisan nyilvántartott
+szegmensek gyûjteményétõl kérdezi le (\textit{Segment Collection}). A távoli Grain is
+a saját szegmensgyûjteményébõl továbbítja a kívánt szegmenst. A két szegmens
+összekapcsolása után egyrészt a Grain a saját szegmensgyûjteményét is frissíti, valamint a
+távoli Grain-nek is elküldi az összefésült szegmenst (\textit{Update Remote Segment}), 
+így ez a Grain is frissítheti a gyûjteményét.
 
 Mivel a szerviz közvetlenül nem
 összekapcsolható más szervizekkel, csupán a feldolgozó Grain-ekkel, így ezek interfésze
-kiegészítésre került a megfelelõ lekérdezõ és módosító mûveletekkel, tehát lényegében \textit{proxy}
+kiegészítésre került a megfelelõ lekérdezõ (\textit{GetRemoteSegment}) és módosító (\textit{UpdateRemoteSegment}) mûveletekkel, tehát lényegében \textit{proxy}
 objektumokként szolgálnak a szegmens szervizek kommunikációjában.
 
 Fontos megjegyezni, hogy a fent bevezetett virtuális szegmens használata esetén is létrejöhetnek olyan
@@ -1524,8 +1547,102 @@ esetén konstans, így az optimális küszöbérték az az érték, amelyre $\sigma_w^2(T
 az egyes osztályok közötti szórás maximális).
 
 \subsection{Klaszterezés}
+A \textit{klaszterezés} a tematikus osztályozás egyik kulcsfontosságú lépése. 
+A szegmentáló algoritmusok ugyan megfelelõen csoportosítják a homogén pixeleket,
+azonban a létrejövõ szegmensek nem feleltethetõek meg egyértelmûen a keresett
+tematikus osztályoknak. Legtöbbször egy tematikus osztályt több, spektrálisan hasonló 
+szegmens épít fel (pl.: egy távérzékelt felvételen több különbözõ vízzel borított terület
+is megjelenhet, melyek nem feltétlenül szomszédosak egymással). A klaszterezõ mûveletek
+feladata, hogy a \textit{spektrálisan} összefüggõ szegmenseket csoportosítsa, és a létrejövõ
+csoportokat megfeleltesse az egyes tematikus osztályoknak. A klaszterezõ algoritmusok 
+az egyes szegmensek geometriai helyzete helyett azok \textit{spektrális intenzitástér}ben 
+való elhelyezkedése alapján keresik az egyes csoportokat, így a csoportok 
+kialakítása során már mindegy, hogy az egy tematikus kategóriába tartozó szegmensek
+hol helyezkednek el az input képen.
 
+\subsubsection{ISODATA algoritmus}
+Az \textit{ISODATA algoritmus (Iterative Self-Organizing Data Analysis Technique)}\cite{isodata}
+egy euklideszi spektrális távolságon alapuló klaszterezõ algoritmus, mely több 
+iteráción keresztül határozza meg az optimális osztályokat. 
+ Az algoritmus a következõ lépésekbõl áll:
 
+\begin{enumerate}
+	\item Válasszunk meghatározott mennyiségû kiinduló klaszterközéppontot az intenzitástérben.
+	\item Minden szegmenshez (vagy pixelhez) rendeljük hozzá annak a klaszternek a sorszámát,
+			amelynek középpontja az intenzitástérben a legközelebbi az euklideszi távolság
+			alapján.
+	\item Határozzuk meg minden klaszterre azoknak a képpontoknak az átlagát, amelyek 
+			az aktuális iterációban az adott klaszterhez sorolódtak. Ez fogja meghatározni
+			az új klaszterközéppontokat.
+	\item Ha a leállási feltétel nem teljesül, folytassuk 2.-tõl.
+\end{enumerate}
+
+Az algoritmus leállási feltétele, hogy a létrejött osztályok átlaga az osztályok lehetséges
+középpontjába helyezõdik, tehát az egyes iterációk eredményei között nagyon alacsony a 
+különbség. 
+
+Az algoritmus nagy elõnye, hogy nem szükséges kezdeti információval rendelkeznünk az adatok
+spektrális tulajdonságairól, így nincs jelentõsége hogy hol helyezkednek el a kezdõ
+klaszterközéppontok, ha elég sok iteráció engedélyezett.
+
+\subsection{Globális mûveletek MapReduce alapú feldolgozása}
+Globális mûveletek esetén általában a feldolgozandó adat a megfelelõ globális információ
+birtokában késõbb elosztottan futtatható, azonban ezen globális információ kiszámítása
+mindenképpen központilag kell, hogy történjen. Az is lehetséges, hogy az adatok 
+valamilyen egyéb szempont alapján történõ \textit{újraparticionálás}a után végezhetõ
+el az elosztott feldolgozás.
+
+\subsubsection{Hisztogram alapú küszöbölõ algoritmusok}
+A hisztogram alapú algoritmusok indulásának pillanatában szükséges a teljes kép hisztogramának
+rendelkezésre állása. Ez egy elõfeldolgozó \textit{Map} illetve \textit{Reduce} 
+mûveletekkel könnyedén elõállítható a \ref{subs:aegisHadoop}. szakaszban a
+\textit{hisztogram-kiegyenlítés} mûveleténél ismertetett módszerrel: Elsõ lépésként egy Map függvénnyel
+kiszámítjuk minden darabra a hisztogramot, majd egy Reduce mûvelet segítségével ebbõl elõállítjuk
+a teljes kép hisztogramát. Ezután az egész input kép hisztogramának ismeretében egy
+harmadik Map függvény végrehajtja a kívánt küszöbölõ mûveletet.
+
+\subsubsection{Klaszterezõ algoritmusok}
+A klaszterezõ algoritmusok - mint korábban említésre került - az input pixelek vagy szegmensek
+intenzitásértékébõl elõállított intenzitástéren operálnak. Ez az intenzitástér az input kép
+geometriai particionálásához hasonló módszerrel particionálható és elosztottan feldolgozható.
+A tematikus osztályozás folyamata során a klaszterezõ mûveletek legtöbbször egy szegmentáló 
+mûvelet eredményhalmazát (szegmensek egy csoportját) kapják meg. MapReduce feldolgozás esetén
+ezeket az eredményhalmazokat összegyûjthetjük a szegmentálás végezte után egy Reduce lépésben
+(A szegmentálás során az elõzõ szakaszban említett duplikált szegmensek eliminálásához 
+egyébként is szükséges egy központi Reduce lépés), majd a spektrális intenzitástér alapján
+újraparticionálhatjuk õket. Ezután az egyes partíciókat újabb \textit{Mapper} függvényekkel,
+elosztottan feldolgozhatjuk. Mivel a végsõ szegmensgyûjtemény számossága jellemzõen 
+nagyságrendekkel alacsonyabb, mint az input pixelek darabszáma, így az adatok újraelosztása 
+a feldolgozó Mapper függvények között nem okoz jelentõs teljesítménycsökkenést. 
+
+Fontos megjegyezni, hogy a spektrális intenzitástér alapján újraparticionált adatokon 
+elosztottan futtatott klaszterezés tulajdonképpen egy regionális mûvelet lesz. Emiatt 
+szükséges ezen particionálás
+során is átfedéseket definiálni, és a klaszterezés során azokat a szegmenseket, amelyek
+több klaszterbe is besorolásra kerültek, eliminálni a végsõ eredményhalmazból. 
+Ezt az eliminálást egy újabb Reduce mûvelet végezheti el a klaszterezés végeztével.
+
+\subsection{Globális mûveletek Orleans alapú feldolgozása}
+A globális mûveletek elméletben az Orleans platformon is hasonló módon kerülnek végrehajtásra,
+mint a MapReduce esetben, csupán az alkalmazott ötletek tekintetében volt különbség. 
+A hisztogram alapú algoritmusok esetén például a központi hisztogram-kiszámító lépést nem
+az Orleans rendszer végzi, hanem a hisztogramot elõzetesen a particionálás során 
+kiszámítjuk, és a \ref{sec:partitioning}. szakaszban ismertetett partíció leíró fájlba
+helyezzük. Mivel ezt a partíció leíró fájlt az összes feldolgozó Grain megkapja, így
+a hisztogram alapú küszöbölõ algoritmusok indításának pillanatában minden feldolgozó
+egység számára rendelkezésre áll.
+
+\subsubsection{Klaszterezõ algoritmusok}
+A klaszterezõ eljárások elosztott futtatásának alapötlete megegyezik a MapReduce
+esetben ismertetett megoldással - a szegmentálás eredményét összegyûjtjük az egyes
+Grain-ektõl, a szegmenseket elhelyezzük a multispektrális térben, majd particionáljuk,
+és újabb feldolgozó Grain-ek segítségével elosztottan elvégezzük a klaszterezést. 
+A különbség abban nyilvánul meg, hogy a particionálás során nem definiálunk
+átfedéseket, hanem a szükséges távoli értékeket az egyes feldolgozó egységek
+a regionális mûveletekhez hasonlóan távoli üzenetküldés segítségével "kérik el"
+egymástól.
+
+%TODO Do we need to write more here?
 
 % ------------------------------------------------------------------------------
 
@@ -1610,6 +1727,8 @@ az egyes osztályok közötti szórás maximális).
 \bibitem{bhtOptimal} A. Anjos, R. Leite, M. L. Cancela, H. Shahbazkia. \textit{MAQ - A Bioinformatics Tool for Automatic Macroarray Analysis}. International Journal of Computer Applications. 2010. Number 7 - Article 1.
 
 \bibitem{otsu}  Nobuyuki Otsu (1979). \textit{A threshold selection method from gray-level histograms}. IEEE Trans. Sys., Man., Cyber. 9 (1): 62-66
+
+\bibitem{isodata} Ball, Geoffrey H., and David J. Hall. \textit{ISODATA, a novel method of data analysis and pattern classification}. STANFORD RESEARCH INST MENLO PARK CA, 1965.
 
 \end{thebibliography}
 
