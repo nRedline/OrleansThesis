@@ -41,8 +41,6 @@
 
 \addto\captionsmagyar{ \renewcommand{\listfigurename}{Ábrajegyzék} }
 
-%TODO Write about function shipping and data locality as opposite of data shipping.
-
 \begin{document}
 
 % ------------------------------------------------------------------------------
@@ -83,7 +81,7 @@ Lorem ipsum...
 \chapter{Távérzékelt felvételek elemzése} \label{ch:remoteSensingAnalysis}
 A fejezet célja betekintést nyújtani távérzékelt felvételkiértékelés folyamatába.
 Elsõként a távérzékelés fogalma, fizikai és technikai alapjai, valamint alkalmazási lehetõségei kerülnek ismertetésre.
-Ezután a távérzékelt felvételek kiértékelésének célja, feldolgozási folyamata
+Ezután a távérzékelt felvételek kiértékelésének célja, feldolgozási folyamata,
 és a folyamat során elvégzett mûveletek bemutatása következik.
 
 \section{A Távérzékelés}
@@ -91,33 +89,28 @@ Távérzékelés alatt olyan adatgyûjtési és feldolgozási eljárásokat értünk, melyne
 tárgyakról vagy területekrõl közvetve, azok érintése nélkül gyûjtünk és rögzítünk adatokat.
 
 Manapság a távérzékelést leggyakrabban földfelszíni-, illetve légköri adatok begyûjtésére értjük, valamilyen légi, vagy ûrbéli szenzor segítségével. 
-Ezek a szenzorok a földfelszínrõl érkezõ energiát érzékelik, ez által alkotnak képet egy bizonyos területrõl. \cite{richards}
+Ezek a szenzorok a földfelszínrõl érkezõ (kibocsátott, vagy visszavert) elektromágneses 
+energiát érzékelik, ez által alkotnak képet egy bizonyos területrõl.\cite{richards}
 
 \subsection{A távérzékelés fizikai és technikai alapjai} \label{subs:remoteSensingBasics}
-A távérzékelõ rendszereknek alapvetõen három fõ összetevõje van: A sugárforrás, a megfigyelés tárgyát képezõ földfelszín és az érzékelõ.
+A távérzékelõ rendszereknek alapvetõen három fõ összetevõje van: A \textit{sugárforrás}, a megfigyelés tárgyát képezõ \textit{földfelszín} és az \textit{érzékelõ}.
 
-Az érzékelt energia forrása alapján beszélhetünk \textit{passzív}-, illetve \textit{aktív} távérzékelõ szenzorokról.
-A \textit{passzív} szenzorok valamilyen természetes energia sugárzását érzékelik, ez lehet a Föld által kibocsátott, vagy
-visszavert energia. \textit{Passzív} szenzorok által leggyakrabban használt energiaforrás a Napból érkezõ visszavert energia.
-Az \textit{aktív} szenzorok abban különböznek passzív társaiktól, hogy õk maguk sugározzák a földfelszínre az érzékelni kívánt energiát.
-
-%TODO Consider the replacement of the figure
-%\begin{figure}[h!]
-%	\centering
-%	\includegraphics[width=90mm]{figures/remote_sensing_components.jpg}
-%	\caption{A távérzékelési rendszer összetevõi \label{fig:remote_sensing_components}}
-%\end{figure}
+A sugárforrás alapján beszélhetünk \textit{passzív}-, illetve \textit{aktív} távérzékelõ szenzorokról.
+A passzív szenzorok valamilyen természetes energia sugárzását érzékelik, ez lehet a Föld által kibocsátott, vagy
+visszavert energia. A Passzív szenzorok által leggyakrabban használt sugárforrás a Napból érkezõ energia.
+Az aktív szenzorok abban különböznek passzív társaiktól, hogy õk maguk sugározzák a földfelszínre az érzékelni kívánt energiát.
 
 A távérzékelt felvételek \textit{spektrális felbontás}a meghatározza, hogy az elektromágneses spektrumon belül mely
 hullámsávokat milyen részletességgel vételezi a szenzor. Az úgynevezett \textit{pankromatikus} szenzorok egy spektrális
 sávot felvételeznek, mely lefedi a teljes látható tartományt, valamint belenyúlhat a közeli infravörös tartományba.
 A \textit{multispektrális} szenzorok több különbözõ elektromágneses hullámsávban érzékelnek. A leggyakrabban használt
-\textit{multispektrális} szenzorok sávszáma 3 és 7 között van, és a reflektív tartomány mellett 
+multispektrális szenzorok sávszáma 3 és 7 között van, és a reflektív tartomány mellett 
 a termális infravörös sávot is felvételezik.
 
-Az érzékelõ a megadott hullámsávban beérkezõ mennyiséget digitális értékekké (\textit{Digital Number - DN})
-alakítja - az érzékelõk \textit{radiometriai felbontása} 
-a kvantálás finomságát jelzi. Minél több energiaszintet képes megkülönböztetni az szenzor, annál magasabb
+Az érzékelõ berendezés az egyes hullámsávokban beérkezõ elektromágneses intenzitást 
+alakítja digitális értékekké (\textit{Digital Number - DN}). Ezen kvantálás finomságát az
+érzékelõk \textit{radiometriai felbontás}a határozza meg. 
+Minél több energiaszintet képes megkülönböztetni az szenzor, annál magasabb
 radiometriai felbontással rendelkezik. A legelterjedtebb nagyfelbontású multispektrális szenzoroknál 
 a \textit{7-8 bites felbontás} jellemzõ, mely \textit{128}, illetve \textit{256} különbözõ intenzitásszintnek felel meg.
 
@@ -141,10 +134,7 @@ $,
 ahol B számú spektrális sávot feltételezve $\vec{v}_{\textit{ij}} = (v_{\textit{ij}1}, \hdots, v_{\textit{ijB}})$
 az egyes elemekhez tartozó intenzitásértékek vektora. A vektor egyes elemei mindegyik spektrális sávban (kvantált formában)
 megadják az adott intenzitásértéket, tehát: $v_{\textit{ijb}} \in [\textit{1}\hdots\textit{H}]$, ahol \textit{H} a
-radiometriai felbontás alapján ábrázolható maximális értéket jelöli.
-
-A mátrix elemeinek koordinátáit és értékeit annak megfelelõen értelmezzük,
-amelyet az elvégezni kívánt mûvelet megkövetel. \cite{remoteSensingLecture}
+radiometriai felbontás alapján ábrázolható maximális értéket jelöli.\cite{remoteSensingLecture}
 
 \subsection{Távérzékelt felvételek alkalmazási területei}
 Az élet számos területén felhasználhatóak a távérzékeléssel nyert információk, például:
@@ -165,18 +155,25 @@ Az élet számos területén felhasználhatóak a távérzékeléssel nyert információk, p
 	a termést veszélyeztetõ növények és állatok kártételét.
 \end{itemize}
 
-A felhasználási területek közül fõként a katasztrófavédelemnél kiemelten fontos, hogy az érzékelés pillanatától számítva 
-mennyi késéssel juthatunk hozzá a kiértékelt adatokhoz - árvíz esetén például órák alatt változhat a vízszint, amelyrõl ha idõben
-értesülünk, megtehetjük a megfelelõ óvintézkedéseket, késlekedés esetén azonban jelentõs károk keletkezhetnek. A mûholdak visszatérési
-ideje csupán egy tényezõ az eredmény elõállításának gyorsaságában - kritikus lehet a meglévõ adatok kiértékelésének sebessége is.
+A felhasználási területek közül fõként a katasztrófavédelemnél kiemelten fontos, hogy \textit{milyen gyakran},
+és az érzékelés pillanatától számítva \textit{mennyi késéssel} juthatunk hozzá a kiértékelt adatokhoz.
+Árvíz esetén például órák alatt változhat a vízszint, amelyrõl ha idõben
+értesülünk, megtehetjük a megfelelõ óvintézkedéseket, késlekedés esetén azonban jelentõs károk 
+keletkezhetnek. 
+
+Az eredmény elõállításának sebességét két tényezõ befolyásolja. 
+Egyrészt az \textit{adatok hozzáférési ideje}, mely azt adja meg, mennyi idõ telik el
+a felvételkészítéstõl addig, amíg a felvételek eljutnak a felhasználóhoz. 
+Kritikus lehet emellett az \textit{adatok kiértékelésének sebessége} is, tehát hogy mennyi
+idõ alatt állítható elõ a felvételezett képbõl a szükséges információ.
 
 \section{Távérzékelt felvételek feldolgozása}
 A távérzékelés általánosságban a \textit{felvételezés}tõl a \textit{tematikus információ-kivonás}ig tart. 
 A felvételezés során a szenzorra beérkezõ intenzitásértékek nem tükrözik hûen a földfelszín sugárzását, 
-így elsõ lépésként a felvételeket egy elõfeldolgozó fázisban korrigálni kell.
-Ezután a felvételek tematikus kiértékelése következik, mely történhet 
-manuálisan vagy automatizáltan, esetleg a kettõ keverékeként. A tematikus kiértékelés módja befolyással lehet arra,
-mely elõfeldolgozó mûveletek végrehajtása szükséges.
+így elsõ lépésként a felvételeket egy \textit{elõfeldolgozó fázis}ban korrigálni kell.
+Ezután a felvételek \textit{tematikus kiértékelés}e következik, mely történhet 
+manuálisan vagy automatizáltan, esetleg a kettõ keverékeként. A tematikus kiértékelés 
+módja befolyással lehet arra, mely elõfeldolgozó mûveletek végrehajtása szükséges.
 
 \subsection{Elõfeldolgozás} \label{ssn:preProcessing}
 A mûholdak által szolgáltatott nyers digitális értékek számos hibaforrással lehetnek terheltek, melyek korrigáció nélküli
@@ -191,9 +188,10 @@ sávokhoz tartozó sávonkénti intenzitást módosítjuk. A ténylegesen végrehajtandó 
 a felhasználás célja, mivel az emberi szem és agy más szempontok alapján képes különbséget tenni a felvételen látható
 felszínborítások között, mint a kvantitatív számítógépes mûveletek.
 
-Az intenzitás-korrekció csoportjába tartozik például a \textit{radiometriai korrekció}, valamint a különbözõ látványjavító mûveletek.
-A \textit{radiometriai korrekció} arra szolgál, hogy a szenzor által mért digitális számértékekbõl megkapjuk
-a földfelszín fizikai paramétereit. A rendelkezésre álló korrekciós adatok és a feldolgozás igénye meghatározza,
+Az intenzitás-korrekció csoportjába tartozik például a \textit{radiometriai korrekció}, valamint a különbözõ \textit{látványjavító mûveletek}.
+A radiometriai korrekció arra szolgál, hogy a szenzor által mért digitális számértékekbõl megkapjuk
+a földfelszín fizikai paramétereit. 
+A rendelkezésre álló korrekciós adatok és a feldolgozás igénye meghatározza,
 hogy milyen szintû korrekcióra van szükség:
 
 \begin{itemize}
@@ -204,19 +202,21 @@ hogy milyen szintû korrekcióra van szükség:
 		
 	\item A \textit{ToA-Reflektancia} (\textit{Top of Atmosphere Reflectance} - \textit{légkör tetején mérhetõ reflektancia}), 
 		a felszín visszaverésének olyan közelítése, mely nem veszi figyelembe a sugárzás és a légkör közötti kölcsönhatást.
-		A reflektancia a radianciából számítható, figyelembe véve a \textit{Nap}, a \textit{felvételezett terület} 
+		A ToA-Reflektancia a radianciából számítható, figyelembe véve a \textit{Nap}, a \textit{felvételezett terület} 
 		és a \textit{szenzor} geometriai viszonyát egymáshoz képest, 
 		valamint az \textit{irradianciát} (a beesõ napsugárzás intenzitása)
 		
 	\item A \textit{felszíni reflektancia} a ToA-reflektanciából számítható a légköri korrekció végrehajtásával,
 		tehát az olyan kölcsönhatások eliminálásával, amelyek a sugárzásra a légkörben történõ áthaladása során hatnak
-		(például \textit{ózon}, \textit{szén-dioxid} és a \textit{vízpára}).
+		(például \textit{ózon}, \textit{szén-dioxid} vagy a \textit{vízpára}).
 	
 \end{itemize}
 
 Az egyes \textit{látványjavító mûveletek} célja a felvétel vizuális megjelenítési tulajdonságainak megváltoztatása az emberi szemmel történõ
-értelmezés könnyítése érdekében. Látványjavító mûvelet például az \textit{invertálás}, valamint a különbözõ \textit{szûrések} A 
-látványjavító mûveletek egy részében (pl.: szûrések) ténylegesen megváltoznak a pixelértékek, ebben az esetben 
+értelmezés könnyítése érdekében. Látványjavító mûvelet például az \textit{invertálás}, illetve 
+a különbözõ \textit{szûrések}. 
+A látványjavító mûveletek egy részében (pl.: szûrések) ténylegesen megváltoznak a pixelértékek, 
+ebben az esetben 
 a javítás után már nem végezhetõ el a numerikus kiértékelés, mivel elveszítjük a földfelszín konkrét
 fizikai paramétereit.\cite{remoteSensingLecture}
 
@@ -231,8 +231,9 @@ kiértékelõ személy - ez olyan esetekben hatékony eljárás, amikor \textit{geometr
 Numerikus kiértékelés esetén a tematikus döntések meghozatala a számítógépen, 
 elõre megadott feltételek alapján történik. A számítógépes feldolgozás elõnye, hogy nagy mennyiségû
 adat feldolgozására is alkalmas, illetve az egyes textúrák közötti tónuskülönbségek mérésében és elkülönítésében
-is jobban teljesít, mint az emberi szem és agy rendszere. Mivel mindkét módszer rendelkezik jelentõs elõnyökkel
-a másikkal szemben, gyakran együttesen kerülnek alkalmazásra. 
+is jobban teljesít, mint az emberi szem és agy rendszere. Mivel mindkét módszer 
+jelentõs elõnyökkel és hátrányokkal rendelkezik egymáshoz képest, 
+gyakran együttesen kerülnek alkalmazásra. 
 
 A \textit{tematikus osztályozás} egy kvantitatív kiértékelési mód, melynek célja egy olyan tematikus térkép
 elkészítése, mely véges számú célosztállyal írja le a vizsgált területet. A tematikus térkép minden pixeléhez a
@@ -253,7 +254,6 @@ tartalmazó szegmens sorszámát. Az eredményszegmensek a legtöbb esetben nem felel
 elérni kívánt célosztályoknak, számuk jellemzõen nagyságrendekkel nagyobb. 
 Az összetartozó szegmensek összevonása és ezáltal célosztályokká redukálása a \textit{klaszterezõ} eljárások feladata.
 
-%TODO Placement
 \begin{figure}[h!]
 	\centering
 	\captionsetup{width=1\textwidth, justification=centering}
@@ -269,13 +269,13 @@ jellemzõen nem pontokba tömörülnek, hanem rendelkeznek bizonyos mértékû szórássa
 ezen térben keressük az összetartozó elemeket, és ez alapján alakítjuk ki a végsõ osztályhalmazokat.\cite{remoteSensingLecture}
 
 \subsection{Feldolgozó mûveletek munkaterülete}
-A feldolgozó mûveletek munkaterülete azt határozza meg, hogy egy lépés végrehajtásához mekkora adathalmazra
-van szükség. Ez alapján négy csoportot különböztetünk meg
+A feldolgozó mûveletek munkaterülete azt határozza meg, hogy a mûvelet egy lépésének végrehajtásához 
+az input kép mekkora részére van szükség. Ez alapján négy csoportot különböztetünk meg:
 
 \begin{itemize}
 	\item \textit{Lokális mûvelet:} A forrás egy megadott képpontjából a cél egy képpontját állítja elõ,
 	lényegében egy pontból pontba történõ transzformáció. Ebbe a csoportba tartoznak az egyszerûbb képi
-	transzformációk, mint az \textit{invertálás}, valamint az egyes \textit{küszöbölõ} algoritmusok.
+	transzformációk (például az \textit{invertálás}), valamint az egyes \textit{küszöbölõ} algoritmusok.
 	\item \textit{Fokális mûvelet:} Egy megadott képpont kiszámításához annak valamilyen sugarú környezetében lévõ
 	értékek felhasználásával dolgozik. Ide tartoznak például a különbözõ \textit{szûrõ} mûveletek.
 \end{itemize}
@@ -292,7 +292,7 @@ van szükség. Ez alapján négy csoportot különböztetünk meg
 \end{figure}
 
 \begin{itemize}
-	\item \textit{Regionális (zonális) mûvelet:} %TODO Recompose
+	\item \textit{Regionális (zonális) mûvelet:}
 	A regionális mûveletek hasonlóak a fokális mûveletekhez, leszámítva hogy míg a fokális mûveletnél 
 	a képpont kiszámításához szükséges környezet egy elõre definiált
 	méretû terület, addig a zonális mûveletnél a szükséges környezet az õt tartalmazó régió (zóna), 
@@ -303,7 +303,8 @@ van szükség. Ez alapján négy csoportot különböztetünk meg
 	forráskép ismeretével. Ide tartoznak például azok a \textit{küszöbölõ eljárások}, melyek
 	a küszöbértéket a teljes képbõl számított valamilyen statisztika (pl.: hisztogram) alapján határozzák meg. 
 	A legtöbb \textit{klaszterezõ algoritmus} is ebbe a kategóriába tartozik, mivel a klaszterek
-	kialakítása	során a képpont fizikai elhelyezkedését már nem vesszük figyelembe, csupán a multispektrális térben lévõ pozícióját.
+	kialakítása	során a képpont fizikai elhelyezkedését már nem vesszük figyelembe, csupán a 
+	spektrális intenzitástérben lévõ pozícióját.
 \end{itemize}
 
 \begin{figure}[h!]
@@ -316,23 +317,7 @@ van szükség. Ez alapján négy csoportot különböztetünk meg
 	\caption{Globális mûvelet\cite{mapAlgebra}}\label{fig:globalOperation}
 	\endminipage\hfill
 \end{figure}
-
-A mûveletek ezen tulajdonsága kulcsfontosságú az elosztott feldolgozás témakörében - lokális mûveletek esetén 
-a feldolgozandó adat könnyedén particionálható, a feldolgozás pedig tetszõleges számú párhuzamos szálon futtatható.
-
-Fokális mûveleteknél biztosítanunk kell, hogy az egyes képpontok mindegyike rendelkezzen információval a környezetérõl
-- ezt megtehetjük például a partíciókra bevezetett \textit{átfedés} definiálásával, központi
-\textit{utófeldolgozás}sal, illetve ha lehetõségünk van az egyes partíciókon futó folyamatok közvetlen 
-kommunikációjára, a szükséges pixelértéket elkérhetjük a vele rendelkezõ folyamattól.
-
-Regionális mûveletek esetén a fokális mûveletekhez hasonlóan biztosítanunk kell a környezõ értékek elérését. Itt 
-jellemzõen az átfedéses megoldás nem célravezetõ, tekintve hogy nincs információnk a folyamat elindításának
-pillanatában, mekkora területre lesz szükség az egyes képpontok kiszámításához, ez az információ a mûvelet futása alatt
-dinamikusan változhat.
-
-Sok esetben globális mûveletek is elvégezhetõk particionált módon, itt azonban mindenképp szükséges egy központi
-összefuttató lépés - ennek módszere az alkalmazott mûvelettõl függ.\cite{remoteSensingLecture}
-
+ 
 \section{Adatkezelés}
 Az alkalmazási területeknél már említésre került, hogy a feldolgozási idõ kritikus lehet az adatkiértékelés szempontjából.
 Ezt nehezíti az a tény, hogy a kiértékelõ eljárások többsége meglehetõsen komplex, illetve hogy gyakran hatalmas mennyiségû
@@ -348,6 +333,15 @@ rendszer teljesítménynövelésének ezen módja költséges, és a fejlesztéssel nyert 
 A teljesítménynövelés másik lehetséges módja az évek óta kutatott\cite{distributedImageProcessing}, és a számítási
 felhõk elterjedésével az utóbbi idõben leginkább teret nyert \textit{elosztott feldolgozás}.
 
+Távérzékelt felvételek elosztott feldolgozása úgy történik, hogy a feldolgozandó kép alkotóelemeit valamilyen tulajdonság alapján 
+(pixel értékek, spektrális intenzitásértékek) \textit{feldarabolunk} (\textit{particionálás}), az egyes feldolgozó egységek pedig ezen darabokat dolgozzák fel.
+Ekkor - a mûvelet korábban ismertetett munkaterületének megfelelõen - a feldolgozó egységeknek szükségük lehet olyan információkra, melyek
+a teljes adat egy részének vagy egészének ismeretében számíthatók csak ki.
+
+Egyszerûbb, fokális esetben ezt megoldhatjuk \textit{átfedések} alkalmazásával - az input adatot úgy particionáljuk,
+hogy az eredetileg neki szánt területnél valamennyivel nagyobb területet tartalmazzon. Ekkor az 
+átfedések segítségével akár partíció felhasználása nélkül is kiszámítható az eredmény.
+
 \begin{figure}[h!]
 	\centering
 	\captionsetup{width=0.8\textwidth, justification=centering}
@@ -355,26 +349,23 @@ felhõk elterjedésével az utóbbi idõben leginkább teret nyert \textit{elosztott f
 	\caption{Input kép feldarabolása \textit{átfedés}ek alkalmazásával \label{fig:imagePartitioning}}
 \end{figure}
 
-Távérzékelt felvételek elosztott feldolgozása úgy történik, hogy a feldolgozandó kép alkotó elemeit valamilyen tulajdonság alapján 
-(pixel értékek, spektrális intenzitásértékek) \textit{feldarabolunk} (\textit{particionálás}), az egyes feldolgozó egységek pedig ezen darabokat dolgozzák fel.
-Ekkor - a mûvelet korábban ismertetett munkaterületének megfelelõen - a feldolgozó egységeknek szükségük lehet olyan információkra, melyek
-a teljes adat egy részének vagy egészének ismeretében számíthatók csak ki. 
-Egyszerûbb esetben ezt megoldhatjuk \textit{átfedések} alkalmazásával - az input adatot úgy particionáljuk,
-hogy az eredetileg neki szánt területnél valamennyivel nagyobb területet tartalmazzon. 
-Ez fõként fokális mûveleteknél hasznos, ahol a pixelek kiszámítása egy meghatározott sugarú környezet
-pixelértékeinek felhasználásával történik. Ekkor az átfedések segítségével akár más partíció felhasználása 
-nélkül is kiszámítható az eredmény.
+Regionális esetben is felhasználhatóak az átfedett területek, azonban ekkor
+nincs információnk a folyamat elindításának pillanatában, mekkora területre 
+lesz szükség az egyes képpontok kiszámításához, ez az információ a 
+mûvelet futása alatt dinamikusan változhat. Emiatt csak jelentõs méretû átfedés definiálásával
+érhetjük el, hogy nagy valószínûséggel minden feldolgozó egység számára elég legyen 
+a rendelkezésre álló terület. Egy másik megközelítés lehet, ha a feldolgozó egységek a mûvelet végrehajtása során 
+egymással kommunikálva biztosítják a számításokhoz szükséges adatokat. 
+Ebben az esetben a rendszer teljesítményét leginkább meghatározó szempont ezen adatok gyors és hatékony rendelkezésre állása.
 
-Regionális esetben is felhasználhatóak az átfedett területek, azonban az egyes régiók méretének
-dinamikus változása miatt kisebb valószínûséggel lesz elég az átfedések által tartalmazott adat.
-Emiatt szükséges lehet a feldolgozó egységeknek egymással kommunikálniuk feldolgozás közben,
-hogy biztosíthassák a számításokhoz szükséges adatokat. Ezen adatok gyors és hatékony 
-rendelkezésre állása kulcsfontosságú egy elosztott rendszer teljesítményében.
+A legtöbb globális mûvelet is elvégezhetõ particionált módon, itt azonban mindenképp szükséges 
+egy központi összefuttató lépés - ennek módszere az alkalmazott mûvelettõl függ.\cite{remoteSensingLecture}
 
 % ------------------------------------------------------------------------------
 
 \chapter{Elosztott alkalmazások fejlesztése}
-A fejezetben bemutatásra kerülnek a fõbb elosztott szoftverrendszerek elméleti alapjai, ezek néhány megvalósítása, valamint
+A fejezetben bemutatásra kerülnek az elosztott szoftverrendszerek elméleti alapjai, 
+ezek néhány megvalósítása, valamint
 távérzékelt felvételek feldolgozásában lévõ alkalmazási lehetõségeik, külön részletezve a dolgozat
 témáját, a \textit{Microsoft Orleans} platformot.
 
@@ -400,7 +391,7 @@ Egy MapReduce alkalmazás alkotóelemei \textit{Map} és \textit{Reduce} funkciók. 
 elemeibõl köztes \textit{kulcs/érték párok}at állít elõ, a \textit{Reduce} mûvelet pedig összevonja az összes olyan
 köztes elemet, melynek kulcsa megegyezik.
 A MapReduce paradigma alapján írt programok automatikusan párhuzamosíthatók, és skálázhatók. 
-A futtatókörnyezet végzi az adatok \textit{particionálás}át, vezérli a végrehajtást, kezeli a 
+A futtatókörnyezet végzi az adatok \textit{particionálás}át, vezérli a \textit{végrehajtás}t, kezeli a 
 \textit{gépek közötti kommunikáció}t és a fellépõ hibákat.
 Ezzel lehetõséget nyújt elosztott környezetek erõforrásainak kihasználására anélkül, hogy a fejlesztõktõl 
 komoly szaktudást követelne a párhuzamos és elosztott alkalmazásfejlesztés területén.
@@ -420,18 +411,24 @@ bármilyen hardveres hiba elõfordulása természetes, és a keretrendszernek automat
 A rendszer három fõ komponensbõl áll: A \textit{Hadoop Elosztott Fájlrendszer}bõl 
 (\textit{HDFS - Hadoop Distributed File System}), a \textit{Hadoop MapReduce} adatfeldolgozóból, valamint
 a \textit{Hadoop YARN}-ból, mely a rendszer erõforrás-kezelõje.
-A Hadoop a fájlokat blokkokra osztja, és szétosztja az egyes \textit{node}-ok között. Az adatok feldolgozása
-során a Hadoop a feldolgozó szoftvert tölti fel minden \textit{node}-ra, így az adatok helyben kerülnek
-feldolgozásra (\textit{adatlokalitás}).
+A feldolgozandó input fájlokat elõször a HDFS-be töltjük fel. Ezeket a fájlokat
+a Hadoop automatikusan blokkokra osztja és az egyes blokkokat replikálva szétosztja 
+az elosztott rendszert alkotó gépek között.
+
+A feldolgozás során a Hadoop a feldolgozó szoftvert tölti fel minden feldoldogzásban
+részt vevõ számítógépre, így az adatok helyben kerülnek feldolgozásra (\textit{adatlokalitás}).
 
 \subsubsection{Térinformatikai alkalmazása}
-A Hadoop keretrendszer fejlesztésekor az alkalmazás fõ célterülete szöveges adatok feldolgozása volt.
-A rendszer terjedésével azonban megjelent az igény az informatika több különbözõ területén való
-alkalmazására. Ennek megfelelõen megjelentek a keretrendszer térinformatikai kiterjesztései is
-\cite{spatialHadoop,hadoopGIS}, melyek
-támogatják téradatok tárolását, indexelését, és \textit{MapReduce} alapú feldolgozását.
+A Hadoop keretrendszer fejlesztésekor az alkalmazás fõ célterülete szöveges adatok 
+feldolgozása volt, terjedésével azonban megjelent az igény az informatika több 
+különbözõ területén való alkalmazására. 
+Ennek megfelelõen megjelentek a keretrendszer térinformatikai 
+kiterjesztései is\cite{spatialHadoop,hadoopGIS}, melyek
+támogatják téradatok \textit{tárolás}át, \textit{indexelés}ét, és MapReduce alapú 
+\textit{feldolgozás}át.
+
 Az egyes feldolgozó mûveletek közül a lokális, illetve a fokális mûveletek könnyedén alkalmazhatók
-egyszerû \textit{Map} függvényekként, regionális és globális esetben általában szükséges egy olyan
+egyszerû \textit{Map} függvényekként. Regionális és globális esetben általában szükséges egy olyan
 alternatív algoritmus bevezetése, amely az eredeti algoritmus kiegészítése egy (vagy több) 
 \textit{Reduce} lépéssel.
 
@@ -449,18 +446,20 @@ függvényben kiszámítjuk az egyes hisztogram értékeket minden fájldarabra. A máso
 utasítás alkalmazza a hisztogramkiegyenlítést a kiszámított teljes hisztogramértékek alapján.
 
 Összességében elmondható\cite{aegisHadoop}, hogy a legtöbb esetben a mûveletek könnyedén adaptálhatók Hadoop környezetbe, 
-azonban néhány alkalommal komplex módosításokra van szükség, és a portolt algoritmus helyfoglalási idénye sokkal nagyobb
+azonban néhány alkalommal komplex módosításokra van szükség, és a portolt algoritmus helyfoglalási igénye sokkal nagyobb
 lehet, mint az eredeti mûveleté. Ezen tényezõk indokolták további alternatív feldolgozó mechanizmusok kutatásának szükségét.
 
-\section{Aktor modell} %TODO Extend if possible
+\section{Aktor modell}
 Az \textit{Aktor modell} egy olyan konkurens matematikai modell, melynek alapegységei az "\textit{aktorok}" \cite{actorOrig}.
-Az aktorok egymástól izolált egységek, melyek direkt módon, aszinkron \textit{immutable} üzeneteken keresztül kommunikálnak egymással.
-Minden aktor rendelkezik egy "postaládával", ahová az üzenetek érkeznek, ezeket az üzeneteket dolgozza fel sorban 
-- számítást végezhet, aktorokat hozhat létre, 
-további üzeneteket küldhet, valamint beállíthatja, hogyan fog reagálni a következõ üzenetre.
-Az üzenetek sorrendje nem garantált, de követelmény, hogy minden üzenet beérkezzen.
+Az aktorok egymástól izolált egységek, melyek direkt módon, aszinkron, 
+\textit{módosíthatatlan (immutable)} üzeneteken keresztül kommunikálnak egymással.
+Minden aktor rendelkezik egy "\textit{postaládával}", ahová az üzenetek érkeznek.
+Az aktorok mûködésük során mindig valamilyen üzenetre regagálnak - számítást 
+végezhetnek, aktorokat hozhatnak létre, további üzeneteket küldhetnek, valamint 
+beállíthatják, hogyan fognak reagálni a következõ üzenetre.
+Az üzenetek érkezési sorrendje nem garantált, de követelmény, hogy minden üzenet beérkezzen.
 
-\begin{figure}[H]
+\begin{figure}[h!]
 	\centering
 	\captionsetup{width=0.8\textwidth, justification=centering}
 	\includegraphics[width=120mm]{figures/actorModel.png}
@@ -470,48 +469,51 @@ Az üzenetek sorrendje nem garantált, de követelmény, hogy minden üzenet beérkezz
 Az aktorok jellemzõen egy számítási szállal rendelkeznek, és nem osztanak meg memóriát egymás között. 
 Ez eliminálja a versenyhelyzetek kezelésének szükségességét aktor szinten. 
 A fejlesztõknek nem szükséges \textit{lock}olást, \textit{mutex}eket és más versenyhelyzet-kezelõ megoldásokat
-alkalmazniuk, melyek nem tartoznak az alkalmazás logikájához. Az aktorok dinamikusan jönnek létre
-a rendelkezésre álló erõforrások alapján, ezáltal hatékony terheléselosztás alkalmazható.
+alkalmazniuk, melyek nem tartoznak az alkalmazás logikájához. Az aktorok létrehozása
+egyes implementációkban történhet manuálisan, vagy a rendelkezésre álló 
+erõforrások alapján dinamikusan, ezáltal hatékony terheléselosztás alkalmazható.
 
 Az aktor modell akkor alkalmazható hatékonyan, ha az aktorok "könnyûsúlyúak", gyorsan példányosíthatók,
 és folyamatuk nincs a rendszermag szálaihoz kötve, attól eltérõen ütemezhetõ.
 
 \subsubsection{Aktor implementációk}
-A modellt elõször az \textit{Erlang} programozási nyelvben alkalmazták konkurens alkalmazások fejlesztésére \cite{actorErlang}, majd a modell népszerûségének 
+A modellt elõször az \textit{Erlang} programozási nyelvben alkalmazták konkurens 
+alkalmazások fejlesztésére\cite{actorErlang}, majd népszerûségének 
 növekedésével több nyelv és keretrendszer is sikeresen 
-adaptálta a modellt, pl.: a \textit{Scala} \cite{actorScala}, 
+adaptálta a modellt, pl.: a \textit{Scala}\cite{actorScala}, 
 vagy az \textit{Akka} keretrendszer\cite{actorAkka}.
 
 Ezek az aktor modell implementációk - jóllehet hatékony megoldást adnak az elosztott 
 alkalmazásfejlesztésre - több elosztott rendszerrel kapcsolatos probléma kezelését a 
-fejlesztõkre bízzák. A fejlesztõknek kezelniük kell az aktorok életciklusát (hiba esetén történõ leállás esetén az aktorok újraaktiválását), a rendszerben
-történõ elhelyezését, valamint versenyhelyzetek kezelését. Ezek a limitációk, és a 
+fejlesztõkre bízzák. A fejlesztõknek kezelniük kell az aktorok életciklusát (hiba 
+esetén történõ leállás esetén az aktorok újraaktiválását), és a rendszerben
+történõ elhelyezését. Ezek a limitációk, és a 
 kiküszöbölésükre való törekvés hívta életre a \textit{Microsoft Orleans} keretrendszert.
-
 
 \section{A Microsoft Orleans platform}
 Az \textit{Orleans} egy - a \textit{Microsoft Research} által fejlesztett - keretrendszer, 
 mely lehetõséget ad megbízható és skálázható felhõalapú alkalmazások fejlesztésére.
 
 Az Orleans programozási modellje (\textit{Virtual Actor Model - Virtuális Aktor Modell})
-az aktor modell egy olyan kiterjesztése, amely az aktorokat virtuális entitásokként kezeli, mely eliminálja a 
-az elosztott erõforráskezelés és a megbízhatóság alkalmazás szinten történõ kezelését, megszünteti a konkurenciát, ezáltal
+az aktor modell egy olyan kiterjesztése, amely az aktorokat virtuális entitásokként 
+kezeli. Ez eliminálja a az elosztott erõforráskezelés és a megbízhatóság alkalmazás
+szinten történõ kezelésének szükségességét, megszünteti a konkurenciát, ezáltal
 nem követel komplex tudást a fejlesztõktõl az elosztott alkalmazásfejlesztés területén.
 
-A keretrendszert a \textit{Microsoft Windows Azure} számítási \textit{felhõben} több jelenleg is futó projekten 
+A keretrendszert a \textit{Microsoft Azure} számítási \textit{felhõben} több jelenleg is futó projekten 
 hatékonyan alkalmazták, 2015 januárjában pedig nyílt forráskódú licenccel a nyilvánosság elé tárták.
 
-\subsection{Virtuális Aktor modell}
-Az Orleans rendszer egy módosított Aktor modellt definiál, amelyet elosztott alkalmazások, valamint az
-Erlang nyelv Aktor modellének implementációja ihletett, és teljes egészében a .NET keretrendszerre épül.
-Az Orleans aktorok (\textit{Grain}, szabad fordításban \textit{szemcse, gabonaszem}) a rendszer legkisebb
+\subsection{Virtuális aktor modell}
+Az Orleans rendszer egy módosított aktor modellt definiál, amelyet elosztott alkalmazások, valamint az
+Erlang nyelv modellének implementációja ihletett, és teljes egészében a .NET keretrendszerre épül.
+Az Orleans aktorok, vagyis \textit{Grain}-ek (szabad fordításban \textit{szemcse, gabonaszem}) a rendszer legkisebb
 számítási alapegységei. Egy aktor enkapszulálja az állapotát és a viselkedését, és nem
 oszt meg memóriát más aktorokkal, így két aktor között az egyetlen kommunikációs mód az aszinkron üzenetküldés.
 
-Az aktorok az Orleans rendszerben a tradicionális modelltõl eltérõen virtuálisak. 
+Az aktorok az Orleans rendszerben az eredeti modelltõl eltérõen virtuálisak. 
 Egy aktor elméletben mindig létezik, nem hozható létre és nem semmisíthetõ
 meg manuálisan. Az aktorok létezése nem függ a példányok számától, és nem függ futtató szerver állapotától.
-Mivel az aktorok mindig léteznek, ezért mindig elérhetõek.
+Mivel az aktorok elméletben mindig léteznek, ezért mindig elérhetõek.
 Az Orleans futtatókörnyezet automatikusan kezeli az aktorok példányosítását (\textit{aktiváció}) és megsemmisítését. 
 Az alkalmazás futása során minden idõpillanatban egy aktor 0, 1 vagy több aktivációval rendelkezik.
 Ha egy üzenet érkezik egy aktornak, és nincs egyetlen aktivációja sem, a rendszer létrehoz egy példányt az egyik elérhetõ 
@@ -520,11 +522,11 @@ a futtatókörnyezet elvégzi a példány deaktiválását és felszabadítását. Ha egy sz
 Orleans egy másik elérhetõ szerveren automatikusan újrapéldányosítja azokat az aktorokat, 
 amelyek a hibás szerveren futottak, és a nekik küldött üzeneteket erre az új szerverre irányítja.
 Az alkalmazásoknak így nincs szükségük különbözõ \textit{életciklus felügyelet}i logika bevezetésére
-(pl.: \textit{felügyeleti fák} az Erlang nyelvben \cite{erlang}).
+(pl.: \textit{felügyeleti fák} az Erlang nyelvben\cite{erlang}).
 Az aktorok automatikus példányosítása és életciklus-kezelése azt is eredményezi, 
 hogy az aktorok fizikai elhelyezkedésérõl a futó alkalmazásnak nincs tudomása - 
-egy bizonyos idõpillanatban egy aktornak akár 0 vagy egynél több aktivációja is lehet, ezt a 
-keretrendszer tartja nyilván.
+egy bizonyos idõpillanatban egy aktornak akár 0 vagy egynél több aktivációja is lehet
+különbözõ szervereken, ezt a keretrendszer tartja nyilván.
 
 Jelenleg az Orleans rendszer kétféle aktivációs módot támogat: az \textit{állapot}tal rendelkezõ aktorok
 egyszerre maximum egy aktivációval rendelkezhetnek, míg az \textit{állapotmentes} (\textit{Stateless Worker})
@@ -532,17 +534,19 @@ aktoroknak szimultán több egymástól független aktivációja is megengedett a klasz
 
 \subsubsection{Aktorok kommunikációja}
 Az egyes aktorok azokon a metódusokon keresztül tudnak kommunikálni egymással, 
-melyek az aktor interfészében definiálásra kerültek. Az összes metódus amelyet az interfészen
-definiáltak, aszinkron (\textit{Task} visszatérési értékû) kell, hogy legyen.
+melyek az \textit{aktor interfész}ében definiálásra kerültek. 
+Az interfészen definiált összes metódus \textit{aszinkron} kell, hogy legyen.
 
-Ahhoz, hogy egy aktor üzenetet küldhessen egy másik aktornak, szükséges \textit{referenciá}val
-rendelkeznie a másik aktorra. Ezek a referenciák virtuálisak abban a tekintetben, hogy nem 
+Ahhoz, hogy egy aktor üzenetet küldhessen egy másik aktornak, az aktor
+\textit{referenciá}jával kell rendelkeznie.
+Ezek a referenciák virtuálisak abban a tekintetben, hogy nem 
 szolgálnak semmilyen információval a referált aktor fizikai elhelyezkedésérõl. 
 A kommunikáció egy lokális \textit{proxy objektum}on keresztül történik, és az üzenetet
 a futtatókörnyezet továbbítja a tényleges aktornak.
 
-Az egyes üzenetek szerializálva kerülnek továbbításra - a beépített .NET [Serializable]
-attribútummal ellátott objektumok is használhatók és az Orleans keretrendszer is rendelkezik
+Az egyes üzenetek szerializálva kerülnek továbbításra - a .NET keretrendszer által
+definiált \texttt{[Serializable]}
+attribútummal ellátott objektumok is használhatók, és az Orleans keretrendszer is rendelkezik
 beépített szerializálóval, amely képes tömbök, illetve generikus objektumok 
 szerializálására is, mindezek mellett pedig megtartja az objektumok identitását 
 (ha két pointer ugyanarra az objektumra mutat, akkor deszerializálás után 
@@ -557,37 +561,29 @@ A forduló alapú modell ugyan megengedi több kérés fordulóinak átfedését
 (pl.: Amíg az egyik forduló egy \textit{I/O mûvelet} befejeztére vár,
 egy másik forduló feldolgozása is elkezdõdhet), azonban ezt az Orleans rendszer
 alapértelmezetten nem engedélyezi. Ez a viselkedés felüldefiniálható, és a fordulók
-átfedhetnek, ha az aktor osztályt megjelöljük a [Reentrant] attribútummal.
+átfedhetnek, ha az aktor osztályt megjelöljük a \texttt{[Reentrant]} attribútummal.
 
 \subsection{A keretrendszer implementációja}
 Az Orleans rendszer szerverek egy csoportján fut, és három fõ alrendszere van - 
 \textit{Üzenetküldés}, \textit{Végrehajtás} valamint \textit{Futtatókörnyezet}.
 
-Az üzenetküldés alrendszer minden szervert egyszerû TCP kapcsolattal köt össze, 
+Az Üzenetküldés alrendszer minden szervert egyszerû TCP kapcsolattal köt össze, 
 és több kommunikációs szálon keresztül továbbítja az egyes üzeneteket.
 
-A környezet alrendszer dönt az aktivációk elhelyezésérõl a klaszterben, a
-végrehajtás pedig a rendelkezésre álló számítási szálak alapján futtatja az
+A Környezet alrendszer dönt az aktivációk elhelyezésérõl a klaszterben, a
+Végrehajtás pedig a rendelkezésre álló számítási szálak alapján futtatja az
 aktorok kódját.
 
 Amikor egy aktor egy másik aktort hív, a Végrehajtás a függvényhívást üzenetté
-konvertálja, és átadja az üzenetküldésnek a cél aktor identitásával együtt.
-Az üzenetküldés lekéri a környezettõl, hogy melyik szerver hosztolja
-az aktort. A környezet egy \textit{elosztott könyvtár} segítségével tartja nyilván
+konvertálja, és átadja az Üzenetküldésnek a cél aktor identitásával együtt.
+Az Üzenetküldés lekéri a Futtatókörnyezettõl, hogy melyik szerver hosztolja
+az aktort. A Futtatókörnyezet egy \textit{elosztott könyvtár} segítségével tartja nyilván
 az aktorok összes aktivációját a rendszerben. A könyvtárban vagy egy létezõ aktivációt
-talál, vagy kiválaszt egy szervert, és létrehoz egy új aktivációt. Az üzenetküldés 
+talál, vagy kiválaszt egy szervert, és létrehoz egy új aktivációt. Az Üzenetküldés 
 ezután szerializálja az üzenetet, és a nyitott TCP kapcsolaton keresztül továbbítja 
-a célszervernek. A célszerver üzenetküldés alrendszer deszerializálja az üzenetet,
-és átadja a végrehajtásnak, mely ezután ütemezi a hívást. Ha egy aktor éppen egy
+a célszervernek. A célszerver Üzenetküldés alrendszere deszerializálja az üzenetet,
+és átadja a Végrehajtásnak, mely ezután ütemezi a hívást. Ha egy aktor éppen egy
 másik hívást dolgoz fel, az üzenet sorban áll addig, amíg a feldolgozás be nem fejezõdik.
-
-%TODO Add figure
-%\begin{figure}[ht!]
-%	\centering
-%	\includegraphics[width=90mm]{figures/}
-%	\caption{
-%	\label{fig:}}
-%\end{figure}
 
 A környezet felel a lokális erõforrások kezeléséért is. Ha egy aktorra egy bizonyos
 (elõre definiált) ideje nem volt szükség, vagy ha a szerver erõforráshiányt észlel,
@@ -599,7 +595,7 @@ Az aszinkron üzenetküldés az egyedüli kommunikációs mód köztük, amelyek
 metódusok formájában jelennek meg az aktorok interfészén. Ezen felül a metódushívások
 paraméterei és visszatérési értékei a hívás során lemásolódnak (még akkor is,
 ha a metódushívás két ugyanazon a szerveren lévõ aktor között megy végbe),
-ezzel biztosítva hogy az elküldött üzenet ne módosulhasson.
+ezzel biztosítva az elküldött üzenet módosíthatatlanságát.
 
 \subsubsection{Kooperatív multitasking}
 Az Orleans az egyes fordulókat \textit{kooperatív multitasking} formában ütemezi. Ez azt jelenti, hogy
@@ -637,15 +633,15 @@ különbözhet a mentési stratégia, a rendszer nem kezeli az állapotok automatikus 
 \subsubsection{Aktorok elhelyezése}
 Az Orleans rendszer futása során automatikusan és transzparensen hozza létre az aktorokat.
 Ez azt jelenti hogy nem szolgáltat információt azok fizikai elhelyezkedésérõl, 
-tehát arról, hogy a létrehozott \textit{Grain} aktiváció melyik szerveren helyezkedik el a klaszterben.
+tehát hogy a létrehozott \textit{Grain} aktiváció melyik szerveren helyezkedik el a klaszterben.
 Az aktorok elhelyezését direkt módon nem vezérelhetjük, azonban a \textit{Placement} attribútumok
 használatával egy \textit{Grain} osztályon, közvetetten befolyásolhatjuk, hová "szeretnénk", 
 hogy az új aktiváció kerüljön. 
 
 Az Orleans jelenleg 3 fajta elhelyezési (\textit{Placement})
 stratégiát támogat: 
-\textit{Aktivációk száma alapján} történõ elhelyezés (\textit{ActivationCountBasedPlacement}), 
-\textit{Lokális} elhelyezés (\textit{LocalPlacement}), 
+\textit{aktivációk száma alapján} történõ elhelyezés (\textit{ActivationCountBasedPlacement}), 
+\textit{lokális} elhelyezés (\textit{LocalPlacement}), 
 valamint \textit{véletlenszerû} elhelyezés (\textit{RandomPlacement}). A véletlenszerû elhelyezés 
 használatával az összes szerverre egyenlõ valószínûséggel kerül az új aktiváció. Lokális elhelyezés
 során az aktivációt kérõ \textit{Grain} szerverére történik az elhelyezés. Ha az aktiváló nem egy 
@@ -659,7 +655,7 @@ Egy Orleans alkalmazást 3 fõ komponens épít fel: \textit{Aktorok} (\textit{Grain
 \textit{Aktor interfészek} (\textit{Grain Interfaces}) valamint a \textit{Kliens} (\textit{Client}). Ezek a komponensek 
 különálló alprojektekként jelennek meg a rendszerben.
 
-A \textit{Grain interfaces} komponensben definiálhatjuk a projektben használt aktorokat, 
+A \textit{Grain Interfaces} komponensben definiálhatjuk a projektben használt aktorokat, 
 valamint ezek metódusait és a metódusok szignatúráját. Csak az itt definiált aktor típusok lesznek késõbb
 felhasználhatóak, melyek implementációját a \textit{Grains} komponens tartalmazza.
 
@@ -669,7 +665,7 @@ valamint üzenetet is küldhet \textit{Grain}-eknek. A megfelelõ kommunikáció érde
 illetve a \textit{Grains} komponensnek is rendelkeznie kell ugyanazzal a \textit{Grain Interfaces} komponenssel.
 
 
-\subsection{Alkalmazási lehetõségek} %TODO Not the best section title.
+\subsection{Alkalmazási lehetõségek}
 Az Orleans környezet alapvetõen a \textit{Szolgáltatás-orientált architektúra} jegyében épült alkalmazások fejlesztését
 támogatja - egymástól teljesen izolált, önálló szervizek összessége, melyek jól skálázódnak, és egy meghatározott 
 mûvelet elvégzésére képesek. Egy komplex alkalmazás több száz, vagy akár több ezer szervizbõl is állhat, és a szervizek
@@ -700,8 +696,8 @@ keretrendszerre, mely a következõ fejezetben kerül tárgyalásra.
 Az \textit{AEGIS} keretrendszer \textit{Eötvös Loránd Tudományegyetem Informatikai Karán} jelenleg is fejlesztés alatt
 álló térinformatikai keretrendszer, melynek fõ célja térinformatikai algoritmusok, megoldások \textit{kutatás}a és \textit{fejlesztés}e.
 A rendszer téradatok széles spektrumát támogatja, például: \textit{vektoros adathalmazok}, \textit{raszter felvételek}
-valamint \textit{pontfelhõk}. A rendszer egy platformfüggetlen osztálykönyvtár, melynek fejlesztése C\# nyelven
-történik, alapja a \textit{.NET keretrendszer}, illetve a \textit{Mono Framework}. A fejlesztés a komponens alapú
+valamint \textit{pontfelhõk}. A keretrendszer egy platformfüggetlen osztálykönyvtár, melynek fejlesztése \textit{C\#} nyelven
+történik, alapja a \textit{.NET keretrendszer}, illetve a \textit{Mono Framework\footnote{http://www.mono-project.com/}}. A fejlesztés a komponens alapú
 architektúra jegyében történik, mely lehetõséget ad a rendszer bõvítésére, valamint az újrafelhasználhatóságra.
 Ennek segítségével az egyes komponensek könnyedén integrálhatóak más alkalmazásokba\cite{aegis}.
 Mindezek mellett az AEGIS keretrendszer rendelkezik azokkal a távérzékelt adatfeldolgozó
@@ -710,7 +706,7 @@ biztosított az Orleans térinformatikai kiegészítésére.
 
 Az AEGIS keretrendszert felépítõ fõbb komponensek: \textit{Core, IO, Operations, Temporal}.
 A \textit{Core} komponens a rendszer adatmodellével kapcsolatos osztályokat tartalmazza, az \textit{IO} 
-téradatok betöltéséért és írásáért felel (pl.: \textit{Shapefile} vagy \textit{GeoTIFF} formában),  %TODO cite Shapefile and tiff?
+téradatok betöltéséért és írásáért felel (pl.: \textit{Shapefile}\cite{shapefile} vagy \textit{GeoTIFF}\cite{geotiff} formában),
 az \textit{Operations} komponens tartalmazza a téradatokon végezhetõ mûveleteket, valamint ezek futtatókörnyezetét,
 a \textit{Temporal} komponens pedig az adatmodell kiterjesztése idõbeliség kezelésével.
 
@@ -723,9 +719,10 @@ a \textit{Temporal} komponens pedig az adatmodell kiterjesztése idõbeliség kezel
 
 \section{Adat-, illetve mûveleti modell}
 A rendszer adatmodellje az \textit{Open Geospatial Consortium (OGC)} szervezet által definiált
-\textit{Simple Feature Access (SFA)}\cite{sfa} szabvány. A szabványban a központi geometriai 
-primitív a \textit{Geometry} osztály, mely a térbeli tulajdonságokat, és az egyes térbeli objektumok 
-között elvégezhetõ mûveleteket definiálja. Az adatmodell két-, illetve háromdimenziós vektoros 
+\textit{Simple Feature Access (SFA)}\cite{sfa} szabvány. A szabványban az összes
+ábrázolható alakzat közös õse a \textit{Geometry} osztály, mely a térbeli tulajdonságokat, 
+és az egyes térbeli objektumok 
+között elvégezhetõ mûveleteket definiálja. Az eredeti adatmodell két-, illetve háromdimenziós vektoros 
 adatok tárolására koncentrál, idõbeliség nélkül. Az egyes mûveletek egységes alkalmazhatósága érdekében
 az implementáció során a szabvány kiterjesztésre került raszteres adatok támogatásával is, így a 
 \textit{Raster} osztály a \textit{Geometry} leszármazottja.
@@ -739,10 +736,11 @@ az implementáció során a szabvány kiterjesztésre került raszteres adatok támogat
 \end{figure}
  
 Az \textit{Operations} komponensben implementált algoritmusok kezelése is egységes alapon történik, minden mûvelet
-közös õse az absztrakt \textit{Operation} osztály. A mûveletek rendelkeznek egy leíró osztállyal is (\textit{OperationMethod})
-rendelkeznek, melynek segítségével kategorizálhatjuk a metódusokat, valamint optimalizálhatjuk a végrehajtást.
+közös õse az absztrakt \textit{Operation} osztály. A mûveletek rendelkeznek egy leíró 
+osztállyal is (\textit{OperationMethod}), melynek segítségével kategorizálhatjuk a 
+metódusokat, valamint optimalizálhatjuk a végrehajtást.
 A mûveletek paramétereinek objektuma az \textit{OperationMethodParameter}, amely tartalmazza a paraméter típusát,
-valamint értékét (\ref{fig:aegis_operations}. Ábra).
+valamint értékét (\ref{fig:aegis_operations}. ábra).
 
 A mûveletet az Operation osztály \textit{Execute()} metódusával futtathatjuk. Az \textit{Execute()} metódus
 futása során rendre három alfüggvényt hív meg, ezek: \textit{PrepareResult(), ComputeResult(), FinalizeResult()}.
@@ -763,8 +761,6 @@ A csak raszteres adatokon futó mûveleteket (\textit{szûrés, küszöbölés, hisztogr
 pedig olyan metaadattal látjuk el, amely megakadályozza a vektoros adathalmazon történõ futtatást.
 Ezek a raszteres mûveletek az \textit{Operations} komponens \textit{Spectral} kiterjesztésében
 helyezkednek el. A dolgozat során az itt implementált mûveletek kerültek felhasználásra.
-
-%TODO Can we place a package diagram here?
 
 \section{Feldolgozás Hadoop architektúrán}
 Az AEGIS támogatja a \textit{Hadoop} architektúrával történõ adatkezelést, illetve feldolgozást.
@@ -788,11 +784,11 @@ Ezen fejezet célja az alkalmazás felépítésének és komponenseinek bemutatása.
 
 A dolgozat során elkészített prototípus alkalmazás (\textit{OrleansSpectral}) felépítése hasonló a 
 tradicionális Orleans alkalmazásokhoz, rendelkezik a \ref{subs:orleansProjects}. szakaszban említett
-3 komponenssel (\textit{Grains}, \textit{Grain interfaces}, \textit{Client}), valamint ezeken túl 
+három komponenssel (\textit{Grains}, \textit{Grain interfaces}, \textit{Client}), valamint ezeken túl 
 egy \textit{Common} projekttel, amely az egyes komponensek mindegyike
 által használt osztályokat és mûveleteket tartalmazza.
 
-\begin{figure}[ht!]
+\begin{figure}[h!]
 	\centering
 	\captionsetup{width=0.8\textwidth, justification=centering}
 	\includegraphics[width=130mm]{figures/orleansSpectralComponents.png}
@@ -807,7 +803,7 @@ szükség, ezek kerültek integrálásra. Mivel mindkét rendszer a \textit{.NET} kere
 így az integráció is egyszerû volt, csupán az AEGIS által nyújtott \textit{.NET szerelvények} 
 (\textit{assembly}) referálására volt szükség a fent felsorolt projektekben.
 
-\section{Input adatok particionálása és feltöltése} \label{sec:partitioning} %TODO Not the best section title
+\section{Input adatok particionálása és feltöltése} \label{sec:partitioning}
 A \ref{ch:remoteSensingAnalysis}. fejezetben említésre került, hogy távérzékelt felvételek
 elosztott feldolgozásánál az input adatokat valamilyen tulajdonság alapján feldarabolunk
 és az egyes darabokat külön számítási egységekkel dolgozunk fel. Az Orleans rendszer
@@ -834,23 +830,23 @@ rögzítenünk kell a partíció-leíróba.
 
 \section{Adatok feltérképezése, azonosítása és beolvasása}
 Az adatok elhelyezése után az õket feldolgozó aktorok létrehozása következik.
-A megfelelõ teljesítmény érdekében minden partíciót külön aktor fog feldolgozni,
-ehhez szükséges tudnunk mely szerveren hány fájlpartíció helyezkedik el, és ezek mindegyikére
+A megfelelõ teljesítmény érdekében minden partíciót külön aktor fog feldolgozni.
+Ehhez szükséges tudnunk, mely szerveren hány fájlpartíció helyezkedik el, és ezek mindegyikére
 létrehozni egy aktor entitást. 
 
 Mint korábban említésre került, direkt módon nem határozhatjuk meg az aktorok elhelyezését a
 klaszterben, azonban az elhelyezési stratégiát befolyásolhatjuk a \textit{Placement} attribútumokkal.
 Sajnos jelenleg a rendszer nem tartalmaz olyan \textit{Placement} stratégiát, amellyel meghatározott mennyiségû
-\textit{Grain}-t tudnánk létrehozni az összes szerveren (Az \textit{ActivationCountBasedPlacement} áll
+Grain-t tudnánk létrehozni az összes szerveren (Az \textit{ActivationCountBasedPlacement} áll
 legközelebb a feladathoz, azonban ez a stratégia fõként nagyobb klaszterek esetén tud hatékony lenni
 a dolgozat során nem produkált használható teljesítményt).
 
 A fenti limitációk megkerülése érdekében egy saját stratégia került alkalmazásra - bevezetünk egy
 "\textit{manager}" aktort (\textit{OperationManagerGrain}), 
-melyet a \textit{RandomPlacement} attribútummal látunk el. A \textit{manager} %TODO check if RandomPlacement is used
+melyet a \textit{RandomPlacement} attribútummal látunk el. A \textit{manager}
 aktorból addig hozunk létre új aktivációkat, amíg a klaszter minden szerverén legalább egy létre nem jön
 (alapértelmezés szerint az aktort hosztoló szerver identitása is transzparens az alkalmazás számára, 
-azonban ez az információ a \textit{Grain}-ek identitásából visszafejthetõ).
+azonban ez az információ a Grain-ek identitásából visszafejthetõ).
 
 \begin{figure}[h!]
 	\centering
@@ -865,12 +861,12 @@ A létrehozott aktorok közül minden szerverrõl egyet választunk, ez lesz a szerve
 
 A menedzser entitás nem végez spektrális mûveleteket, hanem a mûveleteket feldolgozó aktorok 
 példányosításáért és a kliensnek való továbbításáért felel. Egy elõkészítési fázisban
-minden menedzser \textit{Grain} feltérképezi a szerverén lévõ feldolgozandó fájldarabokat
-(a partíció leíróban megadott útvonalon), és ennek megfelelõ mennyiségû feldolgozó \textit{Grain}-t
+minden menedzser Grain feltérképezi a szerverén lévõ feldolgozandó fájldarabokat
+(a partíció leíróban megadott útvonalon), és ennek megfelelõ mennyiségû feldolgozó Grain-t
 (\textit{SpectralOperationGrain}) példányosít. A \textit{SpectralOperationGrain}-t a \textit{LocalPlacement}
 attribútummal látjuk el, így minden új aktiváció az õt példányosító menedzser alkalmazás szerverén
-fog létrejönni. A létrehozott \textit{Grain}-eket ezután hozzárendeljük a feltérképezett fájldarabokhoz.
-Így szerver szinten minden entitásról tudjuk hogy melyik fájldarabot dolgozza fel. 
+fog létrejönni. A létrehozott Grain-eket ezután hozzárendeljük a feltérképezett fájldarabokhoz.
+Így szerver szinten minden entitásról tudjuk, hogy melyik fájldarabot dolgozza fel. 
 
 \begin{figure}[H] 
 	\centering
@@ -881,32 +877,29 @@ fog létrejönni. A létrehozott \textit{Grain}-eket ezután hozzárendeljük a feltér
 
 Azonban a megfelelõ
 kommunikáció érdekében minden szerveren minden Grain-nek tudnia kell az összes fájldarabról, és annak
-elérhetõségérõl. Ehhez minden menedzser továbbítja a szerveren lévõ feldolgozó \textit{Grain}-ek 
-identitását és a hozzá tartozó fájldarabokat a kliensnek (erre egy dedikált \textit{Grain} is definiálható
+elérhetõségérõl. Ehhez minden menedzser továbbítja a szerveren lévõ feldolgozó Grain-ek 
+identitását és a hozzá tartozó fájldarabokat a kliensnek (erre egy dedikált Grain is definiálható
 lett volna, azonban a feldolgozó aktorokkal való direkt kommunikációhoz egyébként is szükséges
 továbbítani az identitásukat a kliensnek). A kliens a korábban említett partíció leíróban kiegészíti
-az összes fájldarabra vonatkozó információt a feldolgozó \textit{Grain}-ek identitásával. 
+az összes fájldarabra vonatkozó információt a feldolgozó Grain-ek identitásával. 
 Ezután elküldi a kiegészített leíró fájlt ezeknek az aktoroknak.
-
 
 \begin{figure}[H] 
 	\centering
 	\captionsetup{width=0.8\textwidth, justification=centering}
 	\includegraphics[width=155mm]{figures/discoverParts.png}
-	\caption{Input darabok feltérképezése, és a \textit{Grain}-ek informálása \label{fig:discoverParts}}
+	\caption{Input darabok feltérképezése, és a Grain-ek informálása \label{fig:discoverParts}}
 \end{figure}
-
-
 
 \section{Mûveletek futtatása}
 A mûveleteket végzõ aktorok létrehozása és megfelelõ információval való ellátása után következik a 
-kívánt mûvelet végrehajtása. A mûveletek indítása már nem a menedzser \textit{Grain}-en keresztül történik, a kliens
-direkt módon a feldolgozó \textit{Grain}-ekkel kommunikál. A mûveletet valamint paramétereit az alkalmazás indításánál
+kívánt mûvelet végrehajtása. A mûveletek indítása már nem a menedzser Grain-en keresztül történik, a kliens
+direkt módon a feldolgozó Grain-ekkel kommunikál. A mûveletet, valamint paramétereit az alkalmazás indításánál
 paraméterekként adhatjuk meg, ezeket az információkat kapja meg a \textit{ComputeOperation} mûvelet.
 A \textit{FinalizeOperation} mûvelet felel az eredmények lemezre történõ kiírásáért, és csak akkor hajtódik végre,
-ha mindegyik \textit{Grain}-en befejezõdött a ComputeOperation. Ez azért szükséges, mert egy \textit{Grain} hamarabb
-végezhet mint a többi, azonban az általa tárolt adatokra szüksége lehet a többi \textit{Grain}-nek. A mûvelet futtatásának
-eredményét a \textit{GetOperationResult} metódussal kérdezhetjük le az egyes \textit{Grain}-ektõl. A visszaadott
+ha mindegyik Grain-en befejezõdött a ComputeOperation. Ez azért szükséges, mert egy Grain hamarabb
+végezhet mint a többi, azonban az általa tárolt adatokra szüksége lehet a többi Grain-nek. A mûvelet futtatásának
+eredményét a \textit{GetOperationResult} metódussal kérdezhetjük le az egyes Grain-ektõl. A visszaadott
 információ tartalmazza a mûvelet \textit{eredmény}ét (\textit{Futtatásra kész, Fut, Sikeres, Hibás}), 
 a futás alatt \textit{eltelt idõ}t, valamint - ha a futás során hiba történt - a fellépõ \textit{kivétel}t.
 
@@ -916,9 +909,9 @@ Az Orleans felépítésének és kiterjesztésének bemutatása után a dolgozat során vi
 ismertetése következik. Az elemzett mûveletek megválasztásánál fontos szempont volt a sokszínûség - 
 a távérzékelt felvételek feldolgozásának mindkét fázisából (tehát az elõfeldolgozás és a tematikus 
 osztályozás fázisból), mindegyik munkaterület-csoportból kerültek kiválasztásra
-mûveletek, ezáltal átfogó képet kaphatunk, a képfeldolgozás mely részein alkalmazható hatékonyan a rendszer.
+mûveletek, ezáltal átfogó képet kaphatunk, a feldolgozás mely részein alkalmazható hatékonyan a rendszer.
 
-Az egyes mûveletek Orleans kiterjesztése munkaterület-csoportonként különbözõ megközelítést igényelt,
+Az egyes mûveletek kiterjesztése az Orleans platformra munkaterület-csoportonként különbözõ megközelítést igényelt,
 így a bemutatás az egyes csoportokon végighaladva történik, ismertetve a mûveletek mellett az alkalmazott
 ötleteket, és megvalósításukat.
 
@@ -929,8 +922,8 @@ Ebben az esetben az input kép tetszõleges módon particionálható, és elosztottan 
 további lépések. A lokális mûveletek egyszerûségük miatt megfelelõ alapot nyújtottak a vizsgált rendszer alapvetõ
 lehetõségeinek megismerésére, melyre a késõbbiekben építkezni lehetett. Ezen felül a lokális 
 mûveletek segítségével 
-a rendszer mûködtetésének a mûveletek futtatásán túli költsége (adatok feltérképezése és
-beolvasása Grain-ek létrehozása) is mérhetõ volt, így kevésbé számításigényes 
+a rendszer mûködtetésének a mûveletek futtatásán túli költsége (Grain-ek létrehozása, adatok feltérképezése és
+beolvasása) is mérhetõ volt, így kevésbé számításigényes 
 algoritmusok kerültek tesztelésre.
 
 \subsubsection{Spektrális Invertálás}
@@ -972,11 +965,11 @@ mûvelet, melynek célja a földfelszín tényleges visszaverésének kiszámítása
 a légköri zavaró hatások figyelembe vétele nélkül.
 A ToA-Reflektancia kiszámításának módja felvételtípusonként változik, és a szükséges
 paraméterek általában \textit{metaadat}ok formájában a felvételekkel együtt kerülnek publikálásra.
-
 Az egyik legnépszerûbb mai távérzékelt felvételeket szolgáltató mûholdcsalád, a 
-\textit{Landsat}\footnote{http://landsat.usgs.gov/} mûholdak reflektanciájának kiszámítási módja az alábbi:
+\textit{Landsat}\footnote{http://landsat.usgs.gov/} mûholdak által szolgáltatott felvételekre 
+a reflektancia kiszámítása az alábbi módon történik:
 
-Elsõ lépésként a Spektrális radianciát kell kiszámolnunk, mely a digitális számokkal legtöbbször lineáris kapcsolatban
+Elsõ lépésként a spektrális radianciát kell kiszámolnunk, mely a digitális számokkal legtöbbször lineáris kapcsolatban
 áll. Kiszámításához két paraméter szükséges a 
 pixel digitális értékén(\textit{DN}) kívül: az \textit{emelkedés} (\textit{gain}) 
 valamint az \textit{eltolás} (\textit{offset}). A paraméterekbõl képezve az $L_\lambda$ spektrális 
@@ -994,7 +987,7 @@ jelölt reflektancia:
 \end{center}
 
 Ahol $d$ a Nap és a Föld távolsága csillagászati egységben, $E_\lambda$ a 
-\textit{légkörön kívüli irradiancia (vagyis az adott hullámsávban beesõ napsugárzás intenzitása)} átlaga, 
+\textit{légkörön kívüli irradiancia (az adott hullámsávban beesõ napsugárzás intenzitása)} átlaga, 
 $\theta_s$ pedig a \textit{zenitszög (a földdarabra érkezõ napsugárzás beesési szöge)}\cite{toarefCompute}.
 
 \subsubsection{Konstans küszöbölés}
@@ -1029,11 +1022,6 @@ mátrix, melynek minden $v'_{ij}$ elemére $v'_{ij} \in \mathbb{L}$ és
 	$
 \end{center}
 
-%TODO Do we need this section here? If so, consider writing about Orleans as well.
-%\subsubsection{Lokális mûveletek MapReduce alapú feldolgozása}
-%A fent felsorolt mûveletek MapReduce módon történõ feldolgozása hasonlóan egyszerû feladat 
-%- az input tetszõleges módon particionálható, és a mûveletek elvégezhetõek egy szimpla \textit{Map} fázisban. 
-
 \section{Fokális mûveletek}
 \textit{Fokális mûveletek} végrehajtása esetén egy pixel kiszámításához szükség van a pixel egy
 meghatározott sugarú környezetének értékeire. A szükséges terület méretét a mûvelet elindításának
@@ -1045,9 +1033,9 @@ hogy várhatóan mekkora területre lesz szüksége az egyes mûveleteknek és ez alapj
 \textit{átfedések}kel hozzuk létre - ekkor a mûvelet indításakor biztosítanunk kell, hogy a
 mûvelet által igényelt terület méreténél nagyobb, vagy egyenlõ a felhasznált partícióra definiált átfedés.
 
-Egy másik lehetõség ha a partíciók nem rendelkeznek átfedésekkel,
+Egy másik lehetõség - ha a partíciók nem rendelkeznek átfedésekkel,
 hogy a feldolgozás során a szükséges intenzitásértékeket a feldolgozó egységek egymás
-számára elérhetõvé teszik. Ekkor ha egy egységnek egy olyan értékre van szüksége,
+számára elérhetõvé teszik. Ekkor, ha egy egységnek egy olyan értékre van szüksége,
 amelyet egy másik feldolgozó egység birtokol, akkor ezt az értéket futás során "elkérheti"
 a birtokló folyamattól.
 Ezzel a megoldással valószínûleg nem érhetõ el olyan teljesítmény, mint
@@ -1132,7 +1120,7 @@ A Gabor szûrõ tulajdonképpen egy Gauss függvény modulálása egy szinusz síkhullám
 	x' = x*\cos\theta + y*\sin\theta \quad \text{és} \quad y' = -x*\sin\theta + y*\cos\theta 
 	$
 \end{center}
-A függvény paraméterei a következõk: $\lambda$ a szinuszhullám hullámhossza, $\theta$ az orientációja $\varphi$ az eltolása, $\sigma$ a Gauss függvény szórása $\gamma$ pedig a nagysága, kiterjedése.
+A függvény paraméterei a következõk: $\lambda$ a szinuszhullám hullámhossza, $\theta$ az orientációja, $\varphi$ az eltolása, $\sigma$ a Gauss függvény szórása, $\gamma$ pedig a nagysága, kiterjedése.
 \begin{figure}[H]
 	\begin{subfigure}{.5\textwidth}
 		\centering
@@ -1174,16 +1162,16 @@ a távérzékelt felvételek feldolgozása kapcsán.
 \subsubsection{Virtuális Raszter}
 Az AEGIS rendszerben megvalósított metódusok jelenleg egy konkrét raszter kép minden pixelét feldolgozzák, nincs lehetõség
 annak meghatározására, hogy mûvelet a kép csak egy részterületén dolgozzon. Emiatt ha a képet átfedés nélkül 
-feldaraboljuk és az eredeti mûveleteket végrehajtjuk, az egyes partíciók szélén nem fognak helyes eredményt adni,
-mivel a mûveletnek nincs információja, hogy az adott partíció egy nagyobb kép része és a szélén lévõ pixelek kiszámításához
+feldaraboljuk és az eredeti mûveleteket végrehajtjuk, azok az egyes partíciók szélén nem fognak helyes eredményt adni,
+mivel a mûveletnek nincs információja arról, hogy az adott partíció egy nagyobb kép része és a szélén lévõ pixelek kiszámításához
 szükséges lehet további adat felhasználása is.
 
 A fenti probléma kétféleképpen volt orvosolható. Az egyik lehetõség a mûveletek teljes újraírása és adaptálása
 az Orleans környezetbe, így a módosított mûveletek a partíció abszolút pozíciója alapján futottak volna, és a 
-szükséges helyeken (a partíciók szélein) kezelték volna az esetleges \textit{Grain} kommunikációt, ezáltal a szükséges
+szükséges helyeken (a partíciók szélein) kezelték volna az esetleges Grain kommunikációt, ezáltal a szükséges
 plusz adatok beszerzését. Azonban ez a megoldás több szempontból is kedvezõtlen volt. Egyrészt az összes
-mûvelet módosítása már önmagában is jelentõs ráfordítással járt volna és így a keretrendszer által 
-nyújtott elõnyök nagy része nem lett volna felhasználható. Másrészt a jövõben implementálásra kerülõ mûveletek 
+mûvelet módosítása már önmagában is jelentõs ráfordítással járt volna, így a keretrendszer által 
+nyújtott elõnyök nagy része nem lett volna kihasználható. Másrészt a jövõben implementálásra kerülõ mûveletek 
 adaptációja is elkerülhetetlen lett volna.
 
 Az AEGIS keretrendszer fejlesztésekor azonban fontos szempont volt a rugalmasság és a bõvíthetõség. 
@@ -1215,8 +1203,8 @@ Ahhoz hogy a lokális adatokhoz más Grain-ek is hozzáférjenek, A Grain interfészé
 Ezeket a metódusokat (\mbox{\textit{ReadValue}}, \mbox{\textit{ReadFloatValue}}) az \textit{IRasterProvider} interfész tartalmazza, 
 ebbõl származik a feldolgozó Grain interfésze. Az Orleans ismertetésekor említésre került, hogy az egyes fordulók
 alapértelmezés szerint nem fedhetik át egymást. Ez a jelenlegi esetben problémát okozna, tekintve hogy a feldolgozás során
-több távoli adatra is szükség lehet és nagy valószínûséggel a távoli adattal rendelkezõ Grain is a mûveletet végrehajtó
-fázisban áll. Ezért a feldolgozó \textit{SpectralOperationGrain} osztályt megjelöltük a [Reentrant] attribútummal, így a
+több távoli adatra is szükség lehet, és nagy valószínûséggel a távoli adattal rendelkezõ Grain is a mûveletet végrehajtó
+fázisban áll. Ezért a feldolgozó \textit{SpectralOperationGrain} osztályt megjelöltük a \texttt{[Reentrant]} attribútummal, így a
 beérkezõ kérések a mûvelet végrehajtása közben is kiszolgálásra kerülnek a Grain által.
 
 \subsubsection{Végrehajtási terület}
@@ -1257,10 +1245,10 @@ A régió alapú szegmentáló algoritmusok két fõ csoportra oszthatók. Az \textit{ös
 kezdetben minden képpontot önálló szegmensnek tekintenek, és egy meghatározott számú iterációs lépésben a megadott
 feltételeknek eleget tevõ szomszédos elemeket összevonják (\textit{összevonási kritérium}). 
 A \textit{vágás alapú} mûveletek esetén kezdetben a teljes
-felvételt egy darab szegmensnek tekintjük, melyet minden iterációs lépésben a meghatározott 
+felvételt egy darab szegmensnek tekintjük, melyet minden  lépésben a meghatározott 
 \textit{vágási kritérium}nak megfelelõen több részre bontunk. 
 
-\subsubsection{Negyedelõ fa alapú szegmentálás} %TODO Cite
+\subsubsection{Negyedelõ fa alapú szegmentálás}
 A \textit{negyedelõ fa} (\textit{Quadtree}) egy hierarchikus fa adatszerkezet, 
 mely a sík egyenlõ régiókra történõ rekurzív felbontásán alapul. Fõként a képfeldolgozás és a számítógépes
 grafika területén terjedt el, valamint térbeli adatok indexelésére és raszteres adatok tömörítésére 
@@ -1326,7 +1314,7 @@ Mivel az inhomogén cellákat nem soroltuk szegmensekbe, ezért ezeket a pixeleket 
 \textit{klaszterezés} során kell a nekik megfelelõ tematikus osztályokba sorolni. 
 
 \subsubsection{Legjobb összevonáson alapuló szegmentálás}
-A legjobb összevonáson alapuló szegmentálás (\textit{best merge based segmentation})
+A legjobb összevonáson alapuló szegmentálás (\textit{Best merge based segmentation})
 - mint a neve is utal rá - egy összevonás alapú, iteratív szegmentálási módszer
 \cite{bestMerge,bestMerge2}. Az algoritmus kezdõállapotában minden pixelértéket 
 külön szegmensnek tekint, és minden iterációs lépésében egy megadott 
@@ -1362,8 +1350,9 @@ végsõ szegmenshalmazból. Erre az alábbi heurisztikák használhatóak\cite{aegisHad
 
 \begin{itemize}
 	\item Ugyanazzal a pixelhalmazzal rendelkezõ szegmensek esetén az egyiket kitöröljük
-	\item Ha egy szegmens egy másik szegmens részhalmaza, akkor két lehetõség van. 
-	Ha a szegmens az átfedés határán helyezkedik el, akkor kitöröljük. %TODO What does it mean?
+	\item Ha egy szegmens egy másik szegmens részhalmaza, akkor két lehetõségünk van:
+	Ha a kisebbik szegmens az átfedés határán helyezkedik el (tehát az egyik része a partícióban
+	foglal helyet, a másik része pedig az átfedésben), akkor kitöröljük.
 	Ha a szegmens az átfedésen belül helyezkedik el, akkor 	megtartjuk, és a tartalmazó
 	szegmensbõl kitöröljük a pixelértékeit.
 	\item Ha két szegmens közös pixeleket tartalmaz, akkor a ezek a pixelek mindkét 
@@ -1377,16 +1366,13 @@ méretû átfedéssel kell létrehozni, amely növeli a tárterületet. Azonban még ekko
 a lehetõség, hogy a mûveletnek további adatokra van szüksége - 
 helytelen paraméterezés vagy homogén kép esetén akár az input kép egészére is. 
 
-Az Orleans rendszer másfajta megközelítést alkalmaz az elosztott feldolgozásra 
-amellyel - elméletben - 
-kiküszöbölhetõek a fent említett nehézségek. Az egyes ötletek és megvalósításuk a
-következõ szakaszban kerülnek ismertetésre.
-
-\subsection{Regionális mûveletek feldolgozása az Orleans rendszerben}
-%TODO Compose
+\subsection{Regionális mûveletek feldolgozása Orleans platformon}
+Az Orleans rendszer a MapReduce rendszertõl eltérõ megközelítést alkalmaz az elosztott feldolgozásra,
+amellyel - elméletben - kiküszöbölhetõek az elõzõ szakasz végén említett nehézségek.
+A feldolgozás során itt is az aktorok egymás közti kommunikációját használjuk ki.
 
 \subsubsection{Vágást alkalmazó szegmentáló mûveletek futtatása}
-A vágást alkalmazó szegmensek kezdetben az input kép egészét egy darab szegmensnek tekintik, és egy
+A vágást alkalmazó szegmentáló mûveletek kezdetben az input kép egészét egy darab szegmensnek tekintik, és egy
 meghatározott vágási kritérium alapján több több szegmensre osztják fel - például a korábban ismertetett
 negyedelõ fa alapú szegmentálás esetén négy egyforma méretû részre. A vágást alkalmazó mûveletek ennek
 megfelelõen könnyedén felkészíthetõek az elosztott feldolgozásra. Tekinthetjük a particionálás mûveletét
@@ -1419,10 +1405,10 @@ csupán a saját területüket valamilyen módon érintõ szegmenseket.
 
 A szegmentáló mûveletek ezen virtuális szegmenseken operálnak a saját partíciójuk által meghatározott
 munkaterületen. A virtuális raszteren és a virtuális szegmensgyûjteményen keresztül 
-lényegében a teljes input kép bármelyik pixelét és szegmensét elérhetik. Ezzel lényegében az algoritmusok
-bármilyen módosítás nélkül elosztottan, tetszõleges számú partíción futtathatók.
+lényegében a teljes input kép bármelyik pixelét és szegmensét elérhetik. Ezzel az algoritmusok
+bármilyen módosítás nélkül, tetszõleges számú partíción, elosztottan futtathatók.
 
-A szegmens szerviznek alapvetõen két funkciója van: Egyrészt biztosítja a szegmensek elérését, ehhez
+A szegmens szerviznek alapvetõen két funkciója van: Egyrészt biztosítja a szegmensek elérését. Ehhez
 a lokális partícióhoz tartozó szegmenseket a kiinduló szegmensgyûjteményhez hasonlóan tartja
 nyilván, más partíciók által tartalmazott szegmenseket pedig a távoli partíciót feldolgozó egységnek
 intézett üzenetküldéssel kéri el. 
@@ -1463,15 +1449,13 @@ MapReduce esetén, elegendõ az egyik szegmenst kitörölni a végsõ gyûjteménybõl.
 %TODO Add figure.
 
 \section{Globális mûveletek}
-A Globális mûveletek feldolgozásuk során az eredményt az input kép valamilyen globális tulajdonsága alapján
-- például hisztogram - képesek kiszámítani. A particionálás - ha egyáltalán lehetséges - meglehetõsen
-komplex feladat. A Globális mûveletek azonban kulcsfontosságú részét képezik a távérzékelt adatokból
+A globális mûveletek feldolgozásuk során az eredményt az input kép valamilyen globális tulajdonsága alapján
+(például hisztogram) képesek kiszámítani. A particionálás - ha egyáltalán lehetséges - meglehetõsen
+komplex feladat. A globális mûveletek azonban kulcsfontosságú részét képezik a távérzékelt adatokból
 történõ tematikus információkinyerésnek. Mind a pont alapú osztályozó mûveletek (pl.: küszöbölés), mind
 pedig a regionális, a szegmentáláson és klaszterezésen alapuló tematikus osztályozás alapvetõ részei.
-
 A fenti tényezõk miatt az Orleans rendszer gyakorlati alkalmazhatósága nagyban függ a globális mûveletek
-területén nyújtott teljesítményétõl. Ha ezen a területen megfelelõ teljesítményt nyújt a rendszer, az
-nagy elõrelépést jelentene a távérzékelt felvételek elosztott feldolgozása területén.
+területén nyújtott teljesítményétõl.
 
 \subsection{Hisztogram alapú küszöbölés}
 A tematikus osztályozás legegyszerûbb algoritmusa, a \textit{konstans küszöbölés} a lokális mûveleteknél
@@ -1480,13 +1464,13 @@ minden egyes mûveletre, és az optimális érték minden inputra különbözhet.
 
 A \textit{hisztogram alapú} küszöbölõ algoritmusok az input képre kiszámított hisztogram alapján
 próbálnak optimális küszöbértéket keresni. A legtöbb mûvelet úgy próbálja a küszöbértéket meghatározni, 
-hogy a tõle kisebb, illetve nagyobb intenzitásértékek között a legnagyobb legyen a különbség.
+hogy a tõle kisebb, illetve nagyobb intenzitásértékek átlaga között a legnagyobb legyen a különbség.
 
 Az algoritmusokat legtöbbször szürkeárnyalatos képek küszöbölésére használjuk, azonban távérzékelt
 felvételek bármelyik spektrális sávjának küszöbölésére is alkalmazható.
 
 \subsubsection{Kiegyensúlyozott hisztogram küszöbölés}
-A kiegyensúlyozott hisztogram alapú küszöbölés\cite{balancedHistogramThresholding} két különbözõ
+A \textit{kiegyensúlyozott hisztogram alapú küszöbölés}\cite{balancedHistogramThresholding} két különbözõ
 osztályt képes megkülönböztetni a képen: egy elõteret és egy hátteret. Az algoritmus
 \textit{súlyozza} az input hisztogramot, és azt a pontot keresi meg futása során, ahol a hisztogram érték
 "egyensúlyban" van. Ez azt jelenti, hogy a ponttól azonos mennyiségû alacsonyabb-, illetve magasabb
@@ -1559,7 +1543,7 @@ hol helyezkednek el az input képen.
 
 \subsubsection{ISODATA algoritmus}
 Az \textit{ISODATA algoritmus (Iterative Self-Organizing Data Analysis Technique)}\cite{isodata}
-egy euklideszi spektrális távolságon alapuló klaszterezõ algoritmus, mely több 
+egy euklideszi távolságon alapuló klaszterezõ algoritmus, mely több 
 iteráción keresztül határozza meg az optimális osztályokat. 
  Az algoritmus a következõ lépésekbõl áll:
 
@@ -1599,8 +1583,8 @@ a teljes kép hisztogramát. Ezután az egész input kép hisztogramának ismeretében 
 harmadik Map függvény végrehajtja a kívánt küszöbölõ mûveletet.
 
 \subsubsection{Klaszterezõ algoritmusok}
-A klaszterezõ algoritmusok - mint korábban említésre került - az input pixelek vagy szegmensek
-intenzitásértékébõl elõállított intenzitástéren operálnak. Ez az intenzitástér az input kép
+A klaszterezõ algoritmusok - mint korábban említésre került - az input pixelek, vagy szegmensek
+intenzitásértékeibõl elõállított intenzitástéren operálnak. Ez az intenzitástér az input kép
 geometriai particionálásához hasonló módszerrel particionálható és elosztottan feldolgozható.
 A tematikus osztályozás folyamata során a klaszterezõ mûveletek legtöbbször egy szegmentáló 
 mûvelet eredményhalmazát (szegmensek egy csoportját) kapják meg. MapReduce feldolgozás esetén
@@ -1643,7 +1627,7 @@ egymástól.
 
 \chapter{Eredmények}
 A diplomamunka fõ célja annak kutatása volt, hogy a vizsgált Orleans keretrendszer megfelelõ
-segítséget tud-e nyújtani a távérzékelt felvételek feldolgozásának területén.
+alapot tud-e nyújtani a távérzékelt felvételek feldolgozásának területén.
 A rendszer gyakorlati használhatóságát akkor tudjuk igazán megismerni, ha a napjainkban 
 legtöbbször felhasznált mûholdak által szolgáltatott adatok feldolgozására vizsgáljuk a 
 teljesítményét. A tesztelés során így esett a választás napjaink két meghatározó
@@ -1674,7 +1658,7 @@ számítási-, és I/O kapacitással rendelkezõ \textit{PC} szolgált a
 tesztelésére. Az eredmények közlése a mûveletek bemutatásához hasonlóan
 munkaterület-csoportonként történik.
 
-\section{Lokális mûveletek}
+\section{Lokális mûveletek}  %TODO Consider writing Lokáis mûveletek eredményei	
 Mivel a választott lokális algoritmusok az eredménykép minden %TODO Recompose
 pixelét konstans idõben kiszámítják, ezért a 
 végrehajtásuk során mért teljesítményt fõleg 
@@ -1729,7 +1713,7 @@ okozhatnak. Mivel a Landsat és a SPOT mûholdak által szolgáltatott felvételek
 mindegyike 8 bites radiometriai felbontással rendelkezik, a ToA-Reflektancia
 mûvelete pedig 32 bites felbontást eredményez minden sávra, ezért az eredménykép
 négyszer nagyobb lesz, mint az input adat. A mûvelet eredményét lokálisan például
-egy darab output fájlba nem tudjuk kiírni, mivel erre az AEGIS architektúra 
+egy darab output fájlba nem tudjuk kiírni, mivel az AEGIS architektúra 
 jelenleg nem támogatja ekkora fájlok írását.
 
 A lokális mûveletek területén összegzésképp tehát elmondható, hogy az adatok
@@ -1806,7 +1790,7 @@ valamelyikére, azok már lokálisan rendelkezésre állnának. Egy ilyen gyorsítótár
 implementálása azonban egyrészt túlmutatott a diplomamunka keretein, másrészt pedig
 a mért eredmények arra engedtek következtetni, hogy valószínûleg ezen javítás
 bevezetése esetén sem tudnánk megközelíteni azt a teljesítményt, ha az adatok
-lokálisan rendelkezésre állnának minden feldolgozó egység számára.
+lokálisan rendelkezésre állnak minden feldolgozó egység számára.
 
 \section {Regionális mûveletek}
 
@@ -1824,7 +1808,7 @@ melyet minden egyes feldolgozó egység meg fog kapni az inicializálás során. Ezze
 eliminálunk minden kommunikációt a feldolgozó Grain-ek között, így ezen mûveletek 
 lényegében lokális munkaterületû mûveletek lesznek.
 
-Mind a kiegyensúlyozott hisztogram küszöbölés mind az Otsu küszöbölés közel azonos
+Mind a kiegyensúlyozott hisztogram küszöbölés, mind az Otsu küszöbölés közel azonos
 eredményeket mutattak a lokális-, és az Orleans alapú feldolgozás során, ezért
 csak az egyik mûvelet futtatásának eredménye kerül elemzésre:
 
@@ -1878,13 +1862,13 @@ részei, és mivel a fent
 \addcontentsline{toc}{chapter}{Irodalomjegyzék}
 
 \begin{thebibliography}{9}
-\bibitem{richards} Richards, J. A., Jia, X.: \textit{Remote Sensing Digital Image Analysis, An Introduction, fifth edition}, Springer, 2013, 978-3-642-30061-5.
+\bibitem{richards} Richards, J. A., Jia, X. \textit{Remote Sensing Digital Image Analysis, An Introduction, fifth edition}, Springer, 2013, 978-3-642-30061-5.
 
-\bibitem{remoteSensingLecture} László, I., Csornai, G., Fekete, I., Giachetta, R.: \textit{Távérzékelt felvételek elemzése}, Egyetemi jegyzet, Eötvös Loránd Tudományegyetem Informatikai Kar, Budapest, 2014.
+\bibitem{remoteSensingLecture} László, I., Csornai, G., Fekete, I., Giachetta, R. \textit{Távérzékelt felvételek elemzése}, Egyetemi jegyzet, Eötvös Loránd Tudományegyetem Informatikai Kar, Budapest, 2014.
 
-\bibitem{aegis} Giachetta, R.: \textit{AEGIS - A state-of-the art component based spatio- temporal framework}, OSGeo Journal 13.1, pp. 68-77, 2014.
+\bibitem{aegis} Giachetta, R. \textit{AEGIS - A state-of-the art component based spatio- temporal framework}, OSGeo Journal 13.1, pp. 68-77, 2014.
 
-\bibitem{aegisHadoop} Giachetta, R., Fekete, I.: \textit{A case study of advancing remote sensing image analysis}, Acta Cybernetica, 22, pp. 57-79, 2015.
+\bibitem{aegisHadoop} Giachetta, R., Fekete, I. \textit{A case study of advancing remote sensing image analysis}, Acta Cybernetica, 22, pp. 57-79, 2015.
 
 \bibitem{shapefile} ESRI, ESRI. \textit{Shapefile technical description.} An ESRI White Paper (1998).
 
@@ -1896,7 +1880,7 @@ részei, és mivel a fent
 
 \bibitem{mapAlgebra} \textit{Map Algebra: Global, Zonal, Focal and Local Operations}, http://gisgeography.com/map-algebra-global-zonal-focal-local/
 
-\bibitem{distributedImageProcessing} Giloi, W. Distributed Image Processing. In \textit{Advances in Digital Image Processing}, pages 249-263. 1979.
+\bibitem{distributedImageProcessing} Giloi, W. \textit{Distributed Image Processing}. Advances in Digital Image Processing, pages 249-263. 1979.
 
 \bibitem{mapReduce} Dean, Jeffrey, and Sanjay Ghemawat. \textit{MapReduce: simplified data processing on large clusters.} Communications of the ACM 51.1 (2008): 107-113.
 
