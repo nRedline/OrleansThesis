@@ -1511,7 +1511,7 @@ Másrészt, ha a feldolgozás során szükséges egy távoli szegmens módosítása
 (például szegmensek összekapcsolása vagy vágása), a szegmens szerviz
 értesíti a távoli szegmenst tartalmazó szervizt a módosításról. 
 
-\begin{figure}[H] 
+\begin{figure}[h!] 
 	\centering
 	\captionsetup{width=0.8\textwidth, justification=centering}
 	\includegraphics[width=155mm]{figures/segmentUpdate.png}
@@ -1532,6 +1532,13 @@ Mivel a szerviz közvetlenül nem
 összekapcsolható más szervizekkel, csupán a feldolgozó Grain-ekkel, így ezek interfésze
 kiegészítésre került a megfelelõ lekérdezõ (\textit{GetRemoteSegment}) és módosító (\textit{UpdateRemoteSegment}) mûveletekkel, tehát lényegében \textit{proxy}
 objektumokként szolgálnak a szegmens szervizek kommunikációjában.
+
+\begin{figure}[H] 
+	\centering
+	\captionsetup{width=0.8\textwidth, justification=centering}
+	\includegraphics[width=120mm]{figures/virtualSegmentCollection.png}
+	\caption{Mindkét Grain virtuális szegmensgyûjteménye által tartalmazott szegmens. \label{fig:virtualSegmentCollection}}
+\end{figure}
 
 Fontos megjegyezni, hogy a fent bevezetett virtuális szegmens használata esetén is létrejöhetnek olyan
 szegmensek a rendszerben, melyeket több feldolgozó egység is tartalmaz. Ha egy lokális szegmens 
@@ -1759,7 +1766,7 @@ számítási-, és I/O kapacitással rendelkezõ \textit{PC} szolgált a
 tesztelésére. Az eredmények közlése a mûveletek bemutatásához hasonlóan
 munkaterület-csoportonként történik.
 
-\section{Lokális mûveletek}  %TODO Consider writing Lokáis mûveletek eredményei	
+\section{Lokális mûveletek eredményei}  %TODO Consider writing Lokáis mûveletek eredményei	
 Mivel a választott lokális algoritmusok az eredménykép minden %TODO Recompose
 pixelét konstans idõben kiszámítják, ezért a 
 végrehajtásuk során mért teljesítményt fõleg 
@@ -1826,7 +1833,7 @@ rendszer elindításának milyen plusz költsége van, mivel egyszerû mûveletek
 esetén az inicializálás gyakran több idõt vehet igénybe mint az egész mûvelet
 végrehajtása.
 
-\section{Fokális mûveletek}
+\section{Fokális mûveletek eredményei}
 Fokális mûveletek esetén a fõ kérdés az, tud-e az aktorok közti kommunikáción alapuló, 
 átfedésmentes implementáció közel hasonló, vagy jobb teljesítményt nyújtani, mint 
 az átfedéseken alapuló megoldás.
@@ -1866,7 +1873,7 @@ segítségével a tematikus osztályozás minden lépését elvégezhetnénk.
 	\centering
 	\captionsetup{width=0.8\textwidth, justification=centering}
 	\includegraphics[width=130mm]{figures/diagrams/gaborFilter.png}
-	\caption{Gabor szûrõ alkalmazása közepes méretû képekre Orleans platformon}\label{fig:gaborFilter}
+	\caption{Gabor szûrõ alkalmazása közepes méretû felvételekre Orleans platformon}\label{fig:gaborFilter}
 \end{figure}
 
 A mért eredmények azonban nem ezt bizonyították. A fenti, \ref{fig:gaborFilter}.
@@ -1893,13 +1900,14 @@ a mért eredmények arra engedtek következtetni, hogy valószínûleg ezen javítás
 bevezetése esetén sem tudnánk megközelíteni azt a teljesítményt, ha az adatok
 lokálisan rendelkezésre állnak minden feldolgozó egység számára.
 
-\section {Regionális mûveletek}
+\section {Regionális mûveletek eredményei}
 
 \subsubsection{Virtuális szegmensgyûjtemény használata}
 
 \newpage
 
-\section{Globális mûveletek}
+
+\section{Globális mûveletek eredményei}
 
 \subsubsection{Hisztogram alapú küszöbölés}
 Az ismertetett hisztogram alapú küszöbölõ algoritmusok abból a feltevésbõl indulnak ki, hogy 
@@ -1917,7 +1925,7 @@ csak az egyik mûvelet futtatásának eredménye kerül elemzésre:
 	\centering
 	\captionsetup{width=0.8\textwidth, justification=centering}
 	\includegraphics[width=130mm]{figures/diagrams/otsuThresholding.png}
-	\caption{Otsu küszöbölés alkalmazása nagyméretû képekre Orleans platformon}\label{fig:otsuThresholding}
+	\caption{Otsu küszöbölés alkalmazása nagyméretû felvételekre Orleans platformon}\label{fig:otsuThresholding}
 \end{figure}
 
 A fenti, Otsu küszöbölés eredményén látható, hogy lokális esetben a mûvelet a kezdeti
