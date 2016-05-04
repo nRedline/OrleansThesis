@@ -1743,7 +1743,13 @@ rendelkezõ számítógép összekapcsolt rendszere adta. Ezen a klaszteren
 egyrészt az Orleans segítségével futtattunk teljesítményteszteket,
 valamint ezen adatok MapReduce architektúrával való összehasonlításának érdekében
 ugyanezen a klaszteren a Hadoop keretrendszer felhasználásával is megmértük
-az egyes mûveletek teljesítményét. 
+az egyes mûveletek teljesítményét.
+A vizsgálatok azt mutatták, hogy elosztott feldolgozás esetén nyolc partíció
+felhasználásával még a legnagyobb méretû felvételek is megfelelõen alacsony méretû darabokat eredményeznek,
+több partícióval már nagyobb költsége lenne a particionálásnak, 
+illetve az egyes partíciók összefésülésének a mûveletek végrehajtása után. Ennek megfelelõen
+a tesztelés során 2, 4, illetve 8 partíció felhasználásával történtek a mérések.
+
 Mindamellett, hogy a két elosztott rendszer közötti teljesítményt
 összehasonlítjuk, szeretnénk arról is információt kapni, hogyan viszonyul az
 elosztott feldolgozás hatékonysága az egy számítási egységen végzett 
@@ -1940,11 +1946,64 @@ végrehajtására.
 % ------------------------------------------------------------------------------
 
 \chapter{Összefoglalás} \label{ch:summary}
+A távérzékelt felvételek felhasználási területeinek széleskörû bõvülésével
+egyre nagyobb az igény a felvételek által szolgáltatott adatok gyors és olcsó 
+kiértékelésére. A feldolgozás sebességét leghatékonyabban elosztott rendszerek
+használatával növelhetjük, azonban a feldolgozásban részt vevõ mûveletek
+elosztott végrehajtása gyakran eltérõ megközelítéseket igényel.
 
-Gyorsítótárazás, de a szegmentálás esetén nem nyújtana megfelelõ teljesítményt
+A feladatok osztott végrehajtása során leggyakrabban olyan keretrendszereket 
+használunk fel, amelyek több elosztott rendszerekkel kapcsolatos nehézséget
+megoldanak és elrejtenek, így a fejlesztõk a konkrét feladat megoldására 
+koncentrálhatnak. Az osztott paradigmák közül a legkedveltebb, MapReduce 
+alapú rendszerek mellett az aktor modellre épülõ keretrendszerek is egyre 
+nagyobb népszerûségnek örvendenek. 
 
-Mivel a klaszterezõ algoritmusok a tematikus osztályozás folyamatának elengedhetetlen
-részei, és mivel a fent 
+A dolgozat célja egy aktor modellre épülõ keretrendszer, az Orleans keretrendszer
+teljesítményének vizsgálata távérzékelt felvételek feldolgozásának területén.
+Ehhez szükséges volt a keretrendszer kiterjesztése egy egységes téradat-, illetve 
+mûveleti modellel melyet az Eötvös Loránd Tudományegyetem Informatikai Karán jelenleg
+is fejlesztés alatt álló AEGIS térinformatikai keretrendszer biztosított.
+Az AEGIS komponens alapú architektúrája lehetõvé tette a bõvíthetõséget és a 
+könnyû integrációt az Orleans keretrendszerrel, mindemellett tartalmazta 
+a diplomamunka által vizsgált mûveletek implementációit is. Ezen mûveletek
+kiterjesztése elosztott feldolgozásra mûvelettípusonként eltérõ
+megközelítést igényelt. Egy megadott partíció feldolgozásához szükséges lehetett
+olyan adatok ismerete, amelyet egy másik partíció tartalmazott. Az Orleans rendszerben 
+ezen adatok elérését az egyes aktorok biztosították egymás között. Ahhoz, hogy az
+AEGIS keretrendszerben implementált algoritmusokat módosítás nélkül felhasználhassuk,
+a keretrendszer adatmodellét bõvítettük ki olyan osztályokkal 
+(\textit{Virtuális Raszter, Virtuális Szegmensgyûjtemény}), melyek az aktorok
+egymás közötti kommunikációját kezelték és elrejtették az egyes mûveletek elõl.
+
+A vizsgált mûveletek bemutatásával átfogó képet kaphatunk a távérzékelt
+felvételek feldolgozásának folyamatáról, egyes állomásairól és a mûveletek típusairól, 
+a rendszer teljesítményét pedig részletes mérések végrehajtásával állapítottuk meg.
+A mért eredmények emellett összehasonlításra kerültek a felvételek lokális 
+környezeten történõ feldolgozásának teljesítményével, illetve a MapReduce paradigma
+zászlóshajójának számító Hadoop rendszeren mért teljesítménnyel.
+
+Az eredmények azt mutatták, hogy az Orleans keretrendszer és az alapját képezõ
+aktor modell koncepció nem nyújt megfelelõ teljesítményt távérzékelt felvételek
+feldolgozásának területén. Az aktorok egymás közti információcseréjére építve 
+már az egyszerûbb, fokális mûveletek feldolgozása során sem volt tapasztalható 
+olyan mértékû teljesítmény, amely megközelítené a versenytársak hatékonyságát.
+A fokális mûveleteknél javítási lehetõség lett volna az egyes aktorok közti információk
+gyorsítótárazása, így az aktorok közti szükséges kommunikációk száma csökkenthetõ lett volna.
+A regionális, szegmentáló mûveletek esetén azonban ez az optimalizáció hatástalan lett volna. Az 
+eredményekbõl látható volt, hogy az egyes szegmensek konzisztenciájának megtartásával járó
+folyamatos lekérdezõ-, illetve frissítõ mûveletek a rendszer jelentõs mértékû teljesítményromlásához
+vezettek. Ugyanezen okok miatt a globális, klaszterezõ mûveletek
+végrehajtása nem volt lehetséges a rendszerben. Az egyes prototípus megvalósítások a
+megnövekedett hálózati kommunikáció miatt nem produkáltak mérhetõ eredményt.
+
+Összességében tehát elmondható, hogy a szegmentáló és klaszterezõ mûveletek feldolgozása során 
+az Orleans keretrendszer vagy gyenge, vagy nem mérhetõ eredményeket mutatott, és mivel
+ezek a mûveletek a távérzékelt felvételek numerikus kiértékelésének szerves részeit képezik,
+így az Orleans keretrendszer nem alkalmas távérzékelt felvételek feldolgozására.
+A dolgozat során kifejlesztett ötletek és megvalósításuk (virtuális raszter, 
+virtuális szegmensgyûjtemény) egy késõbbiekben megjelenõ, megfelelõ teljesítményt
+nyújtó keretrendszerben azonban ideális kiindulási alapot adhatnak a kutatáshoz.
 
 %\section{Továbbfejlesztési lehetõségek?}
 
