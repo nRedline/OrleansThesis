@@ -40,6 +40,7 @@
 \graphicspath {{figures/}}
 
 \addto\captionsmagyar{ \renewcommand{\listfigurename}{Ábrajegyzék} }
+\addto\captionsmagyar{ \renewcommand{\abstractname}{Absztrakt} }
 
 \begin{document}
 
@@ -58,6 +59,37 @@
 %\newpage
 %\setcounter{page}{1}
 
+
+% ------------------------------------------------------------------------------
+
+\begin{abstract}
+	A távérzékelt felvételek felhasználási területeinek folyamatos bõvülésével 
+	egyre nagyobb az igény olyan megoldások kutatására, melyek a mûholdak által 
+	szolgáltatott hatalmas mennyiségû adathalmazt olcsón és hatékonyan tudják kezelni és 
+	feldolgozni. A napjainkban tömegesen hozzáférhetõ számítógépek kapacitása
+	azonban már nem elegendõ több, a felvételek feldolgozásában részt vevõ mûvelet számára.
+	Ezzel párhuzamosan a számítástudomány fókusza az elosztott rendszerek felé irányult. %TODO Recompose
+	Az elosztott rendszerek területén az utóbbi idõben két jelentõs paradigma nyert teret.
+	A MapReduce paradigmára építõ rendszerek között találhatunk kifejezetten a térinformatikára
+	és a távérzékelt felvételek feldolgozására felkészített keretrendszereket, az ágens (aktor)
+	modellre épülõ platformok közül azonban még nem jelentek meg téradatokat támogató kiterjesztések.
+	
+	Jelen dolgozat célja az ágens alapú Orleans keretrendszer gyakorlati alkalmazhatóságának 
+	vizsgálata távérzékelt felvételek feldolgozása esetén. A felvételek kiértékelése 
+	során használt mûveletek mûvelettípusai elosztott feldolgozás esetén eltérõ megközelítést 
+	igényelnek. A dolgozat bemutatja ezen mûvelettípusok ágens alapú feldolgozásának 
+	akadályaira adott megoldásait, az elért eredményeket pedig összeveti az egyik 
+	legnépszerûbb MapReduce alapú keretrendszer, a Hadoop platform teljesítményével.
+	
+	A mért eredmények azt mutatják, hogy az ágens alapú megközelítés nem optimális
+	távérzékelt felvételek feldolgozásának területén. Az Orleans keretrendszer csupán
+	néhány mûvelet esetén tudott jobb eredményeket elérni, mint a Hadoop rendszer,
+	azonban a felvételek tematikus osztályozási folyamatának egyik állomásán sem 
+	volt képes olyan eredmény elérésére, amely felvehetné a versenyt a Hadoop-,
+	vagy a lokális feldolgozás teljesítményével.
+	
+\end{abstract}
+
 % ------------------------------------------------------------------------------
 % Tartalomjegyzék
 
@@ -65,16 +97,79 @@
 
 % ------------------------------------------------------------------------------
 
-\addcontentsline{toc}{chapter}{Absztrakt}
-\chapter*{Absztrakt}
-Lorem ipsum...
-
-
-% ------------------------------------------------------------------------------
-
 \chapter{Bevezetés}
-Lorem ipsum...
+Napjaink egyik legnagyobb kihívása a rendelkezésre álló természeti erõforrások hatékony kihasználása.
+A Föld népességének ugrásszerû növekedésével a világ élelem-, és nyersanyagszükséglete az emberiség
+történelmében most a legmagasabb. A rendelkezésre álló megújuló természeti erõforrások azonban végesek és sebezhetõek.
+A növénytermesztés területén például a fejlõdõ növényzetet több veszélyforrás 
+is fenyegetheti (aszály, belvíz, gyomnövények, állati kártevõk). %TODO Gombák, betegségek
+Ezek a veszélyforrások emberi beavatkozás nélkül jelentõs hozambeli csökkenést, rosszabb esetben pedig a teljes növényzet
+pusztulását okozhatják. A növényzet fejlõdésének pillanatnyi állapotáról rendelkezésre álló információ
+birtokában azonban ezek a káros folyamatok felismerhetõek, és bizonyos óvintézkedések alkalmazása esetén
+visszafordíthatóak.
 
+Hasonlóképpen a fát, mint nyersanyagot szolgáltató erdõk is jelentõs veszélyforrásoknak vannak kitéve 
+(állati kártevõk, erdei fafajok betegségei). Ha ezek a veszélyforrások idõben felismerésre kerülnek,
+még orvosolhatók a faállomány jelentõs méretû károsodása nélkül.
+
+Látható, hogy természeti erõforrásaink folyamatos, manuális megfigyelése hatalmas 
+ráfordított emberi energiával és pénzbeli költségekkel jár. 
+Ez olyan monitorozási megoldások kutatását indikálta, 
+amellyel az egységnyi területre jutó megfigyelés költsége csökkenthetõ.
+
+A 60-as években az ûrtechnika fejlõdése, és a látható tartományon kívüli elektromágneses sugárzások felvételezésére
+alkalmas szenzorok fejlesztése elvezetett az elsõ, távérzékelt felvételeket szolgáltató mûholdak üzembe
+állításához. Ezzel egy új tudományág, a távérzékelés tudománya indult útjára.
+
+A mûholdak egyszerre hatalmas területrõl szolgáltatnak információt, ezeket az információkat pedig
+az élet számos területén hatékonyan felhasználhatjuk, a fent említett növény-, és erdõvédelem
+mellett például természeti katasztrófák (pl.: \textit{árvíz}) monitorozására.
+A szolgáltatott felvételek kiértékelése kezdetben manuálisan történt, majd a számítástechnika
+fejlõdésével megjelent az igény a részben, vagy egészben automatizált feldolgozásra.
+
+A távérzékelt felvételek automatikus feldolgozásának nagy részében felhasználhatóak voltak a digitális
+képelemzés területén elért eredmények, így a fókusz új mûveletek kutatása és fejlesztése helyett 
+a feldolgozás teljesítményének növelésére irányult. A mûholdak által szolgáltatott felvételek részlegességüktõl
+függõen hatalmas méretûek lehetnek, így a hozzáférés és a kiértékelés gyorsasága 
+a távérzékelés legtöbb területén (pl.: katasztrófa-monitoring) kiemelt fontosságú. 
+A távérzékelt felvételek feldolgozása kezdetben egyetlen számítógép felhasználásával történt,
+a hálózatok megjelenésével azonban megjelent az igény olyan elosztott rendszerek 
+fejlesztésére, amelyek lehetõvé tették egyszerre több számítógép összekapcsolását 
+és erõforrásaik együttes kihasználását, ezáltal jelentõsen növelve a feldolgozás teljesítményét.
+Ezek az elosztott rendszerek leggyakrabban két fõ paradigmára épülnek. A napjainkban nagy
+népszerûségnek örvendõ \textit{MapReduce} alapú rendszerek mellett az utóbbi idõben az
+\textit{ágens (aktor) modell}re épülõ rendszerek is teret nyertek. 
+
+Jelen dolgozat célja az \textit{Orleans} ágens alapú keretrendszer távérzékelt felvételek
+feldolgozásának területén való alkalmazhatóságának vizsgálata. Ha
+a keretrendszer megfelelõ teljesítményt tud nyújtani a kiértékelésre használt
+mûveletek futtatása során, akkor hatékonyan beilleszthetõ a feldolgozás folyamatába, ezáltal
+az adatok kiértékelési ideje jelentõsen csökkenthetõ.
+
+A keretrendszer hatékonyságát a távérzékelt felvételek feldolgozásában részt vevõ
+mûveletek hatékonyságával tesztelhetjük.
+Ennek megfelelõen számos mûvelet került vizsgálatra a feldolgozás
+mindegyik fázisából (\textit{elõfeldolgozás, képjavító mûveletek, tematikus osztályozás}), 
+melyek az Orleans keretrendszerben egyedi megközelítést igényeltek. 
+A rendszer alkalmazhatóságának vizsgálata érdekében a mûveletek futtatása során
+mért teljesítmény összevetésre kerül az egy számítógépen történõ feldolgozás teljesítményével,
+valamint a MapReduce rendszerek zászlóshajójának számító \textit{Hadoop} platformon mért eredményekkel.
+\newline
+
+A dolgozat felépítése a következõ: a \ref{ch:remoteSensingAnalysis}. fejezetben
+átfogó bemutatásra kerülnek a távérzékelés fizikai és technikai alapjai, valamint
+a távérzékelt felvételek kiértékelésének folyamata, lépései, illetve ezek tulajdonságai.
+Ezt a \ref{ch:distributedSystems}. fejezetben az elosztott alkalmazások fejlesztésének
+alapjai, a felhasználható paradigmák, illetve ezek \linebreak implementációinak bemutatása követi.
+A \ref{ch:aegis}. fejezet ismerteti az Orleans keretrendszer térinformatikai kiegészítéséhez
+felhasznált keretrendszert, az AEGIS keretrendszert. Az Orleans platform teljesítményének
+vizsgálatához egy prototípus alkalmazás megvalósítása volt szükséges, ennek felépítését
+és komponenseit a \ref{ch:application}. fejezet tartalmazza. A prototípus alkalmazás
+bemutatása után az egyes vizsgált mûveletek ismertetése következik, ezt a \ref{ch:algorithms}.
+fejezet tartalmazza. A \ref{ch:results}. fejezet ismerteti a keretrendszer által elért eredményeket,
+valamint összehasonlítja a Hadoop platform-, és az egy számítógépen történõ feldolgozás
+teljesítményével. Végül a \ref{ch:summary}. fejezet összegzi és értékeli a dolgozat 
+által elért eredményeket, emellett pedig összefoglalja a megszerzett tapasztalatokat.
 
 % ------------------------------------------------------------------------------
 
@@ -363,7 +458,7 @@ egy központi összefuttató lépés - ennek módszere az alkalmazott mûvelettõl függ.
 
 % ------------------------------------------------------------------------------
 
-\chapter{Elosztott alkalmazások fejlesztése}
+\chapter{Elosztott alkalmazások fejlesztése} \label{ch:distributedSystems}
 A fejezetben bemutatásra kerülnek az elosztott szoftverrendszerek elméleti alapjai, 
 ezek néhány megvalósítása, valamint
 távérzékelt felvételek feldolgozásában lévõ alkalmazási lehetõségeik, külön részletezve a dolgozat
@@ -435,7 +530,7 @@ alternatív algoritmus bevezetése, amely az eredeti algoritmus kiegészítése egy (
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=150mm]{figures/histogram_map_reduce.jpg}
-	\caption{Hisztogramkiegyenlítés \textit{MapReduce} alkalmazásával \cite{aegisHadoop}
+	\caption{Hisztogramkiegyenlítés \textit{MapReduce} alkalmazásával\cite{aegisHadoop}
 		\label{fig:histogram_map_reduce}}
 \end{figure}
 
@@ -692,7 +787,7 @@ keretrendszerre, mely a következõ fejezetben kerül tárgyalásra.
 
 % ------------------------------------------------------------------------------
 
-\chapter{Az AEGIS térinformatikai keretrendszer}
+\chapter{Az AEGIS térinformatikai keretrendszer} \label{ch:aegis}
 Az \textit{AEGIS} keretrendszer \textit{Eötvös Loránd Tudományegyetem Informatikai Karán} jelenleg is fejlesztés alatt
 álló térinformatikai keretrendszer, melynek fõ célja térinformatikai algoritmusok, megoldások \textit{kutatás}a és \textit{fejlesztés}e.
 A rendszer téradatok széles spektrumát támogatja, például: \textit{vektoros adathalmazok}, \textit{raszter felvételek}
@@ -775,7 +870,7 @@ differenciák sem jelennek meg az eredményekben.
 
 % ------------------------------------------------------------------------------
 
-\chapter{Megvalósítás}
+\chapter{Megvalósítás} \label{ch:application}
 A dolgozat célja az Orleans rendszer távérzékelt felvételek feldolgozására való kiterjesztése és
 a gyakorlatban való alkalmazhatóságának vizsgálata. 
 Ehhez szükséges volt egy olyan prototípus alkalmazás megvalósítása, 
@@ -904,7 +999,7 @@ információ tartalmazza a mûvelet \textit{eredmény}ét (\textit{Futtatásra kész, F
 a futás alatt \textit{eltelt idõ}t, valamint - ha a futás során hiba történt - a fellépõ \textit{kivétel}t.
 
 
-\chapter{Vizsgált algoritmusok}
+\chapter{Vizsgált algoritmusok} \label{ch:algorithms}
 Az Orleans felépítésének és kiterjesztésének bemutatása után a dolgozat során vizsgált algoritmusok
 ismertetése következik. Az elemzett mûveletek megválasztásánál fontos szempont volt a sokszínûség - 
 a távérzékelt felvételek feldolgozásának mindkét fázisából (tehát az elõfeldolgozás és a tematikus 
@@ -1625,7 +1720,7 @@ egymástól.
 
 % ------------------------------------------------------------------------------
 
-\chapter{Eredmények}
+\chapter{Eredmények} \label{ch:results}
 A diplomamunka fõ célja annak kutatása volt, hogy a vizsgált Orleans keretrendszer megfelelõ
 alapot tud-e nyújtani a távérzékelt felvételek feldolgozásának területén.
 A rendszer gyakorlati használhatóságát akkor tudjuk igazán megismerni, ha a napjainkban 
@@ -1844,7 +1939,7 @@ végrehajtására.
 
 % ------------------------------------------------------------------------------
 
-\chapter{Összefoglalás}
+\chapter{Összefoglalás} \label{ch:summary}
 
 Gyorsítótárazás, de a szegmentálás esetén nem nyújtana megfelelõ teljesítményt
 
