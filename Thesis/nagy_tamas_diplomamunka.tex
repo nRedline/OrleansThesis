@@ -185,7 +185,7 @@ tárgyakról vagy területekrõl közvetve, azok érintése nélkül gyûjtünk és rögzítün
 
 Manapság a távérzékelést leggyakrabban földfelszíni-, illetve légköri adatok begyûjtésére értjük, valamilyen légi, vagy ûrbéli szenzor segítségével. 
 Ezek a szenzorok a földfelszínrõl érkezõ (kibocsátott, vagy visszavert) elektromágneses 
-energiát érzékelik, ez által alkotnak képet egy bizonyos területrõl.\cite{richards}
+energiát érzékelik, ez által alkotnak képet egy bizonyos területrõl. \cite{richards}
 
 \subsection{A távérzékelés fizikai és technikai alapjai} \label{subs:remoteSensingBasics}
 A távérzékelõ rendszereknek alapvetõen három fõ összetevõje van: A \textit{sugárforrás}, a megfigyelés tárgyát képezõ \textit{földfelszín} és az \textit{érzékelõ}.
@@ -229,7 +229,7 @@ $,
 ahol B számú spektrális sávot feltételezve $\vec{v}_{\textit{ij}} = (v_{\textit{ij}1}, \hdots, v_{\textit{ijB}})$
 az egyes elemekhez tartozó intenzitásértékek vektora. A vektor egyes elemei mindegyik spektrális sávban (kvantált formában)
 megadják az adott intenzitásértéket, tehát: $v_{\textit{ijb}} \in [\textit{1}\hdots\textit{H}]$, ahol \textit{H} a
-radiometriai felbontás alapján ábrázolható maximális értéket jelöli.\cite{remoteSensingLecture}
+radiometriai felbontás alapján ábrázolható maximális értéket jelöli. \cite{remoteSensingLecture}
 
 \subsection{Távérzékelt felvételek alkalmazási területei}
 Az élet számos területén felhasználhatóak a távérzékeléssel nyert információk, például:
@@ -313,7 +313,7 @@ a különbözõ \textit{szûrések}.
 A látványjavító mûveletek egy részében (pl.: szûrések) ténylegesen megváltoznak a pixelértékek, 
 ebben az esetben 
 a javítás után már nem végezhetõ el a numerikus kiértékelés, mivel elveszítjük a földfelszín konkrét
-fizikai paramétereit.\cite{remoteSensingLecture}
+fizikai paramétereit. \cite{remoteSensingLecture}
 
 \subsection{Tematikus osztályozás}
 A felvételkiértékelés célja a felszínborítás, földfelszíni objektumok fizikai jellemzõinek megállapítása. A felvételkiértékelés két alapvetõ módszere a 
@@ -361,7 +361,7 @@ A klaszterezõ mûveletek a szegmensek \textit{intenzitástér}ben való elhelyezkedé
 határolják be az egyes elemeket a megfelelõ osztályokba. Az intenzitástérben a kép egy pixelének sávonkénti
 intenzitásértékei adják a pont koordinátáit. A \ref{fig:intensitySpaces}. ábrán látható, hogy az egyes intenzitásértékek
 jellemzõen nem pontokba tömörülnek, hanem rendelkeznek bizonyos mértékû szórással. A klaszterezés során
-ezen térben keressük az összetartozó elemeket, és ez alapján alakítjuk ki a végsõ osztályhalmazokat.\cite{remoteSensingLecture}
+ezen térben keressük az összetartozó elemeket, és ez alapján alakítjuk ki a végsõ osztályhalmazokat. \cite{remoteSensingLecture}
 
 \subsection{Feldolgozó mûveletek munkaterülete}
 A feldolgozó mûveletek munkaterülete azt határozza meg, hogy a mûvelet egy lépésének végrehajtásához 
@@ -378,11 +378,11 @@ az input kép mekkora részére van szükség. Ez alapján négy csoportot különböztetü
 \begin{figure}[h!]
 	\minipage{0.5\textwidth}
 	\includegraphics[width=\linewidth]{figures/localOperation.png}
-	{\caption{Lokális mûvelet\cite{mapAlgebra}}}\label{fig:localOperation}
+	{\caption{Lokális mûvelet \cite{mapAlgebra}}}\label{fig:localOperation}
 	\endminipage\hfill
 	\minipage{0.5\textwidth}
 	\includegraphics[width=\linewidth]{figures/focalOperation.png}
-	\caption{Fokális mûvelet\cite{mapAlgebra}}\label{fig:focalOperation}
+	\caption{Fokális mûvelet \cite{mapAlgebra}}\label{fig:focalOperation}
 	\endminipage\hfill
 \end{figure}
 
@@ -405,11 +405,11 @@ az input kép mekkora részére van szükség. Ez alapján négy csoportot különböztetü
 \begin{figure}[h!]
 	\minipage{0.5\textwidth}
 	\includegraphics[width=\linewidth]{figures/zonalOperation.png}
-	{\caption{Regionális mûvelet\cite{mapAlgebra}}}\label{fig:zonalOperation}
+	{\caption{Regionális mûvelet \cite{mapAlgebra}}}\label{fig:zonalOperation}
 	\endminipage\hfill
 	\minipage{0.5\textwidth}
 	\includegraphics[width=\linewidth]{figures/globalOperation.png}
-	\caption{Globális mûvelet\cite{mapAlgebra}}\label{fig:globalOperation}
+	\caption{Globális mûvelet \cite{mapAlgebra}}\label{fig:globalOperation}
 	\endminipage\hfill
 \end{figure}
  
@@ -425,7 +425,7 @@ beszerzése esetén a számítási teljesítményünk is növekszik. A megoldás legnagyob
 teljesítményû környezetben is felhasználhatóak, a feldolgozás szoftveres része nem igényel adaptációt. Azonban a
 rendszer teljesítménynövelésének ezen módja költséges, és a fejlesztéssel nyert számítási kapacitás aránya egy bizonyos szint után csökken.
 
-A teljesítménynövelés másik lehetséges módja az évek óta kutatott\cite{distributedImageProcessing}, és a számítási
+A teljesítménynövelés másik lehetséges módja az évek óta kutatott \cite{distributedImageProcessing}, és a számítási
 felhõk elterjedésével az utóbbi idõben leginkább teret nyert \textit{elosztott feldolgozás}.
 
 Távérzékelt felvételek elosztott feldolgozása úgy történik, hogy a feldolgozandó kép alkotóelemeit valamilyen tulajdonság alapján 
@@ -454,7 +454,7 @@ egymással kommunikálva biztosítják a számításokhoz szükséges adatokat.
 Ebben az esetben a rendszer teljesítményét leginkább meghatározó szempont ezen adatok gyors és hatékony rendelkezésre állása.
 
 A legtöbb globális mûvelet is elvégezhetõ particionált módon, itt azonban mindenképp szükséges 
-egy központi összefuttató lépés - ennek módszere az alkalmazott mûvelettõl függ.\cite{remoteSensingLecture}
+egy központi összefuttató lépés - ennek módszere az alkalmazott mûvelettõl függ. \cite{remoteSensingLecture}
 
 % ------------------------------------------------------------------------------
 
@@ -481,7 +481,7 @@ melyek az elosztott alkalmazások fejlesztésének nehézségeire részben vagy egészb
 A következõ részekben ezen koncepciók és néhány megvalósításuk kerül bemutatásra.
 
 \section{MapReduce}
-A \textit{MapReduce} nagy adathalmazok generálására és feldolgozására fejlesztett számítási modell.\cite{mapReduce}
+A \textit{MapReduce} nagy adathalmazok generálására és feldolgozására fejlesztett számítási modell. \cite{mapReduce}
 Egy MapReduce alkalmazás alkotóelemei \textit{Map} és \textit{Reduce} funkciók. A \textit{Map} funkció az input
 elemeibõl köztes \textit{kulcs/érték párok}at állít elõ, a \textit{Reduce} mûvelet pedig összevonja az összes olyan
 köztes elemet, melynek kulcsa megegyezik.
@@ -518,7 +518,7 @@ A Hadoop keretrendszer fejlesztésekor az alkalmazás fõ célterülete szöveges adat
 feldolgozása volt, terjedésével azonban megjelent az igény az informatika több 
 különbözõ területén való alkalmazására. 
 Ennek megfelelõen megjelentek a keretrendszer térinformatikai 
-kiterjesztései is\cite{spatialHadoop,hadoopGIS}, melyek
+kiterjesztései is \cite{spatialHadoop,hadoopGIS}, melyek
 támogatják téradatok \textit{tárolás}át, \textit{indexelés}ét, és MapReduce alapú 
 \textit{feldolgozás}át.
 
@@ -530,7 +530,7 @@ alternatív algoritmus bevezetése, amely az eredeti algoritmus kiegészítése egy (
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=150mm]{figures/histogram_map_reduce.jpg}
-	\caption{Hisztogramkiegyenlítés \textit{MapReduce} alkalmazásával\cite{aegisHadoop}
+	\caption{Hisztogramkiegyenlítés \textit{MapReduce} alkalmazásával \cite{aegisHadoop}
 		\label{fig:histogram_map_reduce}}
 \end{figure}
 
@@ -540,7 +540,7 @@ függvényben kiszámítjuk az egyes hisztogram értékeket minden fájldarabra. A máso
 összefésüli ezeket az értékeket, és elõállítja a teljes hisztogramot. A harmadik lépésben pedig egy újabb \textit{Map}
 utasítás alkalmazza a hisztogramkiegyenlítést a kiszámított teljes hisztogramértékek alapján.
 
-Összességében elmondható\cite{aegisHadoop}, hogy a legtöbb esetben a mûveletek könnyedén adaptálhatók Hadoop környezetbe, 
+Összességében elmondható \cite{aegisHadoop}, hogy a legtöbb esetben a mûveletek könnyedén adaptálhatók Hadoop környezetbe, 
 azonban néhány alkalommal komplex módosításokra van szükség, és a portolt algoritmus helyfoglalási igénye sokkal nagyobb
 lehet, mint az eredeti mûveleté. Ezen tényezõk indokolták további alternatív feldolgozó mechanizmusok kutatásának szükségét.
 
@@ -573,10 +573,10 @@ Az aktor modell akkor alkalmazható hatékonyan, ha az aktorok "könnyûsúlyúak", gy
 
 \subsubsection{Aktor implementációk}
 A modellt elõször az \textit{Erlang} programozási nyelvben alkalmazták konkurens 
-alkalmazások fejlesztésére\cite{actorErlang}, majd népszerûségének 
+alkalmazások fejlesztésére \cite{actor}, majd népszerûségének 
 növekedésével több nyelv és keretrendszer is sikeresen 
-adaptálta a modellt, pl.: a \textit{Scala}\cite{actorScala}, 
-vagy az \textit{Akka} keretrendszer\cite{actorAkka}.
+adaptálta a modellt, pl.: a \textit{Scala} \cite{actorScala}, 
+vagy az \textit{Akka} keretrendszer \cite{actorAkka}.
 
 Ezek az aktor modell implementációk - jóllehet hatékony megoldást adnak az elosztott 
 alkalmazásfejlesztésre - több elosztott rendszerrel kapcsolatos probléma kezelését a 
@@ -587,7 +587,7 @@ kiküszöbölésükre való törekvés hívta életre a \textit{Microsoft Orleans} keretre
 
 \section{A Microsoft Orleans platform}
 Az \textit{Orleans} egy - a \textit{Microsoft Research} által fejlesztett - keretrendszer, 
-mely lehetõséget ad megbízható és skálázható felhõalapú alkalmazások fejlesztésére.
+mely lehetõséget ad megbízható és skálázható felhõalapú alkalmazások fejlesztésére \cite{dotnetOrleans, orleansMSR}.
 
 Az Orleans programozási modellje (\textit{Virtual Actor Model - Virtuális Aktor Modell})
 az aktor modell egy olyan kiterjesztése, amely az aktorokat virtuális entitásokként 
@@ -617,7 +617,7 @@ a futtatókörnyezet elvégzi a példány deaktiválását és felszabadítását. Ha egy sz
 Orleans egy másik elérhetõ szerveren automatikusan újrapéldányosítja azokat az aktorokat, 
 amelyek a hibás szerveren futottak, és a nekik küldött üzeneteket erre az új szerverre irányítja.
 Az alkalmazásoknak így nincs szükségük különbözõ \textit{életciklus felügyelet}i logika bevezetésére
-(pl.: \textit{felügyeleti fák} az Erlang nyelvben\cite{erlang}).
+(pl.: \textit{felügyeleti fák} az Erlang nyelvben \cite{erlang}).
 Az aktorok automatikus példányosítása és életciklus-kezelése azt is eredményezi, 
 hogy az aktorok fizikai elhelyezkedésérõl a futó alkalmazásnak nincs tudomása - 
 egy bizonyos idõpillanatban egy aktornak akár 0 vagy egynél több aktivációja is lehet
@@ -794,14 +794,14 @@ A rendszer téradatok széles spektrumát támogatja, például: \textit{vektoros adat
 valamint \textit{pontfelhõk}. A keretrendszer egy platformfüggetlen osztálykönyvtár, melynek fejlesztése \textit{C\#} nyelven
 történik, alapja a \textit{.NET keretrendszer}, illetve a \textit{Mono Framework\footnote{http://www.mono-project.com/}}. A fejlesztés a komponens alapú
 architektúra jegyében történik, mely lehetõséget ad a rendszer bõvítésére, valamint az újrafelhasználhatóságra.
-Ennek segítségével az egyes komponensek könnyedén integrálhatóak más alkalmazásokba\cite{aegis}.
+Ennek segítségével az egyes komponensek könnyedén integrálhatóak más alkalmazásokba \cite{aegis}.
 Mindezek mellett az AEGIS keretrendszer rendelkezik azokkal a távérzékelt adatfeldolgozó
 mûveletekkel, amelyek a dolgozatban kutatásra kerültek. Ezek alapján a rendszer megfelelõ környezetet
 biztosított az Orleans térinformatikai kiegészítésére.
 
 Az AEGIS keretrendszert felépítõ fõbb komponensek: \textit{Core, IO, Operations, Temporal}.
 A \textit{Core} komponens a rendszer adatmodellével kapcsolatos osztályokat tartalmazza, az \textit{IO} 
-téradatok betöltéséért és írásáért felel (pl.: \textit{Shapefile}\cite{shapefile} vagy \textit{GeoTIFF}\cite{geotiff} formában),
+téradatok betöltéséért és írásáért felel (pl.: \textit{Shapefile} \cite{shapefile} vagy \textit{GeoTIFF} \cite{geotiff} formában),
 az \textit{Operations} komponens tartalmazza a téradatokon végezhetõ mûveleteket, valamint ezek futtatókörnyezetét,
 a \textit{Temporal} komponens pedig az adatmodell kiterjesztése idõbeliség kezelésével.
 
@@ -814,7 +814,7 @@ a \textit{Temporal} komponens pedig az adatmodell kiterjesztése idõbeliség kezel
 
 \section{Adat-, illetve mûveleti modell}
 A rendszer adatmodellje az \textit{Open Geospatial Consortium (OGC)} szervezet által definiált
-\textit{Simple Feature Access (SFA)}\cite{sfa} szabvány. A szabványban az összes
+\textit{Simple Feature Access (SFA)} \cite{sfa} szabvány. A szabványban az összes
 ábrázolható alakzat közös õse a \textit{Geometry} osztály, mely a térbeli tulajdonságokat, 
 és az egyes térbeli objektumok 
 között elvégezhetõ mûveleteket definiálja. Az eredeti adatmodell két-, illetve háromdimenziós vektoros 
@@ -1083,7 +1083,7 @@ jelölt reflektancia:
 
 Ahol $d$ a Nap és a Föld távolsága csillagászati egységben, $E_\lambda$ a 
 \textit{légkörön kívüli irradiancia (az adott hullámsávban beesõ napsugárzás intenzitása)} átlaga, 
-$\theta_s$ pedig a \textit{zenitszög (a földdarabra érkezõ napsugárzás beesési szöge)}\cite{toarefCompute}.
+$\theta_s$ pedig a \textit{zenitszög (a földdarabra érkezõ napsugárzás beesési szöge)} \cite{toarefCompute}.
 
 \subsubsection{Konstans küszöbölés}
 A \textit{konstans küszöbölés} a küszöbölõ algoritmusok legegyszerûbb formája. Egy darab spektrális sávot tartalmazó
@@ -1180,7 +1180,7 @@ egy bizonyos számú iterációban egymás után alkalmazva közelíti a \textit{Gauss s
 A \textit{Gauss szûrõ (Gaussian blur)} egy széles körben használt szûrõ a grafikus képfeldolgozás 
 területén, legfõképp a kép zajosságának csökkentésére és a részletesség redukálására használatos.
 A Gauss szûrõ alkalmazása során a képet egy \textit{Gauss függvény} segítségével
-mossuk el, tehát a szûrõ kernelmátrixában egy kétdimenziós \textit{Gauss-eloszlás} értékei szerepelnek\cite{gaussianBlur}.
+mossuk el, tehát a szûrõ kernelmátrixában egy kétdimenziós \textit{Gauss-eloszlás} értékei szerepelnek \cite{gaussianBlur}.
 Egy $0$ várható értékû, $\sigma$ szórású Gauss-eloszlás a következõképpen írható fel:
 
 \begin{center}
@@ -1194,10 +1194,10 @@ A kernelmátrixot a fenti Gauss-eloszlás segítségével állíthatjuk elõ, ekkor az $
 középpontjától számított távolságok a horizontális-, illetve a vertikális tengely mentén. 
 
 \subsubsection{Gabor szûrõ}
-A \textit{Gábor Dénes} után elnevezett \textit{Gabor szûrõ (Gabor filter)}\cite{gaborFilter}
+A \textit{Gábor Dénes} után elnevezett \textit{Gabor szûrõ (Gabor filter)} \cite{gaborFilter}
 egy fõleg éldetektálásra használt lineáris szûrõ. 
 A szûrõ mûködési elve közel áll az emlõsök látórendszeréhez, ezért különösen 
-hatékony a vizuális képfeldolgozás területén\cite{gaborFilter2,gaborFilterApplications} (\textit{éldetektálás}, \textit{írott és nyomtatott szöveg felismerése}, 
+hatékony a vizuális képfeldolgozás területén \cite{gaborFilter2,gaborFilterApplications} (\textit{éldetektálás}, \textit{írott és nyomtatott szöveg felismerése}, 
 \textit{arcfelismerés}).
 
 A Gabor szûrõ tulajdonképpen egy Gauss függvény modulálása egy szinusz síkhullámmal (\ref{fig:gaborFilterModulation}. ábra), mely a következõképpen írható fel matematikai formában:
@@ -1349,7 +1349,7 @@ mely a sík egyenlõ régiókra történõ rekurzív felbontásán alapul. Fõként a képfel
 grafika területén terjedt el, valamint térbeli adatok indexelésére és raszteres adatok tömörítésére 
 is használatos.
 
-Távérzékelt felvételek feldolgozásának területén leginkább a \textit{régió alapú} verziója használatos\cite{quadTree}, melynek
+Távérzékelt felvételek feldolgozásának területén leginkább a \textit{régió alapú} verziója használatos \cite{quadTree}, melynek
 segítségével a felvételt egy megadott \textit{homogenitási kritérium} alapján régiókra bonthatunk. 
 A homogenitási kritérium a fa minden csúcsára meghatározza, hogy az adott csúcsban további dekompozícióra van-e szükség, 
 vagy az egyes értékek közti különbség kisebb a megadott küszöbnél, ekkor a csúcs nem kerül további felosztásra. 
@@ -1410,8 +1410,7 @@ Mivel az inhomogén cellákat nem soroltuk szegmensekbe, ezért ezeket a pixeleket 
 
 \subsubsection{Legjobb összevonáson alapuló szegmentálás}
 A legjobb összevonáson alapuló szegmentálás (\textit{Best merge based segmentation})
-- mint a neve is utal rá - egy összevonás alapú, iteratív szegmentálási módszer
-\cite{bestMerge,bestMerge2}. Az algoritmus kezdõállapotában minden pixelértéket 
+- mint a neve is utal rá - egy összevonás alapú, iteratív szegmentálási módszer \cite{bestMerge,bestMerge2}. Az algoritmus kezdõállapotában minden pixelértéket 
 külön szegmensnek tekint, és minden iterációs lépésében egy megadott 
 \textit{homogenitási kritérium} szerint egymáshoz legközelebb álló szomszédos szegmenseket
 vonja össze. A mûvelet addig fut, amíg el nem ér egy megadott szegmens-számot,
@@ -1419,7 +1418,7 @@ vagy a homogenitási kritérium alapján már nem tudna több szegmenst összevonni.
 
 A homogenitási kritériumok általában olyan \textit{távolságfüggvény}eken alapulnak,
 amelyek a szegmensek által tartalmazott intenzitásértékeket használják fel. Ilyen távolságfüggvények
-például a \textit{divergencia}, a \textit{Bhattacharyya távolság}\cite{bhattacharyya}, vagy az
+például a \textit{divergencia}, a \textit{Bhattacharyya távolság} \cite{bhattacharyya}, vagy az
 \textit{euklideszi távolság}).
 
 A szegmentáló algoritmus reprezentálható egy olyan gráfalapú megközelítéssel, ahol az egyes 
@@ -1441,7 +1440,7 @@ Map-, illetve Reduce függvényekként, azonban a feldolgozási folyamatot szükséges
 kiegészíteni egy utófeldolgozó lépéssel: azok a feldolgozó egységek, amelyek egymással
 szomszédos, átfedõ partíciókat dolgoznak fel, az átfedett területen duplikált szegmenseket 
 hozhatnak létre. A megfelelõ eredmény érdekében ezeket a szegmenseket eliminálni kell a 
-végsõ szegmenshalmazból. Erre az alábbi heurisztikák használhatóak\cite{aegisHadoop}:
+végsõ szegmenshalmazból. Erre az alábbi heurisztikák használhatóak \cite{aegisHadoop}:
 
 \begin{itemize}
 	\item Ugyanazzal a pixelhalmazzal rendelkezõ szegmensek esetén az egyiket kitöröljük
@@ -1572,7 +1571,7 @@ Az algoritmusokat legtöbbször szürkeárnyalatos képek küszöbölésére használjuk, a
 felvételek bármelyik spektrális sávjának küszöbölésére is alkalmazható.
 
 \subsubsection{Kiegyensúlyozott hisztogram küszöbölés}
-A \textit{kiegyensúlyozott hisztogram alapú küszöbölés}\cite{balancedHistogramThresholding} két különbözõ
+A \textit{kiegyensúlyozott hisztogram alapú küszöbölés} \cite{balancedHistogramThresholding} két különbözõ
 osztályt képes megkülönböztetni a képen: egy elõteret és egy hátteret. Az algoritmus
 \textit{súlyozza} az input hisztogramot, és azt a pontot keresi meg futása során, ahol a hisztogram érték
 "egyensúlyban" van. Ez azt jelenti, hogy a ponttól azonos mennyiségû alacsonyabb-, illetve magasabb
@@ -1582,10 +1581,10 @@ oldalból vesz el \textit{hisztogram osztályokat} mindaddig, amíg ki nem egyensúl
 
 Az algoritmus egyszerûsége miatt széles körben használt, túlzottan zajos képek esetén azonban nem 
 ad biztosan eredményt. Ez kiküszöbölhetõ, ha a hisztogram "kiugró" értékeit nem vesszük 
-figyelembe\cite{bhtOptimal}.
+figyelembe \cite{bhtOptimal}.
 
 \subsubsection{Otsu küszöbölés}
-A \textit{Nobuyuki Otsu} után elnevezett \textit{Otsu küszöbölés}\cite{otsu} egy bináris küszöbölõ
+A \textit{Nobuyuki Otsu} után elnevezett \textit{Otsu küszöbölés} \cite{otsu} egy bináris küszöbölõ
 algoritmus. A mûvelet a kiegyensúlyozott hisztogram küszöböléshez hasonlóan feltételezi, hogy az input
 kép két osztályból (egy elõtérbõl és egy háttérbõl) tartalmaz pixelértékeket, és azt a küszöbértéket
 keresi, ahol maximális a két osztály különbsége. 
@@ -1644,7 +1643,7 @@ kialakítása során már mindegy, hogy az egy tematikus kategóriába tartozó szegmen
 hol helyezkednek el az input képen.
 
 \subsubsection{ISODATA algoritmus}
-Az \textit{ISODATA algoritmus (Iterative Self-Organizing Data Analysis Technique)}\cite{isodata}
+Az \textit{ISODATA algoritmus (Iterative Self-Organizing Data Analysis Technique)} \cite{isodata}
 egy euklideszi távolságon alapuló klaszterezõ algoritmus, mely több 
 iteráción keresztül határozza meg az optimális osztályokat. 
  Az algoritmus a következõ lépésekbõl áll:
@@ -2024,76 +2023,76 @@ nyújtó keretrendszerben azonban ideális kiindulási alapot adhatnak a kutatáshoz.
 \addcontentsline{toc}{chapter}{Irodalomjegyzék}
 
 \begin{thebibliography}{9}
-\bibitem{richards} Richards, J. A., Jia, X. \textit{Remote Sensing Digital Image Analysis, An Introduction, fifth edition}, Springer, 2013, 978-3-642-30061-5.
+\bibitem{richards} Richards, J. A.: \textit{Remote Sensing Digital Image Analysis, An Introduction, fifth edition}, Springer, 2013.
 
-\bibitem{remoteSensingLecture} László, I., Csornai, G., Fekete, I., Giachetta, R. \textit{Távérzékelt felvételek elemzése}, Egyetemi jegyzet, Eötvös Loránd Tudományegyetem Informatikai Kar, Budapest, 2014.
+\bibitem{remoteSensingLecture} László, I., Csornai, G., Fekete, I., Giachetta, R.: \textit{Távérzékelt felvételek elemzése}, Egyetemi jegyzet, Eötvös Loránd Tudományegyetem Informatikai Kar, Budapest, 2014.
 
-\bibitem{aegis} Giachetta, R. \textit{AEGIS - A state-of-the art component based spatio- temporal framework}, OSGeo Journal 13.1, pp. 68-77, 2014.
+\bibitem{aegis} Giachetta, R.: \textit{AEGIS - A state-of-the art component based spatio-temporal framework}, OSGeo Journal 13.1, 2014.
 
-\bibitem{aegisHadoop} Giachetta, R., Fekete, I. \textit{A case study of advancing remote sensing image analysis}, Acta Cybernetica, 22, pp. 57-79, 2015.
+\bibitem{aegisHadoop} Giachetta, R., Fekete, I.: \textit{A case study of advancing remote sensing image analysis}, Acta Cybernetica, 22, 2015.
 
-\bibitem{shapefile} ESRI, ESRI. \textit{Shapefile technical description.} An ESRI White Paper (1998).
+\bibitem{shapefile} \textit{ESRI Shapefile technical description}, An ESRI White Paper, 1998.
 
-\bibitem{geotiff} Ritter, N., and M. Ruth. \textit{The GeoTiff data interchange standard for raster geographic images}. International Journal of Remote Sensing 18.7 (1997): 1637-1647.
+\bibitem{geotiff} Ritter, N., Ruth, M.: \textit{The GeoTiff data interchange standard for raster geographic images}, International Journal of Remote Sensing 18.7, 1997.
 
-\bibitem{dotnetOrleans} \textit{Microsoft Orleans, A straightforward approach to building distributed, high-scale applications in .NET}, http://dotnet.github.io/orleans
+\bibitem{dotnetOrleans} \textit{Microsoft Orleans, A straightforward approach to building distributed, high-scale applications in .NET}, http://dotnet.github.io/orleans, 2016.
 
-\bibitem{orleansMSR} Philip A. Bernstein, Sergey Bykov, Alan Geller, Gabriel Kliot, Jorgen Thelin: \textit{Orleans: Distributed Virtual Actors for Programmability and Scalability}, Microsoft Research
+\bibitem{orleansMSR} Bernstein, P., Bykov, S., Geller, A., Kliot, G., Thelin, J.: \textit{Orleans: Distributed Virtual Actors for Programmability and Scalability}, MSR Technical Report, 2014.
 
-\bibitem{mapAlgebra} \textit{Map Algebra: Global, Zonal, Focal and Local Operations}, http://gisgeography.com/map-algebra-global-zonal-focal-local/
+\bibitem{mapAlgebra} \textit{Map Algebra: Global, Zonal, Focal and Local Operations}, http://gisgeography.com/map-algebra-global-zonal-focal-local, 2016.
 
-\bibitem{distributedImageProcessing} Giloi, W. \textit{Distributed Image Processing}. Advances in Digital Image Processing, pages 249-263. 1979.
+\bibitem{distributedImageProcessing} Giloi, W.: \textit{Distributed Image Processing}, Advances in Digital Image Processing, 1979.
 
-\bibitem{mapReduce} Dean, Jeffrey, and Sanjay Ghemawat. \textit{MapReduce: simplified data processing on large clusters.} Communications of the ACM 51.1 (2008): 107-113.
+\bibitem{mapReduce} Dean, J., Ghemawat, S.: \textit{MapReduce: simplified data processing on large clusters}, Communications of the ACM 51.1, 2008.
 
-\bibitem{spatialHadoop} Eldawy, A. and Mokbel, M. F. \textit{SpatialHadoop: An Efficient Mapreduce Framework for Spatial Data}. Data Engineering (ICDE), 2015 IEEE 31st International Conference
-					
-\bibitem{hadoopGIS} Ablimit Aji , Fusheng Wang , Hoang Vo , Rubao Lee , Qiaoling Liu , Xiaodong Zhang , Joel Saltz. 
-\textit{Hadoop GIS: a high performance spatial data warehousing system over mapreduce}, Proceedings of the VLDB Endowment, v.6 n.11, p.1009-1020, August 2013
+\bibitem{spatialHadoop} Eldawy, A., Mokbel, M. F.: \textit{SpatialHadoop: An Efficient Mapreduce Framework for Spatial Data}, IEEE 31st International Conference, 2015.
 
-\bibitem{actorOrig} Carl Hewitt, et al. \textit{Actor Induction and Meta-evaluation} Conference Record of ACM Symposium on Principles of Programming Languages, January 1974.
+\bibitem{hadoopGIS} Aji, A., Wang, F., Vo, H., Lee, R., Liu, Q., Zhang, X., Saltz, J.: 
+\textit{Hadoop GIS: a high performance spatial data warehousing system over mapreduce}, Proceedings of the VLDB Endowment, 2013.
 
-\bibitem{actorErlang} Vinoski, Steve. \textit{Concurrency with Erlang}. IEEE Internet Computing (2007), 11: 90-93
+\bibitem{actorOrig} Hewitt, C., Bishop, P., Greif, I., Smith, B., Matson, T., Steiger, R.: \textit{Actor Induction and Meta-evaluation},  Proceedings of the 1st annual ACM SIGACT-SIGPLAN symposium on Principles of programming languages, 1974.
 
-\bibitem{erlang} Armstrong, J. \textit{Erlang}. CACM, 53, 9 (Sept. 2010), 68-75
+\bibitem{actorErlang} Vinoski, S.: \textit{Concurrency with Erlang}, IEEE Internet Computing, 2007.
 
-\bibitem{actorScala} Philipp Haller, Martin Odersky. \textit{Scala Actors: Unifying thread-based and event-based programming}, Theoretical Computer Science, v.410 n.2-3, p.202-220, February, 2009
+\bibitem{erlang} Armstrong, J.: \textit{Erlang}, Communications of the ACM 53, 2010.
 
-\bibitem{actorAkka} GUPTA, Munish. \textit{Akka essentials}. Packt Publishing Ltd, 2012.
+\bibitem{actorScala} Haller, P., Odersky, M.: \textit{Scala Actors: Unifying thread-based and event-based programming}, Theoretical Computer Science 410.2, 2009.
 
-\bibitem{sfa} Herring, J. \textit{OpenGIS Implementation Standard for Geographic information-Simple feature access-Part 1: Common architecture.} OGC Document 4.21 (2011): 122-127.
+\bibitem{actorAkka} Gupta, M.: \textit{Akka essentials}, Packt Publishing Ltd, 2012.
 
-\bibitem{gaussianBlur} Nixon, Mark. \textit{Feature Extraction and Image Processing.} Academic Press, 2008.
+\bibitem{sfa} Herring, J.: \textit{OpenGIS Implementation Standard for Geographic information-Simple feature access-Part 1: Common architecture}, OGC Document 4.21, 2011.
 
-\bibitem{gaborFilter} Gabor, Dennis. \textit{Theory of communication. Part 1: The analysis of information.} Electrical Engineers-Part III: Radio and Communication Engineering, Journal of the Institution of 93.26 (1946): 429-441.
+\bibitem{gaussianBlur} Nixon, M.: \textit{Feature Extraction and Image Processing}, Academic Press, 2008.
 
-\bibitem{gaborFilter2} FOGEL, Itzhak; SAGI, Dov. \textit{Gabor filters as texture discriminator}. Biological cybernetics, 1989, 61.2: 103-113.
+\bibitem{gaborFilter} Gabor, D.: \textit{Theory of communication. Part 1: The analysis of information}, Electrical Engineers-Part III: Radio and Communication Engineering, Journal of the Institution 93.26, 1946.
 
-\bibitem{gaborFilterApplications} T. P. Weldon, W. E. Higgins, and D. F. Dunn. \textit{Gabor filter design for multiple texture segmentation} Optical Engineering, vol. 35, no. 10, pp. 2852-2863, Oct. 1996.
+\bibitem{gaborFilter2} Fogel, I., Sagi, D.: \textit{Gabor filters as texture discriminator}, Biological cybernetics, 1989.
 
-\bibitem{gaborFilterVisualisation} Prasad, V. Shiv Naga, and Justin Domke. \textit{Gabor filter visualization.} J. Atmos. Sci 13 (2005).
+\bibitem{gaborFilterApplications} Weldon, T. P., Higgins, W. E., Dunn, D. F.: \textit{Gabor filter design for multiple texture segmentation}, Optical Engineering 35.10, 1996.
 
-\bibitem{quadTree} Samet, Hanan. \textit{The quadtree and related hierarchical data structures.} ACM Computing Surveys (CSUR) 16.2 (1984): 187-260.
+\bibitem{gaborFilterVisualisation} Prasad, V. S. N., Domke, J.: \textit{Gabor filter visualization}, J. Atmos. Sci 13, 2005.
 
-\bibitem{sequentialCoupling} Kettig, R. L., Landgrebe, D.A. \textit{Classification of multispectral image data by extraction and classification of homogeneous objects}, Geoscience Electronics, IEEE Transactions on 14.1, pp. 19-26, 1976.
+\bibitem{quadTree} Samet, H.: \textit{The quadtree and related hierarchical data structures}, ACM Computing Surveys 16.2, 1984.
 
-\bibitem{sequentialCoupling2} László, I., Dezsõ, B., Fekete, I., Pröhle, T. \textit{A fully segment-based method for the classification of satellite images}, Annales Univ. Sci. Budapest, Sectio Computatorica. Vol. 30. No. 2009, 2009.
+\bibitem{sequentialCoupling} Kettig, R. L., Landgrebe, D. A.: \textit{Classification of multispectral image data by extraction and classification of homogeneous objects}, Geoscience Electronics, IEEE Transactions 14.1, 1976.
 
-\bibitem{bestMerge} Schoenmakers, Ronald Peter Helena Maria. \textit{Integrated methodology for segmentation of large optical satellite images in land applications of remote sensing}. Office for Official Publications of the European Communities, 1995.
+\bibitem{sequentialCoupling2} László, I., Dezsõ, B., Fekete, I., Pröhle, T.: \textit{A fully segment-based method for the classification of satellite images}, Annales Univ. Sci. Budapest, Sectio Computatorica 30, 2009.
 
-\bibitem{bestMerge2} Fekete I., Dezsõ B, László I., Ócsai K. \textit{A szegmentálás szerepe az ûrfelvételek tematikus osztályozásában}. Informatika a felsõoktatásban 2008 konferencia Debrecen, 2008. augusztus 27-29.
+\bibitem{bestMerge} Schoenmakers, R. P. H. M.: \textit{Integrated methodology for segmentation of large optical satellite images in land applications of remote sensing}, Office for Official Publications of the European Communities, 1995.
+
+\bibitem{bestMerge2} Fekete I., Dezsõ B, László I., Ócsai K.: \textit{A szegmentálás szerepe az ûrfelvételek tematikus osztályozásában}, Informatika a felsõoktatásban konferencia, Debrecen, 2008.
 
 \bibitem{toarefCompute} \textit{Converting Digital Numbers to Top of Atmosphere (ToA) Reflectance} http://www.yale.edu/ceo/Documentation/Landsat\_DN\_to\_Reflectance.pdf
 
-\bibitem{bhattacharyya} Bhattacharyya, Anil. \textit{On a measure of divergence between two multinomial populations} Sankhya: The Indian Journal of Statistics (1946): 401-406.
+\bibitem{bhattacharyya} Bhattacharyya, A. \textit{On a measure of divergence between two multinomial populations} Sankhya: The Indian Journal of Statistics, 1946.
 
-\bibitem{balancedHistogramThresholding} A. Anjos and H. Shahbazkia. \textit{Bi-Level Image Thresholding - A Fast Method}. BIOSIGNALS 2008. Vol:2. P:70-76.
+\bibitem{balancedHistogramThresholding} Anjos, A., Shahbazkia, H.: \textit{Bi-Level Image Thresholding - A Fast Method}, BIOSIGNALS, 2008.
 
-\bibitem{bhtOptimal} A. Anjos, R. Leite, M. L. Cancela, H. Shahbazkia. \textit{MAQ - A Bioinformatics Tool for Automatic Macroarray Analysis}. International Journal of Computer Applications. 2010. Number 7 - Article 1.
+\bibitem{bhtOptimal} Anjos, A., Shahbazkia, H., Leite R., Cancela, M. L.: \textit{MAQ - A Bioinformatics Tool for Automatic Macroarray Analysis}, International Journal of Computer Applications 7, 2010.
 
-\bibitem{otsu}  Nobuyuki Otsu (1979). \textit{A threshold selection method from gray-level histograms}. IEEE Trans. Sys., Man., Cyber. 9 (1): 62-66
+\bibitem{otsu}  Otsu, N.: \textit{A threshold selection method from gray-level histograms}, Automatica 11, 1975.
 
-\bibitem{isodata} Ball, Geoffrey H., and David J. Hall. \textit{ISODATA, a novel method of data analysis and pattern classification}. STANFORD RESEARCH INST MENLO PARK CA, 1965.
+\bibitem{isodata} Ball, G. H., Hall, D. J.: \textit{ISODATA, a novel method of data analysis and pattern classification}, STANFORD RESEARCH INST MENLO PARK CA, 1965.
 
 \end{thebibliography}
 
