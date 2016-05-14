@@ -93,7 +93,14 @@
 % ------------------------------------------------------------------------------
 % Tartalomjegyzék
 
+\cleardoublepage
+\pagenumbering{gobble}
 \tableofcontents
+\cleardoublepage
+\pagenumbering{arabic}
+
+\setcounter{page}{3}
+
 
 % ------------------------------------------------------------------------------
 
@@ -187,7 +194,7 @@ tárgyakról vagy területekrõl közvetve, azok érintése nélkül gyûjtünk és rögzítün
 
 Manapság a távérzékelést leggyakrabban földfelszíni-, illetve légköri adatok begyûjtésére értjük, valamilyen légi, vagy ûrbéli szenzor segítségével. 
 Ezek a szenzorok a földfelszínrõl érkezõ (kibocsátott, vagy visszavert) elektromágneses 
-energiát érzékelik, ez által alkotnak képet egy bizonyos területrõl. \cite{richards}
+energiát érzékelik, ez által alkotnak képet egy bizonyos területrõl \cite{richards}.
 
 \subsection{A távérzékelés fizikai és technikai alapjai} \label{subs:remoteSensingBasics}
 A távérzékelõ rendszereknek alapvetõen három fõ összetevõje van: A \textit{sugárforrás}, a megfigyelés tárgyát képezõ \textit{földfelszín} és az \textit{érzékelõ}.
@@ -231,7 +238,7 @@ $,
 ahol B számú spektrális sávot feltételezve $\vec{v}_{\textit{ij}} = (v_{\textit{ij}1}, \hdots, v_{\textit{ijB}})$
 az egyes elemekhez tartozó intenzitásértékek vektora. A vektor egyes elemei mindegyik spektrális sávban (kvantált formában)
 megadják az adott intenzitásértéket, tehát: $v_{\textit{ijb}} \in [\textit{1}\hdots\textit{H}]$, ahol \textit{H} a
-radiometriai felbontás alapján ábrázolható maximális értéket jelöli. \cite{remoteSensingLecture}
+radiometriai felbontás alapján ábrázolható maximális értéket jelöli \cite{remoteSensingLecture}.
 
 \subsection{Távérzékelt felvételek alkalmazási területei}
 Az élet számos területén felhasználhatóak a távérzékeléssel nyert információk, például:
@@ -241,9 +248,9 @@ Az élet számos területén felhasználhatóak a távérzékeléssel nyert információk, p
 	Hurrikánok, földrengések, erózió, árvíz megfigyelése. A távérzékelt adatokat felhasználhatjuk a
 	természeti katasztrófa hatásainak kiértékelésére, az információ alapján megelõzõ lépéseket tehetünk a jelenlegi helyzet kezelésére, valamint a jövõbeni katasztrófákra is felkészülhetünk.
 	
-	\item \textbf{Természeti erõforrások monitorozása }
+	\item \textbf{Természeti erõforrások megfigyelése }
 	\newline
-	Földhasználat, vadvilági területek monitorozása. A távérzékelt adatok felhasználásával minimalizálhatjuk a
+	Földhasználat, vadvilági területek megfigyelése. A távérzékelt adatok felhasználásával minimalizálhatjuk a
 	városi növekedés káros hatásait a környezetre, valamint dönthetünk, hogyan védhetjük természeti erõforrásainkat.
 
 	\item \textbf{Mezõgazdasági termés- illetve hozambecslés}
@@ -315,7 +322,7 @@ a különbözõ \textit{szûrések}.
 A látványjavító mûveletek egy részében (pl.: szûrések) ténylegesen megváltoznak a pixelértékek, 
 ebben az esetben 
 a javítás után már nem végezhetõ el a numerikus kiértékelés, mivel elveszítjük a földfelszín konkrét
-fizikai paramétereit. \cite{remoteSensingLecture}
+fizikai paramétereit \cite{remoteSensingLecture}.
 
 \subsection{Tematikus osztályozás}
 A felvételkiértékelés célja a felszínborítás, földfelszíni objektumok fizikai jellemzõinek megállapítása. A felvételkiértékelés két alapvetõ módszere a 
@@ -456,11 +463,11 @@ egymással kommunikálva biztosítják a számításokhoz szükséges adatokat.
 Ebben az esetben a rendszer teljesítményét leginkább meghatározó szempont ezen adatok gyors és hatékony rendelkezésre állása.
 
 A legtöbb globális mûvelet is elvégezhetõ particionált módon, itt azonban mindenképp szükséges 
-egy központi összefuttató lépés - ennek módszere az alkalmazott mûvelettõl függ. \cite{remoteSensingLecture}
+egy központi összefuttató lépés - ennek módszere az alkalmazott mûvelettõl függ \cite{remoteSensingLecture}.
 
 % ------------------------------------------------------------------------------
 
-\chapter{Elosztott alkalmazások fejlesztése} \label{ch:distributedSystems}
+\chapter{Elosztott fejlesztési platformok} \label{ch:distributedSystems}
 A fejezetben bemutatásra kerülnek az elosztott szoftverrendszerek elméleti alapjai, 
 ezek néhány megvalósítása, valamint
 távérzékelt felvételek feldolgozásában lévõ alkalmazási lehetõségeik, külön részletezve a dolgozat
@@ -505,7 +512,7 @@ A MapReduce modell egy implementációja az \textit{Apache Software Foundation} ál
 \textit{Hadoop} keretrendszer. A rendszer komponenseinek tervezésénél a fõ szempont a hibatûrés volt - 
 bármilyen hardveres hiba elõfordulása természetes, és a keretrendszernek automatikusan kezelnie kell.
 
-A rendszer három fõ komponensbõl áll: A \textit{Hadoop Elosztott Fájlrendszer}bõl 
+A rendszer három fõ komponensbõl áll: A \textit{Hadoop elosztott fájlrendszer}bõl 
 (\textit{HDFS - Hadoop Distributed File System}), a \textit{Hadoop MapReduce} adatfeldolgozóból, valamint
 a \textit{Hadoop YARN}-ból, mely a rendszer erõforrás-kezelõje.
 A feldolgozandó input fájlokat elõször a HDFS-be töltjük fel. Ezeket a fájlokat
@@ -529,8 +536,8 @@ egyszerû \textit{Map} függvényekként. Regionális és globális esetben általában s
 alternatív algoritmus bevezetése, amely az eredeti algoritmus kiegészítése egy (vagy több) 
 \textit{Reduce} lépéssel.
 
-Például a \textit{hisztogram kiegyenlítés} mûvelet egy globális mûvelet, melynek szüksége van az egész képre vonatkozó
-hisztogram értékekre. Ekkor Hadoop architektúrán a mûvelet három különbözõ lépésbõl áll (\ref{fig:histogram_map_reduce}. ábra). Elõször egy \textit{Map}
+A \textit{hisztogram kiegyenlítés} mûvelete például globális mûvelet, melynek szüksége van az egész képre vonatkozó
+hisztogram értékekre. Ennek egy lehetséges feldolgozási módja három különbözõ lépésbõl áll \cite{aegisHadoop}, folyamata a \ref{fig:histogram_map_reduce}. ábrán látható. Elõször egy \textit{Map}
 függvényben kiszámítjuk az egyes hisztogram értékeket minden fájldarabra. A második, \textit{Reduce} lépés
 összefésüli ezeket az értékeket, és elõállítja a teljes hisztogramot. A harmadik lépésben pedig egy újabb \textit{Map}
 utasítás alkalmazza a hisztogramkiegyenlítést a kiszámított teljes hisztogramértékek alapján.
@@ -585,7 +592,7 @@ alkalmazásfejlesztésre - több elosztott rendszerrel kapcsolatos probléma kezelés
 fejlesztõkre bízzák. A fejlesztõknek kezelniük kell az aktorok életciklusát (hiba 
 esetén történõ leállás esetén az aktorok újraaktiválását), és a rendszerben
 történõ elhelyezését. Ezek a limitációk, és a 
-kiküszöbölésükre való törekvés hívta életre a \textit{Microsoft Orleans} keretrendszert.
+kiküszöbölésükre való törekvés hívta életre a \textit{Microsoft Orleans} keretrendszert \cite{orleansMSR}.
 
 \section{A Microsoft Orleans platform}
 Az \textit{Orleans} egy - a \textit{Microsoft Research} által fejlesztett - keretrendszer, 
@@ -839,7 +846,7 @@ metódusokat, valamint optimalizálhatjuk a végrehajtást.
 A mûveletek paramétereinek objektuma az \textit{OperationMethodParameter}, amely tartalmazza a paraméter típusát,
 valamint értékét (\ref{fig:aegis_operations}. ábra).
 
-A mûveletet az Operation osztály \textit{Execute()} metódusával futtathatjuk. Az \textit{Execute()} metódus
+A mûveletet az Operation osztály \textit{Execute()} metódusával futtathatjuk, mely
 futása során rendre három alfüggvényt hív meg, ezek: \textit{PrepareResult(), ComputeResult(), FinalizeResult()}.
 A \textit{PrepareResult()} a számításokhoz elõállítja a kiinduló adathalmazt, a \textit{ComputeResult()} a tényleges 
 számításokat hajtja végre, a \textit{FinalizeResult()} metódus pedig összegzi és véglegesíti az eredményt.
@@ -860,7 +867,7 @@ Ezek a raszteres mûveletek az \textit{Operations} komponens \textit{Spectral} ki
 helyezkednek el. A dolgozat során az itt implementált mûveletek kerültek felhasználásra.
 
 \section{Feldolgozás Hadoop architektúrán}
-Az AEGIS támogatja a \textit{Hadoop} architektúrával történõ adatkezelést, illetve feldolgozást.
+Az AEGIS támogatja a \textit{Hadoop} architektúrával történõ adatkezelést, illetve feldolgozást \cite{aegisHadoop}.
 A rendszer megfelelõen kezeli nagyméretû bináris adatok \textit{HDFS}-be történõ beolvasását (pl.: \textit{GeoTIFF} formában).
 Az input adat opcionálisan particionálható, az egyes partíciók így elosztottan is feldolgozhatók (A fent említett
 \textit{Operations} komponensben definiált mûveletek módosítás nélkül alkalmazhatók Map-, illetve Reduce függvényekként).
