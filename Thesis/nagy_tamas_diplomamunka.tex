@@ -361,14 +361,16 @@ Az összetartozó szegmensek összevonása és ezáltal célosztályokká redukálása a \t
 A klaszterezõ mûveletek a szegmensek \textit{intenzitástér}ben való elhelyezkedése alapján 
 határolják be az egyes elemeket a megfelelõ osztályokba. Az intenzitástérben a kép egy pixelének sávonkénti
 intenzitásértékei adják a pont koordinátáit. A \ref{fig:intensitySpaces}. ábrán látható, hogy az egyes intenzitásértékek
-jellemzõen nem pontokba tömörülnek, hanem rendelkeznek bizonyos mértékû szórással. A klaszterezés során
+jellemzõen nem pontokba tömörülnek, hanem rendelkeznek bizonyos mértékû szórással, akár át is
+fedhetnek egymással. Az ábrán a \textit{növényzet}hez (\textit{vegetation}) és a \textit{talaj}hoz (\textit{soil}) tartozó
+intenzitások például több pontban is összemosódnak. A klaszterezés során
 ezen térben keressük az összetartozó elemeket, és ez alapján alakítjuk ki a végsõ osztályhalmazokat  \cite{remoteSensingLecture}.
 
 \begin{figure}[h!]
 	\centering
 	\captionsetup{width=1\textwidth, justification=centering}
-	\includegraphics[width=110mm]{figures/coordinateSystem.jpg}
-	\caption{Felszíndarabok sugárzása  $x_1=0.5\si{\micro\metre}$ 
+	\includegraphics[width=110mm]{figures/coordinateSystem.png}
+	\caption{Különbözõ felszíndarabok sugárzása  $x_1=0.5\si{\micro\metre}$ 
 		és $x_2=0.9\si{\micro\metre}$ hullámhosszon \label{fig:intensitySpaces}}
 \end{figure}
 
