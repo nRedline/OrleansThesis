@@ -68,7 +68,7 @@
 	szolgáltatott hatalmas mennyiségû adathalmazt olcsón és hatékonyan tudják kezelni és 
 	feldolgozni. A napjainkban tömegesen hozzáférhetõ számítógépek kapacitása
 	azonban már nem elegendõ több, a felvételek feldolgozásában részt vevõ mûvelet számára.
-	Ezzel párhuzamosan a számítástudomány fókusza az elosztott rendszerek felé irányult. %TODO Recompose
+	Ezzel párhuzamosan a számítástudomány fókusza az elosztott rendszerek felé irányult.
 	Az elosztott rendszerek területén az utóbbi idõben két jelentõs paradigma nyert teret.
 	A MapReduce paradigmára építõ rendszerek között találhatunk kifejezetten a térinformatikára
 	és a távérzékelt felvételek feldolgozására felkészített keretrendszereket, az ágens (aktor)
@@ -111,7 +111,7 @@ Napjaink egyik legnagyobb kihívása a rendelkezésre álló természeti erõforrások h
 A Föld népességének ugrásszerû növekedésével a világ élelem-, és nyersanyagszükséglete az emberiség
 történelmében most a legmagasabb, és folyamatosan emelkedik. A rendelkezésre álló megújuló természeti erõforrások azonban végesek és sebezhetõek.
 A növénytermesztés területén például a fejlõdõ növényzetet több veszélyforrás 
-is fenyegetheti (aszály, belvíz, gyomnövények, állati kártevõk). %TODO Gombák, betegségek
+is fenyegetheti (aszály, belvíz, gyomnövények, állati kártevõk).
 Ezek a veszélyforrások emberi beavatkozás nélkül jelentõs hozambeli csökkenést, rosszabb esetben pedig a teljes növényzet
 pusztulását okozhatják. A növényzet fejlõdésének pillanatnyi állapotáról rendelkezésre álló információ
 birtokában azonban ezek a káros folyamatok felismerhetõek, és bizonyos óvintézkedések alkalmazása esetén
@@ -170,9 +170,8 @@ A dolgozat felépítése a következõ: a \ref{ch:remoteSensingAnalysis}. fejezetben
 átfogó bemutatásra kerülnek a távérzékelés fizikai és technikai alapjai, valamint
 a távérzékelt felvételek kiértékelésének folyamata, lépései, illetve ezek tulajdonságai.
 Ezt a \ref{ch:distributedSystems}. fejezetben az elosztott alkalmazások fejlesztésének
-alapjai, a felhasználható paradigmák, illetve ezek \linebreak implementációinak bemutatása követi.
-A \ref{ch:aegis}. fejezet ismerteti az Orleans keretrendszer térinformatikai kiegészítéséhez
-felhasznált \textit{AEGIS} keretrendszert. Az Orleans platform teljesítményének
+alapjai, a felhasználható paradigmák, illetve ezek \linebreak implementációinak bemutatása követi. 
+Az Orleans platform teljesítményének
 vizsgálatához egy prototípus alkalmazás megvalósítása volt szükséges, ennek felépítését
 és komponenseit az \ref{ch:application}. fejezet tartalmazza. A prototípus alkalmazás
 bemutatása után az egyes vizsgált mûveletek ismertetése következik, ezt a \ref{ch:algorithms}.
@@ -510,7 +509,7 @@ komoly szaktudást követelne a párhuzamos és elosztott alkalmazásfejlesztés terül
 	\caption{A \textit{MapReduce} folyamat \label{fig:mapReduceProcess}}
 \end{figure}
 
-\subsection{Hadoop} \label{subs:aegisHadoop}
+\subsection{A Hadoop keretrendszer} \label{subs:aegisHadoop}
 A MapReduce modell egy implementációja az \textit{Apache Software Foundation} által fejlesztett 
 \textit{Hadoop} keretrendszer. A rendszer komponenseinek tervezésénél a fõ szempont a hibatûrés volt - 
 bármilyen hardveres hiba elõfordulása természetes, és a keretrendszernek automatikusan kezelnie kell.
@@ -793,14 +792,21 @@ feldolgozásához gyakran hatalmas méretû adatokkal kell dolgoznunk, a mûveletek k
 folyamatok adataihoz is hozzá kell férniük. A dolgozat része volt ezen szempontbéli különbségek kiküszöbölése
 a megfelelõ eredmény érdekében - a késõbbi fejezetekben az alkalmazott megoldások és az eredmények
 részletesen is tárgyalásra kerülnek.
-
-Az Orleans térinformatikai kiegészítéséhez szükséges volt egy olyan keretrendszer integrációja és felhasználása,
-amelynek segítségével egységesen kezelhetünk és dolgozhatunk fel téradatokat. Így esett a választás az \textit{AEGIS}
-keretrendszerre, mely a következõ fejezetben kerül tárgyalásra.
+% ------------------------------------------------------------------------------
 
 % ------------------------------------------------------------------------------
 
-\chapter{Az AEGIS térinformatikai keretrendszer} \label{ch:aegis}
+\chapter{Megvalósítás} \label{ch:application}
+Az Orleans rendszer gyakorlati alkalmazhatóságának vizsgálatához
+szükséges volt egy olyan prototípus alkalmazás megvalósítása, 
+melynek segítségével tesztelhetõek a keretrendszer képességei távérzékelt felvételek feldolgozásában. 
+A fejezet célja ezen alkalmazás felépítésének és komponenseinek bemutatása.
+
+Az Orleans térinformatikai kiegészítéséhez szükséges volt egy olyan keretrendszer integrációja és felhasználása,
+amelynek segítségével egységesen kezelhetünk és dolgozhatunk fel téradatokat. 
+Így esett a választás az \textit{AEGIS} keretrendszerre.
+
+\section{Az AEGIS térinformatikai keretrendszer}
 Az \textit{AEGIS} keretrendszer \textit{Eötvös Loránd Tudományegyetem Informatikai Karán} jelenleg is fejlesztés alatt
 álló térinformatikai keretrendszer. A projekt fõ célja az oktatás mellett térinformatikai algoritmusok, megoldások \textit{kutatás}a és \textit{fejlesztés}e.
 
@@ -810,7 +816,7 @@ történik, alapja a \textit{.NET keretrendszer}, illetve a \textit{Mono Framework
 architektúra jegyében történik, mely lehetõséget ad a rendszer bõvítésére, valamint az újrafelhasználhatóságra.
 Ennek segítségével az egyes komponensek könnyedén integrálhatóak más alkalmazásokba \cite{aegis}.
 Mindezek mellett az AEGIS keretrendszer rendelkezik azokkal a távérzékelt adatfeldolgozó
-mûveletekkel, amelyek a dolgozatban kutatásra kerültek. Ezek alapján a rendszer megfelelõ környezetet
+mûveletekkel, amelyek a dolgozatban vizsgálatra kerültek. Ezek alapján a rendszer megfelelõ környezetet
 biztosított az Orleans térinformatikai kiegészítésére.
 
 Az AEGIS keretrendszert felépítõ fõbb komponensek: \textit{Core, IO, Operations, Temporal}.
@@ -819,9 +825,9 @@ téradatok betöltéséért és írásáért felel (pl.: \textit{Shapefile} \cite{shapefil
 az \textit{Operations} komponens tartalmazza a téradatokon végezhetõ mûveleteket, valamint ezek futtatókörnyezetét,
 a \textit{Temporal} komponens pedig az adatmodell kiterjesztése idõbeliség kezelésével.
 
-\section{Adat-, illetve mûveleti modell}
+\subsubsection{Adat-, illetve mûveleti modell}
 A rendszer adatmodellje (\ref{fig:aegis_data_model}. ábra) az \textit{Open Geospatial Consortium (OGC)} szervezet által definiált
-\textit{Simple Feature Access (SFA)} \cite{sfa} szabvány. A szabványban az összes
+\textit{Simple Feature Access (SFA)} szabvány \cite{sfa}. A szabványban az összes
 ábrázolható alakzat közös õse a \textit{Geometry} osztály, mely a térbeli tulajdonságokat, 
 és az egyes térbeli objektumok 
 között elvégezhetõ mûveleteket definiálja. Az eredeti adatmodell két-, illetve háromdimenziós vektoros 
@@ -836,7 +842,7 @@ az implementáció során a szabvány kiterjesztésre került raszteres adatok támogat
 	\caption{Az \textit{AEGIS} adatmodellje és kiterjesztése raszteres támogatással
 		\label{fig:aegis_data_model}}
 \end{figure}
- 
+
 Az \textit{Operations} komponensben implementált algoritmusok kezelése is egységes alapon történik, minden mûvelet
 közös õse az absztrakt \textit{Operation} osztály. A mûveletek rendelkeznek egy leíró 
 osztállyal is (\textit{OperationMethod}), melynek segítségével kategorizálhatjuk a 
@@ -864,7 +870,8 @@ pedig olyan metaadattal látjuk el, amely megakadályozza a vektoros adathalmazon 
 Ezek a raszteres mûveletek az \textit{Operations} komponens \textit{Spectral} kiterjesztésében
 helyezkednek el. A dolgozat során az itt implementált mûveletek kerültek felhasználásra.
 
-\section{Feldolgozás Hadoop architektúrán}
+\subsubsection{Feldolgozás Hadoop architektúrán}
+
 Az AEGIS támogatja a \textit{Hadoop} architektúrával történõ adatkezelést, illetve feldolgozást \cite{aegisHadoop}.
 A rendszer megfelelõen kezeli nagyméretû bináris adatok \textit{HDFS}-be történõ beolvasását (pl.: \textit{GeoTIFF} formában).
 Az input adat opcionálisan particionálható, az egyes partíciók így elosztottan is feldolgozhatók (A fent említett
@@ -875,14 +882,7 @@ teljesítményének összevetését az Orleans keretrendszerrel. A Hadoop rendszerhez
 nem volt szükséges külön térinformatikai keretrendszer felhasználása, így az architektúrából adódó teljesítménybeli
 differenciák sem jelennek meg az eredményekben. 
 
-% ------------------------------------------------------------------------------
-
-\chapter{Megvalósítás} \label{ch:application}
-Az Orleans rendszer gyakorlati alkalmazhatóságának vizsgálatához
-szükséges volt egy olyan prototípus alkalmazás megvalósítása, 
-melynek segítségével tesztelhetõek a keretrendszer képességei távérzékelt felvételek feldolgozásában. 
-Ezen fejezet célja az alkalmazás felépítésének és komponenseinek bemutatása.
-
+\section{Programszerkezet} %TODO Rename
 A dolgozat során elkészített prototípus alkalmazás (\textit{OrleansSpectral}) felépítése hasonló a 
 tradicionális Orleans alkalmazásokhoz, rendelkezik a \ref{subs:orleansProjects}. szakaszban említett
 három komponenssel (\textit{Grains}, \textit{Grain interfaces}, \textit{Client}), valamint ezeken túl 
@@ -896,7 +896,7 @@ egy \textit{Common} projekttel, amely az egyes komponensek mindegyike
 	\caption{Az alkalmazás komponensdiagramja \label{fig:orleansSpectralComponents}}
 \end{figure}
 
-\section{Az AEGIS keretrendszer integrációja}
+
 Távérzékelt felvételek feldolgozásához szükség volt egy egységes téradatmodellre,
 a felvételek beolvasására, a végrehajtandó mûveletekre, illetve az eredmények lemezre történõ kiírására.
 Ennek megfelelõen az \textit{AEGIS} keretrendszer \textit{Core, IO}, valamint \textit{Operations} komponenseire volt
@@ -1729,21 +1729,18 @@ egymástól.
 % ------------------------------------------------------------------------------
 
 \chapter{Eredmények} \label{ch:results}
-A diplomamunka fõ célja annak kutatása volt, hogy a vizsgált Orleans keretrendszer megfelelõ
-alapot tud-e nyújtani a távérzékelt felvételek feldolgozásának területén.
-A rendszer gyakorlati használhatóságát akkor tudjuk igazán megismerni, ha a napjainkban 
+A kidolgozott számítási modell, és az Orleans keretrendszer gyakorlati használhatóságát akkor tudjuk igazán megismerni, ha a napjainkban 
 legtöbbször felhasznált mûholdak által szolgáltatott adatok feldolgozására vizsgáljuk a 
 teljesítményét. A tesztelés során így esett a választás napjaink két meghatározó
 mûholdcsaládjára, a \textit{Landsat}, és a 
 \textit{SPOT (Satellite Pour l'Observation de la Terre, "Mûhold a Föld megfigyelésére")}
-mûholdak által szolgáltatott adatokra. 
-A mûholdak által szolgáltatott adatok \textit{GeoTIFF}
+mûholdak által szolgáltatott adatokra. Ezek az adatok \textit{GeoTIFF}
 formában álltak rendelkezésre, 
 a fájlok beolvasása és az eredmény kiírása pedig az AEGIS keretrendszerben 
 implementált GeoTIFF olvasó-, illetve író mûveletek felhasználásával valósult meg.
-Az AEGIS keretrendszer segítségével végeztük el továbbá ezen adatok felosztását is.
+Az AEGIS keretrendszer segítségével végeztük el továbbá a képek felosztását is.
 
-Ahhoz hogy minél részletesebb képet kapjunk a rendszer teljesítményérõl, 
+Ahhoz, hogy minél részletesebb képet kapjunk a rendszer teljesítményérõl, 
 a mûveleteket két különbözõ környezetben futtattuk több, eltérõ méretû
 adatra. Az elosztott környezetet tíz darab átlagos számítási-, illetve
 I/O teljesítménnyel
@@ -1968,11 +1965,11 @@ koncentrálhatnak. Az osztott paradigmák közül a legkedveltebb, MapReduce
 alapú rendszerek mellett az aktor modellre épülõ keretrendszerek is egyre 
 nagyobb népszerûségnek örvendenek. 
 
-A dolgozat célja egy aktor modellre épülõ keretrendszer, az Orleans keretrendszer
-teljesítményének vizsgálata távérzékelt felvételek feldolgozásának területén.
+A dolgozat célja egy aktor alapú számítási modell kifejlesztése és az 
+Orleans keretrendszeren történõ tesztelése volt
+távérzékelt felvételek feldolgozásának területén.
 Ehhez szükséges volt a keretrendszer kiterjesztése egy egységes téradat-, illetve 
-mûveleti modellel melyet az Eötvös Loránd Tudományegyetem Informatikai Karán jelenleg
-is fejlesztés alatt álló AEGIS térinformatikai keretrendszer biztosított.
+mûveleti modellel melyet az AEGIS térinformatikai keretrendszer biztosított.
 Az AEGIS komponens alapú architektúrája lehetõvé tette a bõvíthetõséget és a 
 könnyû integrációt az Orleans keretrendszerrel, mindemellett tartalmazta 
 a diplomamunka által vizsgált mûveletek implementációit is. Ezen mûveletek
@@ -1985,20 +1982,20 @@ a keretrendszer adatmodellét bõvítettük ki olyan osztályokkal
 (\textit{Virtuális Raszter, Virtuális Szegmensgyûjtemény}), melyek az aktorok
 egymás közötti kommunikációját kezelték és elrejtették az egyes mûveletek elõl.
 
-A vizsgált mûveletek bemutatásával átfogó képet kaphatunk a távérzékelt
+A vizsgált mûveletek bemutatásával átfogó képet kaphattunk a távérzékelt
 felvételek feldolgozásának folyamatáról, egyes állomásairól és a mûveletek típusairól, 
 a rendszer teljesítményét pedig részletes mérések végrehajtásával állapítottuk meg.
 A mért eredmények emellett összehasonlításra kerültek a felvételek lokális 
 környezeten történõ feldolgozásának teljesítményével, illetve a MapReduce paradigma
 zászlóshajójának számító Hadoop rendszeren mért teljesítménnyel.
 
-Az eredmények azt mutatták, hogy az Orleans keretrendszer és az alapját képezõ
-aktor modell koncepció nem nyújt megfelelõ teljesítményt távérzékelt felvételek
-feldolgozásának területén. Az aktorok egymás közti információcseréjére építve 
+Az eredmények azt mutatták, hogy a kifejlesztett számítási modell az Orleans keretrendszeren
+csak részben - lokális mûveletek esetén - nyújtott megfelelõ teljesítményt. 
+Az aktorok egymás közti információcseréjére építve 
 már az egyszerûbb, fokális mûveletek feldolgozása során sem volt tapasztalható 
 olyan mértékû teljesítmény, amely megközelítené a versenytársak hatékonyságát.
-A fokális mûveleteknél javítási lehetõség lett volna az egyes aktorok közti információk
-gyorsítótárazása, így az aktorok közti szükséges kommunikációk száma csökkenthetõ lett volna.
+Fokális mûveleteknél egy javítási lehetõség lett volna az egyes aktorok közti információk
+gyorsítótárazása, így az aktorok közti szükséges kommunikációk száma csökkenthetõ.
 A regionális, szegmentáló mûveletek esetén azonban ez az optimalizáció hatástalan lett volna. Az 
 eredményekbõl látható volt, hogy az egyes szegmensek konzisztenciájának megtartásával járó
 folyamatos lekérdezõ-, illetve frissítõ mûveletek a rendszer jelentõs mértékû teljesítményromlásához
@@ -2006,15 +2003,12 @@ vezettek. Ugyanezen okok miatt a globális, klaszterezõ mûveletek
 végrehajtása nem volt lehetséges a rendszerben. Az egyes prototípus megvalósítások a
 megnövekedett hálózati kommunikáció miatt nem produkáltak mérhetõ eredményt.
 
-Összességében tehát elmondható, hogy a szegmentáló és klaszterezõ mûveletek feldolgozása során 
-az Orleans keretrendszer vagy gyenge, vagy nem mérhetõ eredményeket mutatott, és mivel
-ezek a mûveletek a távérzékelt felvételek numerikus kiértékelésének szerves részeit képezik,
-így az Orleans keretrendszer nem alkalmas távérzékelt felvételek feldolgozására.
-A dolgozat során kifejlesztett ötletek és megvalósításuk (virtuális raszter, 
+Összességében tehát elmondható, hogy az Orleans keretrendszer csupán a lokális mûvelettípusok
+feldolgozásánál alkalmazható hatékonyan, fokális, regionális, illetve globális mûveletek 
+esetén azonban vagy gyenge, vagy nem mérhetõ eredményeket mutatott.
+A dolgozat során kifejlesztett modell, valamint megvalósítása (virtuális raszter, 
 virtuális szegmensgyûjtemény) egy késõbbiekben megjelenõ, megfelelõ teljesítményt
-nyújtó keretrendszerben azonban ideális kiindulási alapot adhatnak a kutatáshoz.
-
-%\section{Továbbfejlesztési lehetõségek?}
+nyújtó aktor alapú keretrendszerben azonban ideális kiindulási alapot adhat a kutatáshoz.
 
 % ------------------------------------------------------------------------------
 
