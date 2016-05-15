@@ -173,7 +173,7 @@ alapjai, a felhasználható paradigmák, illetve ezek \linebreak implementációinak 
 A \ref{ch:aegis}. fejezet ismerteti az Orleans keretrendszer térinformatikai kiegészítéséhez
 felhasznált \textit{AEGIS} keretrendszert. Az Orleans platform teljesítményének
 vizsgálatához egy prototípus alkalmazás megvalósítása volt szükséges, ennek felépítését
-és komponenseit a \ref{ch:application}. fejezet tartalmazza. A prototípus alkalmazás
+és komponenseit az \ref{ch:application}. fejezet tartalmazza. A prototípus alkalmazás
 bemutatása után az egyes vizsgált mûveletek ismertetése következik, ezt a \ref{ch:algorithms}.
 fejezet tartalmazza. A \ref{ch:results}. fejezet ismerteti a keretrendszer által elért eredményeket,
 valamint összehasonlítja a Hadoop platform-, és az egy számítógépen történõ feldolgozás
@@ -362,7 +362,7 @@ A klaszterezõ mûveletek a szegmensek \textit{intenzitástér}ben való elhelyezkedé
 határolják be az egyes elemeket a megfelelõ osztályokba. Az intenzitástérben a kép egy pixelének sávonkénti
 intenzitásértékei adják a pont koordinátáit. A \ref{fig:intensitySpaces}. ábrán látható, hogy az egyes intenzitásértékek
 jellemzõen nem pontokba tömörülnek, hanem rendelkeznek bizonyos mértékû szórással. A klaszterezés során
-ezen térben keressük az összetartozó elemeket, és ez alapján alakítjuk ki a végsõ osztályhalmazokat. \cite{remoteSensingLecture}
+ezen térben keressük az összetartozó elemeket, és ez alapján alakítjuk ki a végsõ osztályhalmazokat  \cite{remoteSensingLecture}.
 
 \begin{figure}[h!]
 	\centering
@@ -474,8 +474,8 @@ távérzékelt felvételek feldolgozásában lévõ alkalmazási lehetõségeik, külön rész
 témáját, a \textit{Microsoft Orleans} platformot.
 
 Az \textit{elosztott rendszerek} olyan szoftverrendszerek, melyek komponensei fizikailag elkülönítve futnak, és futás során
-egymással hálózaton keresztül kommunikálnak. A komponensek saját processzorral és memóriával rendelkeznek (Szemben a párhuzamos
-rendszerekkel, amelyek a memóriát megosztják egymással).
+egymással hálózaton keresztül kommunikálnak. A komponensek saját processzorral és memóriával 
+rendelkeznek (Szemben a párhuzamos rendszerekkel, amelyek a memóriát megosztják egymással) \cite{distributedParallel}.
 
 Az elosztott architektúra több jelentõs elõnnyel is rendelkezik az egy számítási egységgel rendelkezõ rendszerrel szemben:
 \textit{skálázhatóság} (a folyamat áteresztõképességének növelésének képessége), nagyobb \textit{hibatûrés}, 
@@ -503,7 +503,7 @@ komoly szaktudást követelne a párhuzamos és elosztott alkalmazásfejlesztés terül
 \begin{figure}[h!]
 	\centering
 	\captionsetup{width=0.8\textwidth, justification=centering}
-	\includegraphics[width=120mm]{figures/mapReduce.jpg}
+	\includegraphics[width=150mm]{figures/mapReduce.PNG}
 	\caption{A \textit{MapReduce} folyamat \label{fig:mapReduceProcess}}
 \end{figure}
 
@@ -548,7 +548,7 @@ lehet, mint az eredeti mûveleté. Ezen tényezõk indokolták további alternatív fel
 
 \begin{figure}[H] %TODO Reposition
 	\centering
-	\includegraphics[width=150mm]{figures/histogram_map_reduce.jpg}
+	\includegraphics[width=150mm]{figures/histogram_map_reduce.png}
 	\caption{Hisztogramkiegyenlítés \textit{MapReduce} alkalmazásával \cite{aegisHadoop}
 		\label{fig:histogram_map_reduce}}
 \end{figure}
@@ -563,14 +563,7 @@ végezhetnek, aktorokat hozhatnak létre, további üzeneteket küldhetnek, valamint
 beállíthatják, hogyan fognak reagálni a következõ üzenetre.
 Az üzenetek érkezési sorrendje nem garantált, de követelmény, hogy minden üzenet beérkezzen.
 
-\begin{figure}[h!]
-	\centering
-	\captionsetup{width=0.8\textwidth, justification=centering}
-	\includegraphics[width=120mm]{figures/actorModel.png}
-	\caption{Az \textit{aktor modell}.\label{fig:actorModel}}
-\end{figure}
-
-Az aktorok jellemzõen egy számítási szállal rendelkeznek, és nem osztanak meg memóriát egymás között. 
+Az aktorok jellemzõen egy számítási szállal rendelkeznek és nem osztanak meg memóriát egymás között. 
 Ez eliminálja a versenyhelyzetek kezelésének szükségességét aktor szinten. 
 A fejlesztõknek nem szükséges \textit{lock}olást, \textit{mutex}eket és más versenyhelyzet-kezelõ megoldásokat
 alkalmazniuk, melyek nem tartoznak az alkalmazás logikájához. Az aktorok létrehozása
@@ -579,6 +572,13 @@ erõforrások alapján dinamikusan, ezáltal hatékony terheléselosztás alkalmazható.
 
 Az aktor modell akkor alkalmazható hatékonyan, ha az aktorok "könnyûsúlyúak", gyorsan példányosíthatók,
 és folyamatuk nincs a rendszermag szálaihoz kötve, attól eltérõen ütemezhetõ.
+
+\begin{figure}[h!]
+	\centering
+	\captionsetup{width=0.8\textwidth, justification=centering}
+	\includegraphics[width=150mm]{figures/actorModel.png}
+	\caption{Az \textit{aktor modell}.\label{fig:actorModel}}
+\end{figure}
 
 \subsubsection{Aktor implementációk}
 A modellt elõször az \textit{Erlang} programozási nyelvben alkalmazták konkurens 
@@ -814,13 +814,6 @@ téradatok betöltéséért és írásáért felel (pl.: \textit{Shapefile} \cite{shapefil
 az \textit{Operations} komponens tartalmazza a téradatokon végezhetõ mûveleteket, valamint ezek futtatókörnyezetét,
 a \textit{Temporal} komponens pedig az adatmodell kiterjesztése idõbeliség kezelésével.
 
-%\begin{figure}[ht!]
-%	\centering
-%	\includegraphics[width=90mm]{figures/aegis_components.jpg}
-%	\caption{Az \textit{AEGIS} rendszer komponensei
-%	\label{fig:aegis_components}}
-%\end{figure}
-
 \section{Adat-, illetve mûveleti modell}
 A rendszer adatmodellje (\ref{fig:aegis_data_model}. ábra) az \textit{Open Geospatial Consortium (OGC)} szervezet által definiált
 \textit{Simple Feature Access (SFA)} \cite{sfa} szabvány. A szabványban az összes
@@ -890,7 +883,7 @@ A dolgozat során elkészített prototípus alkalmazás (\textit{OrleansSpectral}) fe
 tradicionális Orleans alkalmazásokhoz, rendelkezik a \ref{subs:orleansProjects}. szakaszban említett
 három komponenssel (\textit{Grains}, \textit{Grain interfaces}, \textit{Client}), valamint ezeken túl 
 egy \textit{Common} projekttel, amely az egyes komponensek mindegyike
-által használt osztályokat és mûveleteket tartalmazza. Az alkalmazás komponensdiagramja a \ref{fig:orleansSpectralComponents}. ábrán látható.
+által használt osztályokat és mûveleteket tartalmazza. Az alkalmazás komponensdiagramja az \ref{fig:orleansSpectralComponents}. ábrán látható.
 
 \begin{figure}[h!]
 	\centering
@@ -1372,8 +1365,6 @@ tekintünk, és erre alkalmazzuk a vágási feltételt addig, amíg minden érték homog
 helyett összevonási feltételt kell alkalmaznunk, és a szegmentáló mûvelet addig fut, amíg már egyetlen
 csúcsot sem tudunk összevonni. 
 
-%TODO Figure?
-
 \subsubsection{Szekvenciális csatolás alapú szegmentálás}
 A \textit{szekvenciális csatolás alapú szegmentálás} \cite{sequentialCoupling,sequentialCoupling2} 
 (\textit{Sequential Coupling Segmentation}) egy \textit{összevonás-alapú} 
@@ -1716,7 +1707,7 @@ A globális mûveletek elméletben az Orleans platformon is hasonló módon kerülnek 
 mint a MapReduce esetben, csupán az alkalmazott ötletek tekintetében volt különbség. 
 A hisztogram alapú algoritmusok esetén például a központi hisztogram-kiszámító lépést nem
 az Orleans rendszer végzi, hanem a hisztogramot elõzetesen a particionálás során 
-kiszámítjuk, és a \ref{sec:partitioning}. szakaszban ismertetett partíció leíró fájlba
+kiszámítjuk, és az \ref{sec:partitioning}. szakaszban ismertetett partíció leíró fájlba
 helyezzük. Mivel ezt a partíció leíró fájlt az összes feldolgozó Grain megkapja, így
 a hisztogram alapú küszöbölõ algoritmusok indításának pillanatában minden feldolgozó
 egység számára rendelkezésre áll.
@@ -2049,6 +2040,8 @@ nyújtó keretrendszerben azonban ideális kiindulási alapot adhatnak a kutatáshoz.
 \bibitem{mapAlgebra} \textit{Map Algebra: Global, Zonal, Focal and Local Operations}, http://gisgeography.com/map-algebra-global-zonal-focal-local, 2016.
 
 \bibitem{distributedImageProcessing} Giloi, W.: \textit{Distributed Image Processing}, Advances in Digital Image Processing, 1979.
+
+\bibitem{distributedParallel} Andrews, Gregory R.: \textit{Foundations of Multithreaded, Parallel, and Distributed Programming}, Addison?Wesley, 2000.
 
 \bibitem{mapReduce} Dean, J., Ghemawat, S.: \textit{MapReduce: simplified data processing on large clusters}, Communications of the ACM 51.1, 2008.
 
