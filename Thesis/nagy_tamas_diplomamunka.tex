@@ -74,20 +74,22 @@
 	és a távérzékelt felvételek feldolgozására felkészített keretrendszereket, az ágens (aktor)
 	modellre épülõ platformok közül azonban még nem jelentek meg téradatokat támogató kiterjesztések.
 	
-	Jelen dolgozat célja az ágens alapú Orleans keretrendszer gyakorlati alkalmazhatóságának 
-	vizsgálata távérzékelt felvételek feldolgozása esetén. A felvételek kiértékelése 
-	során használt mûveletek mûvelettípusai elosztott feldolgozás esetén eltérõ megközelítést 
-	igényelnek. A dolgozat bemutatja ezen mûvelettípusok ágens alapú feldolgozásának 
-	akadályaira adott megoldásait, az elért eredményeket pedig összeveti az egyik 
-	legnépszerûbb MapReduce alapú keretrendszer, a Hadoop platform teljesítményével.
+	Jelen dolgozat célja egy olyan számítási modell kifejlesztése, mely lehetõvé teszi
+	a távérzékelt felvételek kiértékelését ágens alapú platformokon. 
+	A feldolgozásban részt vevõ mûveletek mûvelettípusai elosztott feldolgozás során
+	eltérõ megközelítést igényelnek. A dolgozat bemutatja a mûvelettípusok ágens
+	alapú feldolgozására kifejlesztett megoldásokat, a számítási modell teljesítményét pedig
+	az Orleans keretrendszer által biztosított környezetben méri. Az elért eredmények 
+	ezután összevetésre kerülnek az egyik  legnépszerûbb MapReduce alapú keretrendszer, 
+	a Hadoop platform teljesítményével is.
 	
-	A mért eredmények azt mutatják, hogy az ágens alapú megközelítés nem optimális
-	távérzékelt felvételek feldolgozásának területén. Az Orleans keretrendszer csupán
-	néhány mûvelet esetén tudott jobb eredményeket elérni, mint a Hadoop rendszer,
-	azonban a felvételek tematikus osztályozási folyamatának egyik állomásán sem 
-	volt képes olyan eredmény elérésére, amely felvehetné a versenyt a Hadoop-,
-	vagy a lokális feldolgozás teljesítményével.
-	
+	A mért eredmények azt mutatják, hogy az Orleans által nyújtott környezet egyes 
+	mûvelettípusoknál jobb-, másoknál gyengébb teljesítményt ért el, mint a Hadoop rendszer,
+	így az összes mûvelettípus elvégzésére nem alkalmas, gyakorlati alkalmazhatósága nagyban
+	függ az elvégzendõ feladattól. A dolgozat során kifejlesztett számítási modell 
+	azonban más ágens alapú platformok esetén nyújthat megfelelõ teljesítményt, így
+	több késõbbi kutatás alapjául szolgálhat.
+		
 \end{abstract}
 
 % ------------------------------------------------------------------------------
@@ -148,21 +150,20 @@ napjainkban pedig ezek közül kettõt alkalmaznak széleskörûen: a nagy
 népszerûségnek örvendõ \textit{MapReduce} alapú rendszerek mellett az utóbbi idõben az
 \textit{ágens (aktor) modell}re épülõ rendszerek is teret nyertek. 
 
-Jelen dolgozat célja az \textit{Orleans} ágens alapú keretrendszer távérzékelt felvételek
-feldolgozásának területén való alkalmazhatóságának vizsgálata. Ha
-a keretrendszer megfelelõ teljesítményt tud nyújtani a kiértékelésre használt
-mûveletek futtatása során, akkor hatékonyan beilleszthetõ a feldolgozás folyamatába, ezáltal
-az adatok kiértékelési ideje jelentõsen csökkenthetõ.
-
-A keretrendszer hatékonyságát a távérzékelt felvételek feldolgozásában részt vevõ
-mûveletek hatékonyságával tesztelhetjük.
+Jelen dolgozat célja egy olyan \textit{számítási modell} kifejlesztése és tesztelése, melynek 
+segítségével az aktor modellre épülõ rendszerek is felhasználhatóak a távérzékelt felvételek 
+feldolgozásában. A modell biztosítja, hogy a feldolgozásban részt vevõ mûveletek
+módosítás nélkül végrehajthatóak legyenek az aktor modell által nyújtott elosztott
+környezetben, annak minden elõnyét (\textit{skálázhatóság, bõvíthetõség, stb.}) kihasználva. 
 Ennek megfelelõen számos mûvelet került vizsgálatra a feldolgozás
 mindegyik fázisából (\textit{elõfeldolgozás, képjavító mûveletek, tematikus osztályozás}), 
-melyek az Orleans keretrendszerben egyedi megközelítést igényeltek, az alkalmazott ötletek az egyes
-mûvelettípusokkal együtt kerülnek bemutatásra. 
-A rendszer alkalmazhatóságának vizsgálata érdekében a mûveletek futtatása során
-mért teljesítmény összevetésre kerül az egy számítógépen történõ feldolgozás teljesítményével,
-valamint a MapReduce rendszerek zászlóshajójának számító \textit{Hadoop} platformon mért eredményekkel.
+melyek az ágens alapú környezetben egyedi megközelítést igényeltek. 
+Az alkalmazott ötletek az egyes mûvelettípusokkal együtt kerülnek bemutatásra. 
+
+A modell gyakorlati alkalmazhatóságának a és hatékonyságának vizsgálata az Orleans ágens
+alapú platformon történt, melynek teljesítménye összevetésre kerül 
+az egy számítógépen történõ, \textit{lokális} feldolgozás teljesítményével, valamint a MapReduce rendszerek 
+zászlóshajójának számító \textit{Hadoop} platformon mért eredményekkel.
 \newline
 
 A dolgozat felépítése a következõ: a \ref{ch:remoteSensingAnalysis}. fejezetben
@@ -351,7 +352,7 @@ meghatározza hogy melyik részintervallumba, és ez által melyik célosztályba kerü
 történhet manuálisan (pl.: \textit{konstans küszöbölés}), valamint automatikusan a kép valamilyen tulajdonsága 
 (legtöbbször a \textit{hisztogram}) alapján.
 
-A \textit{szegmensenkénti mûvelet}ek, homogén területek sorozatán képesek elvégezni az osztályozást. 
+A \textit{szegmensenkénti mûvelet}ek homogén területek sorozatán képesek elvégezni az osztályozást.
 Ezen homogén területek feltárásának és összekapcsolásának módja a \textit{szegmentálás}.
 A szegmentálás eredményeként egy olyan tematikus térképet kapunk, mely minden képpontra megadja a pontot 
 tartalmazó szegmens sorszámát. Az eredményszegmensek a legtöbb esetben nem feleltethetõek meg egyértelmûen az
@@ -559,7 +560,8 @@ lehet, mint az eredeti mûveleté. Ezen tényezõk indokolták további alternatív fel
 Az \textit{Aktor modell} egy olyan konkurens matematikai modell, melynek alapegységei az "\textit{aktorok}" \cite{actorOrig}.
 Az aktorok egymástól izolált egységek, melyek direkt módon, aszinkron, 
 \textit{módosíthatatlan (immutable)} üzeneteken keresztül kommunikálnak egymással (\ref{fig:actorModel}. ábra).
-Minden aktor rendelkezik egy "\textit{postaládával}", ahová az üzenetek érkeznek.
+Minden aktor rendelkezik egy "\textit{postaládával}", ahová az üzenetek érkeznek, és egy 
+\textit{izolált állapot}tal, melybõl az aktor szükség esetén újra létrehozható.
 Az aktorok mûködésük során mindig valamilyen üzenetre regagálnak - számítást 
 végezhetnek, aktorokat hozhatnak létre, további üzeneteket küldhetnek, valamint 
 beállíthatják, hogyan fognak reagálni a következõ üzenetre.
@@ -800,7 +802,8 @@ keretrendszerre, mely a következõ fejezetben kerül tárgyalásra.
 
 \chapter{Az AEGIS térinformatikai keretrendszer} \label{ch:aegis}
 Az \textit{AEGIS} keretrendszer \textit{Eötvös Loránd Tudományegyetem Informatikai Karán} jelenleg is fejlesztés alatt
-álló térinformatikai keretrendszer, melynek fõ célja térinformatikai algoritmusok, megoldások \textit{kutatás}a és \textit{fejlesztés}e.
+álló térinformatikai keretrendszer. A projekt fõ célja az oktatás mellett térinformatikai algoritmusok, megoldások \textit{kutatás}a és \textit{fejlesztés}e.
+
 A rendszer téradatok széles spektrumát támogatja, például: \textit{vektoros adathalmazok}, \textit{raszter felvételek}
 valamint \textit{pontfelhõk}. A keretrendszer egy platformfüggetlen osztálykönyvtár, melynek fejlesztése \textit{C\#} nyelven
 történik, alapja a \textit{.NET keretrendszer}, illetve a \textit{Mono Framework\footnote{http://www.mono-project.com/}}. A fejlesztés a komponens alapú
@@ -875,10 +878,9 @@ differenciák sem jelennek meg az eredményekben.
 % ------------------------------------------------------------------------------
 
 \chapter{Megvalósítás} \label{ch:application}
-A dolgozat célja az Orleans rendszer távérzékelt felvételek feldolgozására való kiterjesztése és
-a gyakorlatban való alkalmazhatóságának vizsgálata. 
-Ehhez szükséges volt egy olyan prototípus alkalmazás megvalósítása, 
-melynek segítségével tesztelhetõek az Orleans rendszer képességei távérzékelt felvételek feldolgozásában. 
+Az Orleans rendszer gyakorlati alkalmazhatóságának vizsgálatához
+szükséges volt egy olyan prototípus alkalmazás megvalósítása, 
+melynek segítségével tesztelhetõek a keretrendszer képességei távérzékelt felvételek feldolgozásában. 
 Ezen fejezet célja az alkalmazás felépítésének és komponenseinek bemutatása.
 
 A dolgozat során elkészített prototípus alkalmazás (\textit{OrleansSpectral}) felépítése hasonló a 
